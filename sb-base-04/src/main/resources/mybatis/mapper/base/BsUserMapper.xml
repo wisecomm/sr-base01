@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.mapper.base.BsUserMapper">
+
+    <!-- Select user by ID - already exists -->
+    <select id="selectUser" resultType="BsUserMap">
+        SELECT u.USER_ID, u.USER_NAME, u.EMAIL, u.PHONE, 
+            u.ENABLED, 
+            u.LAST_LOGIN_AT, 
+            u.CREATED_AT, 
+            u.UPDATED_AT 
+        FROM BS_USER u
+        WHERE u.USER_ID = #{userId}
+    </select>
+
+    <!-- Select all users with pagination and filtering -->
+    <select id="selectUserList" parameterType="hashMap" resultType="BsUserMap">
+        SELECT USER_ID, USER_NAME, EMAIL, PHONE, 
+            ENABLED, LAST_LOGIN_AT, CREATED_AT, UPDATED_AT 
+        FROM BS_USER
+        WHERE 1=1
+        <where>
+            <if test="param_key != null and param_key != '' and param_value != null and param_value != ''">
+                <choose>
+                    <when test="param_key == 'userName'">
+                        AND USER_NAME LIKE CONCAT('%', #{param_value}, '%')
+                    </when>
+                </choose>
+            </if>
+        </where>
+        ORDER BY CREATED_AT DESC
+    </select>
+
+    <!-- Insert a new user -->
+    <insert id="insertUser" parameterType="BsUserParam">
+        INSERT INTO BS_USER (
+            USER_ID, 
+            USER_NAME, 
+            PASSWORD, 
+            EMAIL, 
+            PHONE, 
+            ENABLED
+        ) VALUES (
+            #{userId}, 
+            #{userName}, 
+            #{password}, 
+            #{email}, 
+            #{phone}, 
+            #{enabled}
+        )
+    </insert>
+
+    <!-- Update an existing user -->
+    <update id="updateUser" parameterType="BsUserMap">
+        UPDATE BS_USER
+        SET 
+            USER_NAME = #{userName},
+            <if test="password != null and password != ''">
+            PASSWORD = #{password},
+            </if>
+            EMAIL = #{email},
+            PHONE = #{phone},
+            ENABLED = #{enabled}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <!-- Delete a user -->
+    <delete id="deleteUser">
+        DELETE FROM BS_USER
+        WHERE USER_ID = #{userId}
+    </delete>
+
+    <select id="selectUserRole" resultType="userRoleMap">
+        SELECT u.USER_ID, u.USER_NAME, r.ROLE_NAME
+        FROM TB_USER u
+        JOIN TB_USER_ROLE ur ON u.USER_ID = ur.USER_ID
+        JOIN TB_ROLE r ON ur.ROLE_ID = r.ROLE_ID
+        WHERE u.USER_ID = #{userId};
+    </select>
+
+    <select id="selectMenuList" resultType="userRoleMap">
+        SELECT DISTINCT m.*
+        FROM TB_MENU m
+        JOIN TB_ROLE_MENU rm ON m.MENU_ID = rm.MENU_ID
+        JOIN TB_ROLE r ON rm.ROLE_ID = r.ROLE_ID
+        JOIN TB_USER_ROLE ur ON r.ROLE_ID = ur.ROLE_ID
+        WHERE ur.USER_ID = #{userId}
+        AND m.ENABLED = TRUE
+        AND rm.READ_PERM = TRUE
+        ORDER BY m.MENU_ORDER;
+    </select>
+
+    <select id="selectMenuListAll" resultType="userRoleMap">
+        WITH RECURSIVE MENU_HIERARCHY AS (
+            -- 루트 메뉴 선택
+            SELECT m.*, 0 AS LEVEL
+            FROM TB_MENU m
+            WHERE m.PARENT_ID IS NULL
+            
+            UNION ALL
+            
+            -- 하위 메뉴 추가
+            SELECT m.*, h.LEVEL + 1
+            FROM TB_MENU m
+            JOIN MENU_HIERARCHY h ON m.PARENT_ID = h.MENU_ID
+        )
+        SELECT mh.*, CONCAT(REPEAT('    ', mh.LEVEL), mh.MENU_NAME) AS DISPLAY_NAME
+        FROM MENU_HIERARCHY mh
+        ORDER BY mh.LEVEL, mh.MENU_ORDER;
+    </select>
+
+    <select id="selectMenuListRole" resultType="userRoleMap">
+        SELECT r.ROLE_NAME, m.MENU_NAME, m.MENU_URL, 
+            rm.CREATE_PERM, rm.READ_PERM, rm.UPDATE_PERM, rm.DELETE_PERM
+        FROM TB_ROLE r
+        JOIN TB_ROLE_MENU rm ON r.ROLE_ID = rm.ROLE_ID
+        JOIN TB_MENU m ON rm.MENU_ID = m.MENU_ID
+        WHERE r.ROLE_ID = #{roleId}
+        ORDER BY m.MENU_ORDER;
+    </select>
+
+</mapper>
