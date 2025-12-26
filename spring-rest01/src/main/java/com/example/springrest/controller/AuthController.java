@@ -25,12 +25,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    
+
     private final AuthService authService;
 
     /**
      * 로그인 API
-     * @param request 로그인 요청 (username, password)
+     * 
+     * @param request     로그인 요청 (username, password)
      * @param httpRequest HTTP 요청 (IP, User-Agent 추출용)
      * @return 로그인 응답 (JWT 토큰, 사용자 정보)
      */
@@ -38,22 +39,23 @@ public class AuthController {
     public ResponseEntity<ApiResponse<LoginResponse>> login(
             @Valid @RequestBody LoginRequest request,
             HttpServletRequest httpRequest) {
-        
+
         String ipAddress = getClientIpAddress(httpRequest);
         String userAgent = httpRequest.getHeader("User-Agent");
-        
+
         log.info("Login attempt for user: {} from IP: {}", request.getUsername(), ipAddress);
-        
+
         LoginResponse response = authService.login(request, ipAddress, userAgent);
-        
+
         log.info("Login successful for user: {}", request.getUsername());
-        
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     /**
      * 클라이언트 IP 주소 추출
      * X-Forwarded-For 헤더 우선 확인 (프록시 환경 대응)
+     * 
      * @param request HTTP 요청
      * @return IP 주소
      */
@@ -64,36 +66,38 @@ public class AuthController {
         }
         return request.getRemoteAddr();
     }
-    
+
     /**
      * 현재 사용자 정보 조회 API
+     * 
      * @return 인증된 사용자 정보
      */
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserInfoResponse>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        
+
         log.info("Get current user info: {}", username);
-        
+
         UserInfoResponse response = authService.getCurrentUser(username);
-        
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
-    
+
     /**
      * 토큰 검증 API
+     * 
      * @param request 토큰 검증 요청
      * @return 토큰 검증 결과
      */
     @PostMapping("/validate")
     public ResponseEntity<ApiResponse<TokenValidationResponse>> validateToken(
             @Valid @RequestBody TokenValidationRequest request) {
-        
+
         log.info("Validate token request");
-        
+
         TokenValidationResponse response = authService.validateToken(request.getToken());
-        
+
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 }

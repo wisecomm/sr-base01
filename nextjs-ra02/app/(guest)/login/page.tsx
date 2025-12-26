@@ -31,8 +31,8 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 const defaultValues: Partial<AccountFormValues> = {
-  userid: "홍길동",
-  password: "",
+  userid: "admin",
+  password: "password123",
 };
 
 function Login() {
@@ -76,7 +76,7 @@ function Login() {
           ),
         });
 
-        router.push('/main', { scroll: false });
+        router.push('/paserver', { scroll: false });
       } catch (error: unknown) {
         console.log("onSubmit error: " + error);
         toast({
