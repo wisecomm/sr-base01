@@ -42,5 +42,6 @@ springdoc:
 logging:
   level:
     com.example.springrest: DEBUG
+    com.example.springrest.repository: TRACE
     org.springframework.security: DEBUG
     org.mybatis: DEBUG
