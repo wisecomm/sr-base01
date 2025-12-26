@@ -64,12 +64,37 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
-	testImplementation 'org.testcontainers:testcontainers:1.20.4'
-	testImplementation 'org.testcontainers:postgresql:1.20.4'
-	testImplementation 'org.testcontainers:junit-jupiter:1.20.4'
+	testImplementation 'com.h2database:h2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+def frontendDir = "$projectDir/../nextjs-ra02"
+
+task buildFrontend(type: Exec) {
+    group = 'build'
+    description = 'Builds the Next.js frontend and copies it to the static resources directory.'
+
+    workingDir frontendDir
+    
+    // Check if we should use pnpm or npm
+    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+        commandLine 'cmd', '/c', 'pnpm install && pnpm build'
+    } else {
+        commandLine 'sh', '-c', 'pnpm install && pnpm build'
+    }
+}
+
+task copyFrontend(type: Copy) {
+    dependsOn buildFrontend
+    from "${frontendDir}/out"
+    into "${projectDir}/src/main/resources/static"
+}
+
+processResources.dependsOn copyFrontend
+clean.doFirst {
+    delete "${projectDir}/src/main/resources/static"
 }

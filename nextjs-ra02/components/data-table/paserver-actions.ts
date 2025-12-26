@@ -1,4 +1,4 @@
-"use server";
+// This is a client-side mock data fetcher
 
 import { Payment } from "../../app/(admin)/payments/columns";
 import { generatePayments } from "@/lib/mock";
