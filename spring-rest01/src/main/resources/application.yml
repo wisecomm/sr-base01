@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: spring-rest-api
+  
+  profiles:
+    active: dev
+
+# Actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+
+# 기본 서버 설정
+server:
+  port: 8080
+  compression:
+    enabled: true

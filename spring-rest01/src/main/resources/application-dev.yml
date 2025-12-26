@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres123
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      connection-timeout: 30000
+  
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+# MyBatis 설정
+mybatis:
+  type-aliases-package: com.example.springrest.model.entity
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# JWT 설정
+jwt:
+  secret: devSecretKeyForTestingPurposesOnlyMustBe256BitsOrMoreForHS256Algorithm
+  expiration: 1800000  # 30분 (밀리초)
+
+# Swagger 설정 (개발 환경에서만 활성화)
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+# 로깅 레벨
+logging:
+  level:
+    com.example.springrest: DEBUG
+    org.springframework.security: DEBUG
+    org.mybatis: DEBUG
