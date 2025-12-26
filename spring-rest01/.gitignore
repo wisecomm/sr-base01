@@ -65,3 +65,6 @@ coverage/
 *.tmp
 *.bak
 *.orig
+
+# Generated Frontend Assets
+src/main/resources/static/
