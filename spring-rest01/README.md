@@ -32,7 +32,6 @@ JWT 기반 사용자 인증 시스템을 구현한 Spring Boot REST API 프로�
 - **JUnit 5** - 단위 테스트 프레임워크
 - **Mockito** - 모의 객체 생성
 - **AssertJ** - 유연한 assertion 라이브러리
-- **TestContainers** - 통합 테스트용 컨테이너화된 PostgreSQL
 
 ---
 
@@ -61,7 +60,6 @@ JWT 기반 사용자 인증 시스템을 구현한 Spring Boot REST API 프로�
 
 ### 1. 사전 요구사항
 - Java 21 (Eclipse Temurin 권장)
-- Docker & Docker Compose
 - Git
 
 ### 2. 프로젝트 클론
@@ -70,12 +68,8 @@ git clone <repository-url>
 cd spring-rest01
 ```
 
-### 3. PostgreSQL 컨테이너 실행
-```bash
-docker-compose up -d
-```
-
-데이터베이스가 준비되면 Flyway가 자동으로 스키마를 생성하고 초기 데이터를 삽입합니다.
+### 3. PostgreSQL 실행
+로컬에 설치된 PostgreSQL이 실행 중이어야 합니다. Flyway가 자동으로 스키마를 생성하고 초기 데이터를 삽입합니다.
 
 ### 4. 애플리케이션 실행
 ```bash
@@ -354,16 +348,8 @@ export DB_PASSWORD=your-database-password
 ## 🐛 문제 해결
 
 ### PostgreSQL 연결 실패
-```bash
-# Docker 컨테이너 상태 확인
-docker-compose ps
-
-# 로그 확인
-docker-compose logs postgres
-
-# 컨테이너 재시작
-docker-compose restart postgres
-```
+- PostgreSQL 서비스가 실행 중인지 확인
+- `application-dev.yml`의 접속 정보(URL, Username, Password) 확인
 
 ### JWT 토큰 검증 실패
 - Secret 키가 256비트 이상인지 확인

@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 /**
- * 관리자 상세 정보 데이터 접근 매퍼
+ * 사용자 상세 정보 데이터 접근 매퍼
  */
 @Mapper
 public interface UserInfoMapper {

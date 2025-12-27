@@ -1,9 +1,9 @@
-package com.example.springrest.controller.manager;
+package com.example.springrest.controller.user;
 
 import com.example.springrest.model.dto.ApiResponse;
-import com.example.springrest.model.dto.manager.RoleInfoRequest;
-import com.example.springrest.model.dto.manager.RoleInfoResponse;
-import com.example.springrest.model.dto.manager.RoleMenuAssignRequest;
+import com.example.springrest.model.dto.user.RoleInfoRequest;
+import com.example.springrest.model.dto.user.RoleInfoResponse;
+import com.example.springrest.model.dto.user.RoleMenuAssignRequest;
 import com.example.springrest.service.RoleService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Manager - Role Management", description = "역할 관리 API")
+@Tag(name = "User - Role Management", description = "역할 관리 API")
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/manager/roles")
+@RequestMapping("/api/v1/user/roles")
 @RequiredArgsConstructor
 public class RoleController {
 

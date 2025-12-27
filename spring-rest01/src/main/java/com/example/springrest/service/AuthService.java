@@ -3,20 +3,17 @@ package com.example.springrest.service;
 import com.example.springrest.model.dto.LoginRequest;
 import com.example.springrest.model.dto.LoginResponse;
 import com.example.springrest.model.dto.TokenValidationResponse;
-import com.example.springrest.model.dto.UserInfoResponse;
-import com.example.springrest.model.entity.LoginAttempt;
-import com.example.springrest.model.entity.User;
-import com.example.springrest.repository.LoginAttemptMapper;
-import com.example.springrest.repository.UserMapper;
+import com.example.springrest.model.dto.user.UserInfoResponse;
+import com.example.springrest.model.entity.UserInfo;
+import com.example.springrest.repository.UserInfoMapper;
 import com.example.springrest.security.JwtTokenProvider;
+import com.example.springrest.model.enums.UserRole;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
 
 /**
  * 인증 서비스
@@ -27,11 +24,9 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserMapper userMapper;
-    private final LoginAttemptMapper loginAttemptMapper;
+    private final UserInfoMapper userInfoMapper;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final LoginAttemptService loginAttemptService;
 
     /**
      * 사용자 로그인
@@ -41,52 +36,32 @@ public class AuthService {
      * @param userAgent User-Agent 헤더
      * @return 로그인 응답 (JWT 토큰, 사용자 정보)
      * @throws IllegalArgumentException 인증 실패 시
-     * @throws RateLimitException       Rate Limit 초과 시
      */
     @Transactional
     public LoginResponse login(LoginRequest request, String ipAddress, String userAgent) {
         String username = request.getUsername();
 
-        // Rate Limit 체크 (5분간 5회 실패 시 차단)
-        loginAttemptService.checkRateLimit(username);
-
-        // 사용자 조회
-        User user = userMapper.findByUsername(username);
+        // 사용자 조회 (USER_ID를 username으로 사용)
+        UserInfo user = userInfoMapper.findById(username);
         if (user == null) {
-            recordLoginAttempt(username, false, ipAddress, userAgent);
             throw new com.example.springrest.exception.AuthenticationException("Invalid username or password");
         }
 
         // 비밀번호 검증
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            recordLoginAttempt(username, false, ipAddress, userAgent);
+        if (!passwordEncoder.matches(request.getPassword(), user.getUserPwd())) {
             throw new com.example.springrest.exception.AuthenticationException("Invalid username or password");
         }
-        /*
-         * // 로그인 성공 기록
-         * recordLoginAttempt(username, true, ipAddress, userAgent);
-         * 
-         * // 차단 캐시 초기화
-         * loginAttemptService.clearLoginAttempts(username);
-         * 
-         * // 마지막 로그인 시각 업데이트
-         * LocalDateTime now = LocalDateTime.now();
-         * userMapper.updateLastLoginAt(username, now);
-         */
-        // JWT 토큰 생성
-        String token = jwtTokenProvider.generateToken(user.getUsername(), user.getRole());
-        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
+
+        // JWT 토큰 생성 (기본적으로 ADMIN 역할 부여 또는 매핑 테이블에서 가져와야 함)
+        // 일단은 기본 ADMIN 역할 부여 (하드코딩된 부분은 나중에 매핑 테이블 연동 필요)
+        UserRole role = UserRole.ADMIN;
+
+        String token = jwtTokenProvider.generateToken(user.getUserId(), role);
+        String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUserId());
         Long expiresIn = jwtTokenProvider.getExpirationMs();
 
         // 응답 생성
-        UserInfoResponse userInfo = UserInfoResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .createdAt(user.getCreatedAt())
-                // .lastLoginAt(now)
-                .build();
+        UserInfoResponse userInfo = convertToUserInfoResponse(user, role);
 
         log.info("User {} logged in successfully", username);
 
@@ -117,25 +92,21 @@ public class AuthService {
         String username = jwtTokenProvider.extractUsername(refreshToken);
 
         // 사용자 조회
-        User user = userMapper.findByUsername(username);
+        UserInfo user = userInfoMapper.findById(username);
         if (user == null) {
             throw new JwtException("User not found");
         }
 
+        // 역할 정보 추출 (토큰에서 가져오거나 DB 재조회)
+        UserRole role = UserRole.ADMIN;
+
         // 새로운 토큰 생성
-        String newToken = jwtTokenProvider.generateToken(user.getUsername(), user.getRole());
-        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getUsername());
+        String newToken = jwtTokenProvider.generateToken(user.getUserId(), role);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getUserId());
         Long expiresIn = jwtTokenProvider.getExpirationMs();
 
         // 사용자 정보 생성
-        UserInfoResponse userInfo = UserInfoResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .createdAt(user.getCreatedAt())
-                .lastLoginAt(user.getLastLoginAt())
-                .build();
+        UserInfoResponse userInfo = convertToUserInfoResponse(user, role);
 
         log.info("Token refreshed for user: {}", username);
 
@@ -149,27 +120,6 @@ public class AuthService {
     }
 
     /**
-     * 로그인 시도 기록
-     * 
-     * @param username  사용자명
-     * @param success   성공 여부
-     * @param ipAddress IP 주소
-     * @param userAgent User-Agent
-     */
-    private void recordLoginAttempt(String username, boolean success, String ipAddress, String userAgent) {
-        LoginAttempt attempt = LoginAttempt.builder()
-                .username(username)
-                .attemptTime(LocalDateTime.now())
-                .success(success)
-                .ipAddress(ipAddress)
-                .userAgent(userAgent)
-                .createdAt(LocalDateTime.now())
-                .build();
-
-        loginAttemptMapper.insert(attempt);
-    }
-
-    /**
      * 현재 인증된 사용자 정보 조회
      * 
      * @param username 사용자명 (JWT에서 추출)
@@ -177,18 +127,37 @@ public class AuthService {
      * @throws IllegalArgumentException 사용자를 찾을 수 없을 때
      */
     public UserInfoResponse getCurrentUser(String username) {
-        User user = userMapper.findByUsername(username);
+        UserInfo user = userInfoMapper.findById(username);
         if (user == null) {
             throw new IllegalArgumentException("User not found: " + username);
         }
 
+        return convertToUserInfoResponse(user, UserRole.ADMIN);
+    }
+
+    private UserInfoResponse convertToUserInfoResponse(UserInfo user, UserRole role) {
         return UserInfoResponse.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .createdAt(user.getCreatedAt())
-                .lastLoginAt(user.getLastLoginAt())
+                .username(user.getUserId())
+                .email(user.getUserEmail())
+                .role(role)
+                .userId(user.getUserId())
+                .userEmail(user.getUserEmail())
+                .userMobile(user.getUserMobile())
+                .userName(user.getUserName())
+                .userNick(user.getUserNick())
+                .userMsg(user.getUserMsg())
+                .userDesc(user.getUserDesc())
+                .userStatCd(user.getUserStatCd())
+                .userSnsid(user.getUserSnsid())
+                .useYn(user.getUseYn())
+                .accountNonLock(user.getAccountNonLock())
+                .passwordLockCnt(user.getPasswordLockCnt())
+                .accountStartDt(user.getAccountStartDt())
+                .accountEndDt(user.getAccountEndDt())
+                .passwordExpireDt(user.getPasswordExpireDt())
+                .mdmYn(user.getMdmYn())
+                .sysInsertDtm(user.getSysInsertDtm())
+                .sysUpdateDtm(user.getSysUpdateDtm())
                 .build();
     }
 
@@ -207,7 +176,7 @@ public class AuthService {
 
             // 사용자명과 역할 추출
             String username = jwtTokenProvider.extractUsername(token);
-            com.example.springrest.model.enums.UserRole role = jwtTokenProvider.extractRole(token);
+            UserRole role = jwtTokenProvider.extractRole(token);
 
             return TokenValidationResponse.valid(username, role);
 

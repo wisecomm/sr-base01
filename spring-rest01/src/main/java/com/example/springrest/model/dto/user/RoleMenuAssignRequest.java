@@ -1,4 +1,4 @@
-package com.example.springrest.model.dto.manager;
+package com.example.springrest.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package com.example.springrest.service;
 
-import com.example.springrest.model.dto.manager.UserInfoRequest;
-import com.example.springrest.model.dto.manager.UserInfoResponse;
+import com.example.springrest.model.dto.user.UserInfoRequest;
+import com.example.springrest.model.dto.user.UserInfoResponse;
 import com.example.springrest.model.entity.UserInfo;
 import com.example.springrest.model.entity.UserRoleMap;
 import com.example.springrest.repository.UserInfoMapper;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 관리자 정보 서비스
+ * 사용자 정보 서비스
  */
 @Slf4j
 @Service

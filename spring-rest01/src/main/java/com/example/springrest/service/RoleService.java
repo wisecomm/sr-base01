@@ -1,7 +1,7 @@
 package com.example.springrest.service;
 
-import com.example.springrest.model.dto.manager.RoleInfoRequest;
-import com.example.springrest.model.dto.manager.RoleInfoResponse;
+import com.example.springrest.model.dto.user.RoleInfoRequest;
+import com.example.springrest.model.dto.user.RoleInfoResponse;
 import com.example.springrest.model.entity.RoleInfo;
 import com.example.springrest.model.entity.RoleMenuMap;
 import com.example.springrest.repository.RoleInfoMapper;

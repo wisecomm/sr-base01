@@ -1,4 +1,4 @@
-package com.example.springrest.model.dto.manager;
+package com.example.springrest.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 메뉴 정보 요청 DTO
+ * 메뉴 정보 응답 DTO
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MenuInfoRequest {
+public class MenuInfoResponse {
     private String menuId;
     private Integer menuLvl;
     private String menuUri;
@@ -28,4 +28,6 @@ public class MenuInfoRequest {
     private String menuHelpUri;
     private String menuScript;
     private String personalDataYn;
+    private LocalDateTime sysInsertDtm;
+    private LocalDateTime sysUpdateDtm;
 }

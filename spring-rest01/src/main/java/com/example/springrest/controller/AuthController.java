@@ -6,7 +6,7 @@ import com.example.springrest.model.dto.LoginResponse;
 import com.example.springrest.model.dto.TokenRefreshRequest;
 import com.example.springrest.model.dto.TokenValidationRequest;
 import com.example.springrest.model.dto.TokenValidationResponse;
-import com.example.springrest.model.dto.UserInfoResponse;
+import com.example.springrest.model.dto.user.UserInfoResponse;
 import com.example.springrest.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;

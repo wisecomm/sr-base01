@@ -1,8 +1,8 @@
-package com.example.springrest.controller.manager;
+package com.example.springrest.controller.user;
 
 import com.example.springrest.model.dto.ApiResponse;
-import com.example.springrest.model.dto.manager.MenuInfoRequest;
-import com.example.springrest.model.dto.manager.MenuInfoResponse;
+import com.example.springrest.model.dto.user.MenuInfoRequest;
+import com.example.springrest.model.dto.user.MenuInfoResponse;
 import com.example.springrest.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "Manager - Menu Management", description = "메뉴 관리 API")
+@Tag(name = "User - Menu Management", description = "메뉴 관리 API")
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/manager/menus")
+@RequestMapping("/api/v1/user/menus")
 @RequiredArgsConstructor
 public class MenuController {
 

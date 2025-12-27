@@ -23,7 +23,7 @@ public class RoleInfo {
     private LocalDateTime roleEndDt; // 롤_종료_일시
     private String useYn; // 사용 여부
     private LocalDateTime sysInsertDtm; // 시스템_입력_일시
-    private String sysInsertUserId; // 시스템_입력_관리자_아이디
+    private String sysInsertUserId; // 시스템_입력_사용자_아이디
     private LocalDateTime sysUpdateDtm; // 시스템_수정_일시
-    private String sysUpdateUserId; // 시스템_수정_관리자_아이디
+    private String sysUpdateUserId; // 시스템_수정_사용자_아이디
 }

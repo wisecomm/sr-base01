@@ -1,7 +1,7 @@
 package com.example.springrest.service;
 
-import com.example.springrest.model.dto.manager.MenuInfoRequest;
-import com.example.springrest.model.dto.manager.MenuInfoResponse;
+import com.example.springrest.model.dto.user.MenuInfoRequest;
+import com.example.springrest.model.dto.user.MenuInfoResponse;
 import com.example.springrest.model.entity.MenuInfo;
 import com.example.springrest.repository.MenuInfoMapper;
 import lombok.RequiredArgsConstructor;

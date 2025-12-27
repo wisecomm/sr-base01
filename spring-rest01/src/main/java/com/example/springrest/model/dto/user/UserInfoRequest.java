@@ -1,4 +1,4 @@
-package com.example.springrest.model.dto.manager;
+package com.example.springrest.model.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,18 +8,19 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 /**
- * 관리자 정보 응답 DTO
+ * 사용자 정보 요청 DTO
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
+public class UserInfoRequest {
     private String userId;
     private String userEmail;
     private String userMobile;
     private String userName;
     private String userNick;
+    private String userPwd;
     private String userMsg;
     private String userDesc;
     private String userStatCd;
@@ -31,6 +32,4 @@ public class UserInfoResponse {
     private LocalDateTime accountEndDt;
     private LocalDateTime passwordExpireDt;
     private String mdmYn;
-    private LocalDateTime sysInsertDtm;
-    private LocalDateTime sysUpdateDtm;
 }

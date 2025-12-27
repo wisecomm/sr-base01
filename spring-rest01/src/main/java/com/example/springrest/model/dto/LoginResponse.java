@@ -1,5 +1,6 @@
 package com.example.springrest.model.dto;
 
+import com.example.springrest.model.dto.user.UserInfoResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
