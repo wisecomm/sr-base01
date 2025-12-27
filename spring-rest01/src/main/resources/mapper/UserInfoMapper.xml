@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springrest.repository.UserInfoMapper">
+    <resultMap id="UserInfoResultMap" type="com.example.springrest.model.entity.UserInfo">
+        <id property="userId" column="USER_ID"/>
+        <result property="userEmail" column="USER_EMAIL"/>
+        <result property="userMobile" column="USER_MOBILE"/>
+        <result property="userName" column="USER_NAME"/>
+        <result property="userNick" column="USER_NICK"/>
+        <result property="userPwd" column="USER_PWD"/>
+        <result property="userMsg" column="USER_MSG"/>
+        <result property="userDesc" column="USER_DESC"/>
+        <result property="userStatCd" column="USER_STAT_CD"/>
+        <result property="userSnsid" column="USER_SNSID"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="accountNonLock" column="ACCOUNT_NON_LOCK"/>
+        <result property="passwordLockCnt" column="PASSWORD_LOCK_CNT"/>
+        <result property="accountStartDt" column="ACCOUNT_START_DT"/>
+        <result property="accountEndDt" column="ACCOUNT_END_DT"/>
+        <result property="passwordExpireDt" column="PASSWORD_EXPIRE_DT"/>
+        <result property="mdmYn" column="MDM_YN"/>
+        <result property="sysInsertDtm" column="SYS_INSERT_DTM"/>
+        <result property="sysInsertUserId" column="SYS_INSERT_USER_ID"/>
+        <result property="sysUpdateDtm" column="SYS_UPDATE_DTM"/>
+        <result property="sysUpdateUserId" column="SYS_UPDATE_USER_ID"/>
+    </resultMap>
+
+    <sql id="UserInfoColumns">
+        USER_ID, USER_EMAIL, USER_MOBILE, USER_NAME, USER_NICK, USER_PWD, USER_MSG, USER_DESC, 
+        USER_STAT_CD, USER_SNSID, USE_YN, ACCOUNT_NON_LOCK, PASSWORD_LOCK_CNT, 
+        ACCOUNT_START_DT, ACCOUNT_END_DT, PASSWORD_EXPIRE_DT, MDM_YN, 
+        SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
+    </sql>
+
+    <select id="findById" resultMap="UserInfoResultMap">
+        SELECT <include refid="UserInfoColumns"/>
+        FROM CHMM_USER_INFO
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="findAll" resultMap="UserInfoResultMap">
+        SELECT <include refid="UserInfoColumns"/>
+        FROM CHMM_USER_INFO
+    </select>
+
+    <insert id="insert">
+        INSERT INTO CHMM_USER_INFO (
+            <include refid="UserInfoColumns"/>
+        ) VALUES (
+            #{userId}, #{userEmail}, #{userMobile}, #{userName}, #{userNick}, #{userPwd}, #{userMsg}, #{userDesc}, 
+            #{userStatCd}, #{userSnsid}, #{useYn}, #{accountNonLock}, #{passwordLockCnt}, 
+            #{accountStartDt}, #{accountEndDt}, #{passwordExpireDt}, #{mdmYn}, 
+            NOW(), #{sysInsertUserId}, NOW(), #{sysUpdateUserId}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE CHMM_USER_INFO
+        SET USER_EMAIL = #{userEmail},
+            USER_MOBILE = #{userMobile},
+            USER_NAME = #{userName},
+            USER_NICK = #{userNick},
+            USER_PWD = #{userPwd},
+            USER_MSG = #{userMsg},
+            USER_DESC = #{userDesc},
+            USER_STAT_CD = #{userStatCd},
+            USER_SNSID = #{userSnsid},
+            USE_YN = #{useYn},
+            ACCOUNT_NON_LOCK = #{accountNonLock},
+            PASSWORD_LOCK_CNT = #{passwordLockCnt},
+            ACCOUNT_START_DT = #{accountStartDt},
+            ACCOUNT_END_DT = #{accountEndDt},
+            PASSWORD_EXPIRE_DT = #{passwordExpireDt},
+            MDM_YN = #{mdmYn},
+            SYS_UPDATE_DTM = NOW(),
+            SYS_UPDATE_USER_ID = #{sysUpdateUserId}
+        WHERE USER_ID = #{userId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM CHMM_USER_INFO
+        WHERE USER_ID = #{userId}
+    </delete>
+</mapper>

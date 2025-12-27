@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springrest.repository.MenuInfoMapper">
+    <resultMap id="MenuInfoResultMap" type="com.example.springrest.model.entity.MenuInfo">
+        <id property="menuId" column="MENU_ID"/>
+        <result property="menuLvl" column="MENU_LVL"/>
+        <result property="menuUri" column="MENU_URI"/>
+        <result property="menuName" column="MENU_NAME"/>
+        <result property="upperMenuId" column="UPPER_MENU_ID"/>
+        <result property="menuDesc" column="MENU_DESC"/>
+        <result property="menuSeq" column="MENU_SEQ"/>
+        <result property="leftMenuYn" column="LEFT_MENU_YN"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="adminMenuYn" column="ADMIN_MENU_YN"/>
+        <result property="menuHelpUri" column="MENU_HELP_URI"/>
+        <result property="menuScript" column="MENU_SCRIPT"/>
+        <result property="personalDataYn" column="PERSONAL_DATA_YN"/>
+        <result property="sysInsertDtm" column="SYS_INSERT_DTM"/>
+        <result property="sysInsertUserId" column="SYS_INSERT_USER_ID"/>
+        <result property="sysUpdateDtm" column="SYS_UPDATE_DTM"/>
+        <result property="sysUpdateUserId" column="SYS_UPDATE_USER_ID"/>
+    </resultMap>
+
+    <sql id="MenuInfoColumns">
+        MENU_ID, MENU_LVL, MENU_URI, MENU_NAME, UPPER_MENU_ID, MENU_DESC, MENU_SEQ, 
+        LEFT_MENU_YN, USE_YN, ADMIN_MENU_YN, MENU_HELP_URI, MENU_SCRIPT, PERSONAL_DATA_YN, 
+        SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
+    </sql>
+
+    <select id="findById" resultMap="MenuInfoResultMap">
+        SELECT <include refid="MenuInfoColumns"/>
+        FROM CHMM_MENU_INFO
+        WHERE MENU_ID = #{menuId}
+    </select>
+
+    <select id="findAll" resultMap="MenuInfoResultMap">
+        SELECT <include refid="MenuInfoColumns"/>
+        FROM CHMM_MENU_INFO
+        ORDER BY MENU_LVL, MENU_SEQ
+    </select>
+
+    <insert id="insert">
+        INSERT INTO CHMM_MENU_INFO (
+            <include refid="MenuInfoColumns"/>
+        ) VALUES (
+            #{menuId}, #{menuLvl}, #{menuUri}, #{menuName}, #{upperMenuId}, #{menuDesc}, #{menuSeq}, 
+            #{leftMenuYn}, #{useYn}, #{adminMenuYn}, #{menuHelpUri}, #{menuScript}, #{personalDataYn}, 
+            NOW(), #{sysInsertUserId}, NOW(), #{sysUpdateUserId}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE CHMM_MENU_INFO
+        SET MENU_LVL = #{menuLvl},
+            MENU_URI = #{menuUri},
+            MENU_NAME = #{menuName},
+            UPPER_MENU_ID = #{upperMenuId},
+            MENU_DESC = #{menuDesc},
+            MENU_SEQ = #{menuSeq},
+            LEFT_MENU_YN = #{leftMenuYn},
+            USE_YN = #{useYn},
+            ADMIN_MENU_YN = #{adminMenuYn},
+            MENU_HELP_URI = #{menuHelpUri},
+            MENU_SCRIPT = #{menuScript},
+            PERSONAL_DATA_YN = #{personalDataYn},
+            SYS_UPDATE_DTM = NOW(),
+            SYS_UPDATE_USER_ID = #{sysUpdateUserId}
+        WHERE MENU_ID = #{menuId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM CHMM_MENU_INFO
+        WHERE MENU_ID = #{menuId}
+    </delete>
+</mapper>

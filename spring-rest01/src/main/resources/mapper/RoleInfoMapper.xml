@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.springrest.repository.RoleInfoMapper">
+    <resultMap id="RoleInfoResultMap" type="com.example.springrest.model.entity.RoleInfo">
+        <id property="roleId" column="ROLE_ID"/>
+        <result property="roleName" column="ROLE_NAME"/>
+        <result property="roleDesc" column="ROLE_DESC"/>
+        <result property="roleStartDt" column="ROLE_START_DT"/>
+        <result property="roleEndDt" column="ROLE_END_DT"/>
+        <result property="useYn" column="USE_YN"/>
+        <result property="sysInsertDtm" column="SYS_INSERT_DTM"/>
+        <result property="sysInsertUserId" column="SYS_INSERT_USER_ID"/>
+        <result property="sysUpdateDtm" column="SYS_UPDATE_DTM"/>
+        <result property="sysUpdateUserId" column="SYS_UPDATE_USER_ID"/>
+    </resultMap>
+
+    <sql id="RoleInfoColumns">
+        ROLE_ID, ROLE_NAME, ROLE_DESC, ROLE_START_DT, ROLE_END_DT, USE_YN, 
+        SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
+    </sql>
+
+    <select id="findById" resultMap="RoleInfoResultMap">
+        SELECT <include refid="RoleInfoColumns"/>
+        FROM CHMM_ROLE_INFO
+        WHERE ROLE_ID = #{roleId}
+    </select>
+
+    <select id="findAll" resultMap="RoleInfoResultMap">
+        SELECT <include refid="RoleInfoColumns"/>
+        FROM CHMM_ROLE_INFO
+    </select>
+
+    <insert id="insert">
+        INSERT INTO CHMM_ROLE_INFO (
+            <include refid="RoleInfoColumns"/>
+        ) VALUES (
+            #{roleId}, #{roleName}, #{roleDesc}, #{roleStartDt}, #{roleEndDt}, #{useYn}, 
+            NOW(), #{sysInsertUserId}, NOW(), #{sysUpdateUserId}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE CHMM_ROLE_INFO
+        SET ROLE_NAME = #{roleName},
+            ROLE_DESC = #{roleDesc},
+            ROLE_START_DT = #{roleStartDt},
+            ROLE_END_DT = #{roleEndDt},
+            USE_YN = #{useYn},
+            SYS_UPDATE_DTM = NOW(),
+            SYS_UPDATE_USER_ID = #{sysUpdateUserId}
+        WHERE ROLE_ID = #{roleId}
+    </update>
+
+    <delete id="delete">
+        DELETE FROM CHMM_ROLE_INFO
+        WHERE ROLE_ID = #{roleId}
+    </delete>
+</mapper>
