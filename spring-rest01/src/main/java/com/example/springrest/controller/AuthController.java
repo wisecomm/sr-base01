@@ -3,6 +3,7 @@ package com.example.springrest.controller;
 import com.example.springrest.model.dto.ApiResponse;
 import com.example.springrest.model.dto.LoginRequest;
 import com.example.springrest.model.dto.LoginResponse;
+import com.example.springrest.model.dto.TokenRefreshRequest;
 import com.example.springrest.model.dto.TokenValidationRequest;
 import com.example.springrest.model.dto.TokenValidationResponse;
 import com.example.springrest.model.dto.UserInfoResponse;
@@ -48,6 +49,23 @@ public class AuthController {
         LoginResponse response = authService.login(request, ipAddress, userAgent);
 
         log.info("Login successful for user: {}", request.getUsername());
+
+        return ResponseEntity.ok(ApiResponse.success(response));
+    }
+
+    /**
+     * 토큰 갱신 API
+     * 
+     * @param request 토큰 갱신 요청 (refreshToken)
+     * @return 새로운 토큰 정보
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<ApiResponse<LoginResponse>> refresh(
+            @Valid @RequestBody TokenRefreshRequest request) {
+
+        log.info("Refresh token request");
+
+        LoginResponse response = authService.refreshToken(request.getRefreshToken());
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

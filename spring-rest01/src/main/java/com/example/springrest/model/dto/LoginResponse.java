@@ -13,8 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginResponse {
-    private String token;         // JWT 토큰
-    private String tokenType;     // "Bearer"
-    private Long expiresIn;       // 만료 시간 (초 단위, 1800)
+    private String token; // JWT 액세스 토큰
+    private String refreshToken; // 리프래쉬 토큰
+    private String tokenType; // "Bearer"
+    private Long expiresIn; // 만료 시간 (초 단위, 1800)
     private UserInfoResponse user; // 사용자 기본 정보
 }

@@ -18,7 +18,7 @@ import {
     LucideIcon,
     Table,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Tooltip,
@@ -100,15 +100,32 @@ const sidebarItems: SidebarItem[] = [
 
 export function Sidebar() {
     const pathname = usePathname();
+    const [mounted, setMounted] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
         "관리": true,
         "정보": true,
     });
 
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setMounted(true);
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
+
     const toggleGroup = (title: string) => {
         setOpenGroups(prev => ({ ...prev, [title]: !prev[title] }));
     };
+
+    if (!mounted) {
+        return (
+            <div className={cn(
+                "hidden border-r bg-slate-50/40 dark:bg-slate-950/40 md:block transition-all duration-300",
+                isCollapsed ? "w-[70px]" : "md:w-64 lg:w-72"
+            )} />
+        );
+    }
 
     return (
         <TooltipProvider>

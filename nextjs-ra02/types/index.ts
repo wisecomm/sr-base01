@@ -15,6 +15,7 @@ export interface UserInfo {
 
 export interface LoginData {
     token: string;
+    refreshToken: string;
     tokenType: string;
     expiresIn: number;
     user: UserInfo;

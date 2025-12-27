@@ -1,6 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
 import { ApiResponse } from '@/types';
 
+import { getAccessToken } from '@/app/actions/auth-actions';
+import { handleTokenRefresh, handleUnauthorized } from './auth-utils';
+
 // 환경 변수 설정 (클라이언트에서 /api로 요청하면 Next.js Proxy가 처리)
 const baseURL = '/api';
 
@@ -13,9 +16,13 @@ const axiosClient: AxiosInstance = axios.create({
     },
 });
 
-// 2. 요청 인터셉터 (토큰 로직 제거 - Proxy에서 처리)
+// 2. 요청 인터셉터: 토큰 주입
 axiosClient.interceptors.request.use(
     (config) => {
+        const token = getAccessToken();
+        if (token && config.headers) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     },
     (error) => {
@@ -23,39 +30,44 @@ axiosClient.interceptors.request.use(
     }
 );
 
-// 3. 응답 인터셉터 (에러 공통 처리)
+// 3. 응답 인터셉터 (에러 공통 처리 및 401 대응)
 axiosClient.interceptors.response.use(
     (response: AxiosResponse) => {
-        // 응답 데이터만 반환
         return response.data;
     },
-    (error: AxiosError) => {
-        // 공통 에러 처리 로직
+    async (error: AxiosError) => {
+        const originalRequest = error.config;
+
+        // 401: 인증 실패 (토큰 만료 등)
+        if (error.response?.status === 401 && originalRequest) {
+            console.error('인증 실패: 토큰이 만료되었을 수 있습니다.');
+
+            try {
+                // 토큰 갱신 시도
+                const newToken = await handleTokenRefresh();
+
+                if (newToken) {
+                    // 갱신 성공 시 원래 요청 재시도
+                    if (originalRequest.headers) {
+                        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+                    }
+                    return axiosClient(originalRequest);
+                }
+            } catch (refreshError) {
+                console.error('토큰 갱신 중 에러 발생:', refreshError);
+            }
+
+            // 갱신 실패 또는 로직 부재 시 로그아웃 처리
+            handleUnauthorized();
+        }
+
+        // 기타 에러 처리
         if (error.response) {
             const { status } = error.response;
-
-            // 401: 인증 실패
-            if (status === 401) {
-                console.error('인증 실패: 로그인이 필요합니다.');
-                // 필요 시 리다이렉트 또는 로그아웃 처리 로직 추가
-                // if (typeof window !== 'undefined') window.location.href = '/login';
-            }
-
-            // 403: 권한 없음
-            if (status === 403) {
-                console.error('권한이 없습니다.');
-            }
-
-            // 500: 서버 에러
-            if (status >= 500) {
-                console.error('서버 에러가 발생했습니다.');
-            }
+            if (status === 403) console.error('권한이 없습니다.');
+            if (status >= 500) console.error('서버 에러가 발생했습니다.');
         } else if (error.request) {
-            // 요청은 보냈으나 응답을 받지 못한 경우
             console.error('서버로부터 응답이 없습니다.');
-        } else {
-            // 요청 설정 중에 에러가 발생한 경우
-            console.error('요청 설정 중 에러 발생:', error.message);
         }
 
         return Promise.reject(error);

@@ -22,7 +22,7 @@ import java.util.Date;
 @Component
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    
+
     private final JwtProperties jwtProperties;
     private SecretKey key;
 
@@ -38,8 +38,9 @@ public class JwtTokenProvider {
 
     /**
      * JWT 토큰 생성
+     * 
      * @param username 사용자명
-     * @param role 사용자 역할
+     * @param role     사용자 역할
      * @return JWT 토큰 문자열
      */
     public String generateToken(String username, UserRole role) {
@@ -49,6 +50,26 @@ public class JwtTokenProvider {
         return Jwts.builder()
                 .subject(username)
                 .claim("role", role.name())
+                .claim("type", "ACCESS")
+                .issuedAt(now)
+                .expiration(expiryDate)
+                .signWith(getKey(), Jwts.SIG.HS256)
+                .compact();
+    }
+
+    /**
+     * Refresh Token 생성
+     * 
+     * @param username 사용자명
+     * @return Refresh Token 문자열
+     */
+    public String generateRefreshToken(String username) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshExpiration());
+
+        return Jwts.builder()
+                .subject(username)
+                .claim("type", "REFRESH")
                 .issuedAt(now)
                 .expiration(expiryDate)
                 .signWith(getKey(), Jwts.SIG.HS256)
@@ -57,6 +78,7 @@ public class JwtTokenProvider {
 
     /**
      * JWT 토큰에서 사용자명 추출
+     * 
      * @param token JWT 토큰
      * @return 사용자명
      */
@@ -66,6 +88,7 @@ public class JwtTokenProvider {
 
     /**
      * JWT 토큰에서 역할 추출
+     * 
      * @param token JWT 토큰
      * @return 사용자 역할
      */
@@ -76,10 +99,11 @@ public class JwtTokenProvider {
 
     /**
      * JWT 토큰 유효성 검증
+     * 
      * @param token JWT 토큰
      * @return 유효하면 true
      * @throws InvalidTokenException 토큰 형식이 잘못되었거나 서명이 유효하지 않을 때
-     * @throws ExpiredJwtException 토큰이 만료되었을 때
+     * @throws ExpiredJwtException   토큰이 만료되었을 때
      */
     public boolean validateToken(String token) {
         try {
@@ -105,6 +129,7 @@ public class JwtTokenProvider {
 
     /**
      * JWT 토큰에서 Claims 추출
+     * 
      * @param token JWT 토큰
      * @return Claims
      */
@@ -115,12 +140,22 @@ public class JwtTokenProvider {
                 .parseSignedClaims(token)
                 .getPayload();
     }
-    
+
     /**
      * JWT 토큰의 만료 시간(밀리초) 반환
+     * 
      * @return 만료 시간 (밀리초)
      */
     public Long getExpirationMs() {
         return jwtProperties.getExpiration();
+    }
+
+    /**
+     * Refresh Token의 만료 시간(밀리초) 반환
+     * 
+     * @return 만료 시간 (밀리초)
+     */
+    public Long getRefreshExpirationMs() {
+        return jwtProperties.getRefreshExpiration();
     }
 }

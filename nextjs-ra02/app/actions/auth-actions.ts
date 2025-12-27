@@ -8,6 +8,7 @@ import { ApiResponse, LoginData } from "@/types";
 export const setSession = (data: LoginData) => {
     if (typeof window !== "undefined") {
         localStorage.setItem("accessToken", data.token);
+        localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("userInfo", JSON.stringify(data.user));
     }
 };
@@ -19,9 +20,26 @@ export const getAccessToken = () => {
     return null;
 };
 
+export const getRefreshToken = () => {
+    if (typeof window !== "undefined") {
+        return localStorage.getItem("refreshToken");
+    }
+    return null;
+};
+
+export const updateAccessToken = (token: string, refreshToken?: string) => {
+    if (typeof window !== "undefined") {
+        localStorage.setItem("accessToken", token);
+        if (refreshToken) {
+            localStorage.setItem("refreshToken", refreshToken);
+        }
+    }
+};
+
 export const clearSession = () => {
     if (typeof window !== "undefined") {
         localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
         localStorage.removeItem("userInfo");
     }
 };
