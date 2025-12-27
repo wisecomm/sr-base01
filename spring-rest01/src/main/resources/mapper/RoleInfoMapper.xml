@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.springrest.repository.RoleInfoMapper">
-    <resultMap id="RoleInfoResultMap" type="com.example.springrest.model.entity.RoleInfo">
+<mapper namespace="com.example.springrest.domain.role.repository.RoleInfoMapper">
+    <resultMap id="RoleInfoResultMap" type="com.example.springrest.domain.role.model.entity.RoleInfo">
         <id property="roleId" column="ROLE_ID"/>
         <result property="roleName" column="ROLE_NAME"/>
         <result property="roleDesc" column="ROLE_DESC"/>
