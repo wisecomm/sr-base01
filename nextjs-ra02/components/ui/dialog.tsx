@@ -8,16 +8,17 @@ interface DialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     children: React.ReactNode;
+    closeOnOutsideClick?: boolean;
 }
 
-export function Dialog({ open, onOpenChange, children }: DialogProps) {
+export function Dialog({ open, onOpenChange, children, closeOnOutsideClick = true }: DialogProps) {
     if (!open) return null;
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div
                 className="fixed inset-0 bg-black/50 backdrop-blur-sm"
-                onClick={() => onOpenChange(false)}
+                onClick={() => closeOnOutsideClick && onOpenChange(false)}
             />
             <div className="relative z-50 w-full max-w-lg bg-white dark:bg-slate-900 rounded-lg shadow-lg animate-in fade-in zoom-in duration-200">
                 {children}

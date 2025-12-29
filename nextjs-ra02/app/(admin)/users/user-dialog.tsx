@@ -12,7 +12,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogClose,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -90,9 +89,9 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
             <DialogContent className="sm:max-w-[425px]">
-                <DialogClose onClick={() => onOpenChange(false)} />
+
                 <DialogHeader>
                     <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
                     <DialogDescription>
