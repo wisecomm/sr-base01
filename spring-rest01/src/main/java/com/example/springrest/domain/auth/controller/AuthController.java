@@ -6,7 +6,7 @@ import com.example.springrest.domain.auth.model.LoginResponse;
 import com.example.springrest.domain.auth.model.TokenRefreshRequest;
 import com.example.springrest.domain.auth.model.TokenValidationRequest;
 import com.example.springrest.domain.auth.model.TokenValidationResponse;
-import com.example.springrest.domain.user.model.dto.UserInfoResponse;
+import com.example.springrest.domain.user.model.entity.UserInfo;
 import com.example.springrest.domain.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -91,13 +91,13 @@ public class AuthController {
      * @return 인증된 사용자 정보
      */
     @GetMapping("/me")
-    public ResponseEntity<ApiResponse<UserInfoResponse>> getCurrentUser() {
+    public ResponseEntity<ApiResponse<UserInfo>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
 
         log.info("Get current user info: {}", userId);
 
-        UserInfoResponse response = authService.getCurrentUser(userId);
+        UserInfo response = authService.getCurrentUser(userId);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

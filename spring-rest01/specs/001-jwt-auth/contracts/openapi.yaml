@@ -51,13 +51,13 @@ paths:
               normalUser:
                 summary: 일반 사용자 로그인
                 value:
-                  username: "testuser"
-                  password: "password123"
+                  userId: "testuser"
+                  userPwd: "password123"
               adminUser:
                 summary: 관리자 로그인
                 value:
-                  username: "admin"
-                  password: "admin123"
+                  userId: "admin"
+                  userPwd: "admin123"
       responses:
         '200':
           description: 로그인 성공
@@ -81,10 +81,9 @@ paths:
                       tokenType: "Bearer"
                       expiresIn: 1800
                       user:
-                        id: 1
-                        username: "testuser"
-                        email: "test@example.com"
-                        role: "USER"
+                        userId: "testuser"
+                        userEmail: "test@example.com"
+                        userRole: "ADMIN"
         '400':
           description: 잘못된 요청 (필수 필드 누락 또는 형식 오류)
           content:
@@ -169,7 +168,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/UserInfoResponse'
+                        $ref: '#/components/schemas/UserInfo'
               examples:
                 success:
                   summary: 조회 성공
@@ -177,10 +176,9 @@ paths:
                     code: "200"
                     message: "SUCCESS"
                     data:
-                      id: 1
-                      username: "testuser"
-                      email: "test@example.com"
-                      role: "USER"
+                      userId: "testuser"
+                      userEmail: "test@example.com"
+                      userRole: "ADMIN"
         '401':
           description: 인증 실패 (토큰 없음, 만료, 또는 유효하지 않음)
           content:
@@ -241,7 +239,7 @@ paths:
                   - type: object
                     properties:
                       data:
-                        $ref: '#/components/schemas/UserInfoResponse'
+                        $ref: '#/components/schemas/UserInfo'
               examples:
                 success:
                   summary: 검증 성공
@@ -249,10 +247,9 @@ paths:
                     code: "200"
                     message: "SUCCESS"
                     data:
-                      id: 1
-                      username: "testuser"
-                      email: "test@example.com"
-                      role: "USER"
+                      userId: "testuser"
+                      userEmail: "test@example.com"
+                      userRole: "ADMIN"
         '400':
           description: 잘못된 요청 (토큰 필드 누락)
           content:
@@ -317,16 +314,16 @@ components:
     LoginRequest:
       type: object
       required:
-        - username
-        - password
+        - userId
+        - userPwd
       properties:
-        username:
+        userId:
           type: string
           minLength: 3
           maxLength: 50
-          description: 사용자명 (영문/숫자/언더스코어)
+          description: 사용자 아이디
           example: "testuser"
-        password:
+        userPwd:
           type: string
           minLength: 8
           maxLength: 100
@@ -351,30 +348,29 @@ components:
           description: 토큰 만료 시간 (초 단위)
           example: 1800
         user:
-          $ref: '#/components/schemas/UserInfoResponse'
+          $ref: '#/components/schemas/UserInfo'
 
-    UserInfoResponse:
+    UserInfo:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
+        userId:
+          type: string
           description: 사용자 ID
-          example: 1
-        username:
+          example: "testuser"
+        userName:
           type: string
           description: 사용자명
-          example: "testuser"
-        email:
+          example: "테스트"
+        userEmail:
           type: string
           format: email
           description: 이메일 주소
           example: "test@example.com"
-        role:
+        userRole:
           type: string
           enum: [USER, ADMIN]
           description: 사용자 역할
-          example: "USER"
+          example: "ADMIN"
 
     TokenValidationRequest:
       type: object

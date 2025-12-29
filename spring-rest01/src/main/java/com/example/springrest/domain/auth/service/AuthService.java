@@ -3,7 +3,6 @@ package com.example.springrest.domain.auth.service;
 import com.example.springrest.domain.auth.model.LoginRequest;
 import com.example.springrest.domain.auth.model.LoginResponse;
 import com.example.springrest.domain.auth.model.TokenValidationResponse;
-import com.example.springrest.domain.user.model.dto.UserInfoResponse;
 import com.example.springrest.domain.user.model.entity.UserInfo;
 import com.example.springrest.domain.user.repository.UserInfoMapper;
 import com.example.springrest.domain.user.model.enums.UserRole;
@@ -62,7 +61,7 @@ public class AuthService {
         Long expiresIn = jwtTokenProvider.getExpirationMs();
 
         // 응답 생성
-        UserInfoResponse userInfo = convertToUserInfoResponse(user, role);
+        user.setUserRole(role);
 
         log.info("User {} logged in successfully", userId);
 
@@ -71,7 +70,7 @@ public class AuthService {
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .expiresIn(expiresIn)
-                .user(userInfo)
+                .user(user)
                 .build();
     }
 
@@ -107,7 +106,7 @@ public class AuthService {
         Long expiresIn = jwtTokenProvider.getExpirationMs();
 
         // 사용자 정보 생성
-        UserInfoResponse userInfo = convertToUserInfoResponse(user, role);
+        user.setUserRole(role);
 
         log.info("Token refreshed for user: {}", userId);
 
@@ -116,7 +115,7 @@ public class AuthService {
                 .refreshToken(newRefreshToken)
                 .tokenType("Bearer")
                 .expiresIn(expiresIn)
-                .user(userInfo)
+                .user(user)
                 .build();
     }
 
@@ -127,31 +126,14 @@ public class AuthService {
      * @return 사용자 정보
      * @throws IllegalArgumentException 사용자를 찾을 수 없을 때
      */
-    public UserInfoResponse getCurrentUser(String userId) {
+    public UserInfo getCurrentUser(String userId) {
         UserInfo user = userInfoMapper.findById(userId);
         if (user == null) {
             throw new IllegalArgumentException("User not found: " + userId);
         }
 
-        return convertToUserInfoResponse(user, UserRole.ADMIN);
-    }
-
-    private UserInfoResponse convertToUserInfoResponse(UserInfo user, UserRole role) {
-        return UserInfoResponse.builder()
-                .userRole(role)
-                .userId(user.getUserId())
-                .userEmail(user.getUserEmail())
-                .userMobile(user.getUserMobile())
-                .userName(user.getUserName())
-                .userNick(user.getUserNick())
-                .userMsg(user.getUserMsg())
-                .userDesc(user.getUserDesc())
-                .userStatCd(user.getUserStatCd())
-                .userSnsid(user.getUserSnsid())
-                .useYn(user.getUseYn())
-                .sysInsertDtm(user.getSysInsertDtm())
-                .sysUpdateDtm(user.getSysUpdateDtm())
-                .build();
+        user.setUserRole(UserRole.ADMIN);
+        return user;
     }
 
     /**

@@ -2,7 +2,7 @@ package com.example.springrest.domain.user.controller;
 
 import com.example.springrest.global.model.dto.ApiResponse;
 import com.example.springrest.domain.user.model.dto.UserInfoRequest;
-import com.example.springrest.domain.user.model.dto.UserInfoResponse;
+import com.example.springrest.domain.user.model.entity.UserInfo;
 import com.example.springrest.global.model.dto.PageResponse;
 import com.example.springrest.domain.user.model.dto.UserRoleAssignRequest;
 import com.example.springrest.domain.user.service.UserService;
@@ -25,7 +25,7 @@ public class UserController {
 
     @Operation(summary = "사용자 목록 조회")
     @GetMapping
-    public ResponseEntity<ApiResponse<PageResponse<UserInfoResponse>>> getAllUsers(
+    public ResponseEntity<ApiResponse<PageResponse<UserInfo>>> getAllUsers(
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(ApiResponse.success(userService.getAllUsers(page, size)));
@@ -33,8 +33,8 @@ public class UserController {
 
     @Operation(summary = "사용자 상세 조회")
     @GetMapping("/{userId}")
-    public ResponseEntity<ApiResponse<UserInfoResponse>> getUserById(@PathVariable String userId) {
-        UserInfoResponse user = userService.getUserById(userId);
+    public ResponseEntity<ApiResponse<UserInfo>> getUserById(@PathVariable String userId) {
+        UserInfo user = userService.getUserById(userId);
         return user != null ? ResponseEntity.ok(ApiResponse.success(user)) : ResponseEntity.notFound().build();
     }
 

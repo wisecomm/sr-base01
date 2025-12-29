@@ -1,6 +1,6 @@
 package com.example.springrest.domain.auth.model;
 
-import com.example.springrest.domain.user.model.dto.UserInfoResponse;
+import com.example.springrest.domain.user.model.entity.UserInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +18,5 @@ public class LoginResponse {
     private String refreshToken; // 리프래쉬 토큰
     private String tokenType; // "Bearer"
     private Long expiresIn; // 만료 시간 (초 단위, 1800)
-    private UserInfoResponse user; // 사용자 기본 정보
+    private UserInfo user; // 사용자 기본 정보
 }

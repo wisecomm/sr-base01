@@ -219,7 +219,7 @@ public class LoginResponse {
     private String token;         // JWT 토큰
     private String tokenType;     // "Bearer"
     private Long expiresIn;       // 만료 시간 (초 단위, 1800)
-    private UserInfoResponse user; // 사용자 기본 정보
+    private UserInfo user; // 사용자 기본 정보
 }
 ```
 
@@ -245,7 +245,7 @@ public class LoginResponse {
 
 ---
 
-## 5. DTO: UserInfoResponse (사용자 정보 응답)
+## 5. Entity: UserInfo (사용자 정보)
 
 ### 목적
 JWT 토큰에서 추출한 사용자 정보를 반환합니다.
@@ -265,11 +265,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserInfoResponse {
-    private Long id;
-    private String username;
-    private String email;
-    private UserRole role;
+public class UserInfo {
+    private String userId;
+    private String userEmail;
+    private UserRole userRole;
 }
 ```
 

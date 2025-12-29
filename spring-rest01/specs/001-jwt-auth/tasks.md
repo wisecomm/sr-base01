@@ -72,8 +72,8 @@ Spring Boot 프로젝트 기준:
 - [x] T015 [P] [US1] User 엔티티 생성 (src/main/java/com/example/springrest/model/entity/User.java: id, username, password, email, role, createdAt, updatedAt)
 - [x] T016 [P] [US1] UserRole Enum 생성 (src/main/java/com/example/springrest/model/enums/UserRole.java: USER, ADMIN)
 - [x] T017 [P] [US1] LoginRequest DTO 생성 (src/main/java/com/example/springrest/model/dto/LoginRequest.java: @NotBlank username, @Size(min=8) password, Jakarta Validation)
-- [x] T018 [P] [US1] LoginResponse DTO 생성 (src/main/java/com/example/springrest/model/dto/LoginResponse.java: token, tokenType, expiresIn, UserInfoResponse)
-- [x] T019 [P] [US1] UserInfoResponse DTO 생성 (src/main/java/com/example/springrest/model/dto/UserInfoResponse.java: id, username, email, role)
+- [x] T018 [P] [US1] LoginResponse DTO 생성 (src/main/java/com/example/springrest/model/dto/LoginResponse.java: token, tokenType, expiresIn, UserInfo)
+- [x] T019 [P] [US1] UserInfo 엔티티 설정 (com.example.springrest.domain.user.model.entity.UserInfo.java: userId, userName, userEmail, userRole)
 
 **Repository 계층 (MyBatis)**:
 - [x] T020 [US1] UserMapper 인터페이스 생성 (src/main/java/com/example/springrest/repository/UserMapper.java: findByUsername, @Mapper)
@@ -166,14 +166,14 @@ Spring Boot 프로젝트 기준:
 **DTO**:
 - [x] T050 [P] [US3] TokenValidationRequest DTO 생성 (src/main/java/com/example/springrest/model/dto/TokenValidationRequest.java: @NotBlank token)
 - [x] T051 [P] [US3] TokenValidationResponse DTO 생성 (valid, username, role, message 필드)
-- [x] T052 [P] [US3] UserInfoResponse에 lastLoginAt 필드 추가
+- [x] T052 [P] [US3] UserInfo에 lastLoginAt 필드 추가 안내 (현 시점에는 생략 가능)
 
 **JWT 유틸리티 확장**:
 - [x] T053 [US3] JwtTokenProvider에 정보 추출 메서드 추가 (extractUsername, extractRole, extractUserId, getClaims public 메서드)
 
 **Service 계층**:
-- [x] T054 [US3] AuthService에 getCurrentUser 메서드 추가 (SecurityContext에서 인증 정보 가져오기, UserMapper로 DB 조회, UserInfoResponse 반환) - T020 의존
-- [x] T055 [US3] AuthService에 validateToken 메서드 추가 (JwtTokenProvider로 토큰 검증, 사용자 정보 추출, UserInfoResponse 반환) - T051 의존
+- [x] T054 [US3] AuthService에 getCurrentUser 메서드 추가 (SecurityContext에서 인증 정보 가져오기, UserMapper로 DB 조회, UserInfo 반환) - T020 의존
+- [x] T055 [US3] AuthService에 validateToken 메서드 추가 (JwtTokenProvider로 토큰 검증, 사용자 정보 추출, UserInfo 반환) - T051 의존
 
 **Controller 계층**:
 - [x] T056 [US3] AuthController에 GET /api/v1/auth/me 엔드포인트 추가 (@GetMapping, @PreAuthorize, getCurrentUser 호출, Swagger 보안 스킴) - T052 의존
@@ -264,7 +264,7 @@ Task T015: "User 엔티티 생성 (User.java)"
 Task T016: "UserRole Enum 생성 (UserRole.java)"
 Task T017: "LoginRequest DTO 생성 (LoginRequest.java)"
 Task T018: "LoginResponse DTO 생성 (LoginResponse.java)"
-Task T019: "UserInfoResponse DTO 생성 (UserInfoResponse.java)"
+Task T019: "UserInfo 엔티티 설정 (UserInfo.java)"
 
 # User Story 1의 예외 클래스를 동시에 생성:
 Task T028: "AuthenticationException 생성"

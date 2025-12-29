@@ -95,7 +95,7 @@ src/main/java/com/example/springrest/
 │   │   ├── LoginRequest.java     # 로그인 요청 DTO
 │   │   ├── LoginResponse.java    # 로그인 응답 DTO (토큰 포함)
 │   │   ├── TokenValidationRequest.java  # 토큰 검증 요청
-│   │   ├── UserInfoResponse.java # 토큰 기반 사용자 정보 응답
+│   │   ├── UserInfo.java # 사용자 정보 엔티티
 │   │   └── ApiResponse.java      # 표준 응답 포맷 {"code", "message", "data"}
 │   └── enums/           # 열거형
 │       └── UserRole.java         # USER, ADMIN 역할

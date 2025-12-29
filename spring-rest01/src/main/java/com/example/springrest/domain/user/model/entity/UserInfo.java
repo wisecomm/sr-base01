@@ -1,5 +1,7 @@
 package com.example.springrest.domain.user.model.entity;
 
+import com.example.springrest.domain.user.model.enums.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,10 +19,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserInfo {
     private String userId; // 사용자_아이디
+    private UserRole userRole; // 사용자_역할
     private String userEmail; // 사용자_이메일
     private String userMobile; // 사용자_모바일
     private String userName; // 사용자_명
     private String userNick; // 사용자_닉네임
+    @JsonIgnore
     private String userPwd; // 사용자_암호
     private String userMsg; // 사용자_메시지
     private String userDesc; // 사용자_설명

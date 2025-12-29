@@ -1,8 +1,8 @@
 package com.example.springrest.domain.user.service;
 
 import com.example.springrest.domain.user.model.dto.UserInfoRequest;
-import com.example.springrest.domain.user.model.dto.UserInfoResponse;
 import com.example.springrest.domain.user.model.entity.UserInfo;
+import com.example.springrest.domain.user.model.enums.UserRole;
 import com.example.springrest.domain.user.model.entity.UserRoleMap;
 import com.example.springrest.domain.user.repository.UserInfoMapper;
 import com.example.springrest.domain.user.repository.UserRoleMapper;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 사용자 정보 서비스
@@ -30,21 +29,20 @@ public class UserService {
     private final UserRoleMapper userRoleMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public PageResponse<UserInfoResponse> getAllUsers(int page, int size) {
-        PageHelper.startPage(page, size);
+    public PageResponse<UserInfo> getAllUsers(int page, int size) {
+        PageHelper.startPage(page, size, "USER_ID ASC");
         List<UserInfo> users = userInfoMapper.findAll();
         PageInfo<UserInfo> pageInfo = new PageInfo<>(users);
 
-        List<UserInfoResponse> content = users.stream()
-                .map(this::convertToResponse)
-                .collect(Collectors.toList());
-
-        return PageResponse.of(pageInfo, content);
+        return PageResponse.of(pageInfo, users);
     }
 
-    public UserInfoResponse getUserById(String userId) {
+    public UserInfo getUserById(String userId) {
         UserInfo user = userInfoMapper.findById(userId);
-        return user != null ? convertToResponse(user) : null;
+        if (user != null) {
+            user.setUserRole(UserRole.ADMIN);
+        }
+        return user;
     }
 
     @Transactional
@@ -80,23 +78,6 @@ public class UserService {
                     .build();
             userRoleMapper.insert(mapping);
         }
-    }
-
-    private UserInfoResponse convertToResponse(UserInfo entity) {
-        return UserInfoResponse.builder()
-                .userId(entity.getUserId())
-                .userEmail(entity.getUserEmail())
-                .userMobile(entity.getUserMobile())
-                .userName(entity.getUserName())
-                .userNick(entity.getUserNick())
-                .userMsg(entity.getUserMsg())
-                .userDesc(entity.getUserDesc())
-                .userStatCd(entity.getUserStatCd())
-                .userSnsid(entity.getUserSnsid())
-                .useYn(entity.getUseYn())
-                .sysInsertDtm(entity.getSysInsertDtm())
-                .sysUpdateDtm(entity.getSysUpdateDtm())
-                .build();
     }
 
     private UserInfo convertToEntity(UserInfoRequest request) {
