@@ -88,7 +88,7 @@ export default function PaserverPage() {
 
         <div className="w-full space-y-4">
           <DataTableToolbar table={table} />
-          <DataTable table={table} />
+          <DataTable table={table} showSeparators={false} />
         </div>
       </div>
     </div>

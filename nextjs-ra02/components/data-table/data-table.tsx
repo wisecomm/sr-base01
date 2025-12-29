@@ -26,17 +26,19 @@ import {
 
 interface DataTableProps<TData> {
     table: TanstackTable<TData>;
+    showSeparators?: boolean;
 }
 
 export function DataTable<TData>({
     table,
+    showSeparators = false,
 }: DataTableProps<TData>) {
     const [clickedRowId, setClickedRowId] = React.useState<string | null>(null);
 
     return (
         <div className="w-full space-y-4">
             <div className="rounded-md border bg-white dark:bg-slate-900">
-                <Table className="table-fixed">
+                <Table className="table-fixed" showSeparators={showSeparators}>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>

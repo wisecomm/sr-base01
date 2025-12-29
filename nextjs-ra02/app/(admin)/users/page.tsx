@@ -139,7 +139,7 @@ export default function UsersPage() {
                         onRefresh={fetchData}
                         isLoading={isLoading}
                     />
-                    <DataTable table={table} />
+                    <DataTable table={table} showSeparators={true} />
                 </div>
             </div>
 
