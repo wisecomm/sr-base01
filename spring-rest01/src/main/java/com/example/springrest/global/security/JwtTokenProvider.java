@@ -39,16 +39,16 @@ public class JwtTokenProvider {
     /**
      * JWT 토큰 생성
      * 
-     * @param username 사용자명
-     * @param role     사용자 역할
+     * @param userId 사용자 아이디
+     * @param role   사용자 역할
      * @return JWT 토큰 문자열
      */
-    public String generateToken(String username, UserRole role) {
+    public String generateToken(String userId, UserRole role) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getExpiration());
 
         return Jwts.builder()
-                .subject(username)
+                .subject(userId)
                 .claim("role", role.name())
                 .claim("type", "ACCESS")
                 .issuedAt(now)
@@ -60,15 +60,15 @@ public class JwtTokenProvider {
     /**
      * Refresh Token 생성
      * 
-     * @param username 사용자명
+     * @param userId 사용자 아이디
      * @return Refresh Token 문자열
      */
-    public String generateRefreshToken(String username) {
+    public String generateRefreshToken(String userId) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshExpiration());
 
         return Jwts.builder()
-                .subject(username)
+                .subject(userId)
                 .claim("type", "REFRESH")
                 .issuedAt(now)
                 .expiration(expiryDate)
@@ -77,12 +77,12 @@ public class JwtTokenProvider {
     }
 
     /**
-     * JWT 토큰에서 사용자명 추출
+     * JWT 토큰에서 사용자 아이디 추출
      * 
      * @param token JWT 토큰
-     * @return 사용자명
+     * @return 사용자 아이디
      */
-    public String extractUsername(String token) {
+    public String extractUserId(String token) {
         return getClaims(token).getSubject();
     }
 

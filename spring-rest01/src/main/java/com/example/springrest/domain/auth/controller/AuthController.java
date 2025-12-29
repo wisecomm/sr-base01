@@ -44,11 +44,11 @@ public class AuthController {
         String ipAddress = getClientIpAddress(httpRequest);
         String userAgent = httpRequest.getHeader("User-Agent");
 
-        log.info("Login attempt for user: {} from IP: {}", request.getUsername(), ipAddress);
+        log.info("Login attempt for user: {} from IP: {}", request.getUserId(), ipAddress);
 
         LoginResponse response = authService.login(request, ipAddress, userAgent);
 
-        log.info("Login successful for user: {}", request.getUsername());
+        log.info("Login successful for user: {}", request.getUserId());
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }
@@ -93,11 +93,11 @@ public class AuthController {
     @GetMapping("/me")
     public ResponseEntity<ApiResponse<UserInfoResponse>> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        String userId = authentication.getName();
 
-        log.info("Get current user info: {}", username);
+        log.info("Get current user info: {}", userId);
 
-        UserInfoResponse response = authService.getCurrentUser(username);
+        UserInfoResponse response = authService.getCurrentUser(userId);
 
         return ResponseEntity.ok(ApiResponse.success(response));
     }

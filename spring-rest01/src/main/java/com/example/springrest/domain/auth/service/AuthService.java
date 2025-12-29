@@ -40,17 +40,17 @@ public class AuthService {
      */
     @Transactional
     public LoginResponse login(LoginRequest request, String ipAddress, String userAgent) {
-        String username = request.getUsername();
+        String userId = request.getUserId();
 
-        // 사용자 조회 (USER_ID를 username으로 사용)
-        UserInfo user = userInfoMapper.findById(username);
+        // 사용자 조회 (USER_ID 사용)
+        UserInfo user = userInfoMapper.findById(userId);
         if (user == null) {
-            throw new AuthenticationException("Invalid username or password");
+            throw new AuthenticationException("Invalid User ID or password");
         }
 
         // 비밀번호 검증
-        if (!passwordEncoder.matches(request.getPassword(), user.getUserPwd())) {
-            throw new AuthenticationException("Invalid username or password");
+        if (!passwordEncoder.matches(request.getUserPwd(), user.getUserPwd())) {
+            throw new AuthenticationException("Invalid User ID or password");
         }
 
         // JWT 토큰 생성 (기본적으로 ADMIN 역할 부여 또는 매핑 테이블에서 가져와야 함)
@@ -64,7 +64,7 @@ public class AuthService {
         // 응답 생성
         UserInfoResponse userInfo = convertToUserInfoResponse(user, role);
 
-        log.info("User {} logged in successfully", username);
+        log.info("User {} logged in successfully", userId);
 
         return LoginResponse.builder()
                 .token(token)
@@ -89,11 +89,11 @@ public class AuthService {
             throw new JwtException("Invalid refresh token");
         }
 
-        // 사용자명 추출
-        String username = jwtTokenProvider.extractUsername(refreshToken);
+        // 사용자 아이디 추출
+        String userId = jwtTokenProvider.extractUserId(refreshToken);
 
         // 사용자 조회
-        UserInfo user = userInfoMapper.findById(username);
+        UserInfo user = userInfoMapper.findById(userId);
         if (user == null) {
             throw new JwtException("User not found");
         }
@@ -109,7 +109,7 @@ public class AuthService {
         // 사용자 정보 생성
         UserInfoResponse userInfo = convertToUserInfoResponse(user, role);
 
-        log.info("Token refreshed for user: {}", username);
+        log.info("Token refreshed for user: {}", userId);
 
         return LoginResponse.builder()
                 .token(newToken)
@@ -127,10 +127,10 @@ public class AuthService {
      * @return 사용자 정보
      * @throws IllegalArgumentException 사용자를 찾을 수 없을 때
      */
-    public UserInfoResponse getCurrentUser(String username) {
-        UserInfo user = userInfoMapper.findById(username);
+    public UserInfoResponse getCurrentUser(String userId) {
+        UserInfo user = userInfoMapper.findById(userId);
         if (user == null) {
-            throw new IllegalArgumentException("User not found: " + username);
+            throw new IllegalArgumentException("User not found: " + userId);
         }
 
         return convertToUserInfoResponse(user, UserRole.ADMIN);
@@ -138,9 +138,7 @@ public class AuthService {
 
     private UserInfoResponse convertToUserInfoResponse(UserInfo user, UserRole role) {
         return UserInfoResponse.builder()
-                .username(user.getUserId())
-                .email(user.getUserEmail())
-                .role(role)
+                .userRole(role)
                 .userId(user.getUserId())
                 .userEmail(user.getUserEmail())
                 .userMobile(user.getUserMobile())
@@ -169,11 +167,11 @@ public class AuthService {
                 return TokenValidationResponse.invalid("Invalid token");
             }
 
-            // 사용자명과 역할 추출
-            String username = jwtTokenProvider.extractUsername(token);
+            // 사용자 아이디와 역할 추출
+            String userId = jwtTokenProvider.extractUserId(token);
             UserRole role = jwtTokenProvider.extractRole(token);
 
-            return TokenValidationResponse.valid(username, role);
+            return TokenValidationResponse.valid(userId, role);
 
         } catch (JwtException e) {
             log.warn("Token validation failed: {}", e.getMessage());

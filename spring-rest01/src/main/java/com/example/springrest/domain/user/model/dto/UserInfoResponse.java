@@ -16,10 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserInfoResponse {
-    // 호환성을 위한 필드
-    private String username;
-    private String email;
-    private UserRole role;
+    // 역할 정보
+    private UserRole userRole;
 
     // 상세 필드 (CHMM_USER_INFO 매핑)
     private String userId;

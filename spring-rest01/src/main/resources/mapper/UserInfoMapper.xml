@@ -36,6 +36,7 @@
     <select id="findAll" resultMap="UserInfoResultMap">
         SELECT <include refid="UserInfoColumns"/>
         FROM CHMM_USER_INFO
+        ORDER BY USER_ID
     </select>
 
     <insert id="insert">
@@ -54,7 +55,6 @@
             USER_MOBILE = #{userMobile},
             USER_NAME = #{userName},
             USER_NICK = #{userNick},
-            USER_PWD = #{userPwd},
             USER_MSG = #{userMsg},
             USER_DESC = #{userDesc},
             USER_STAT_CD = #{userStatCd},

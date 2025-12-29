@@ -20,10 +20,10 @@ import {
 import { useRouter } from 'next/navigation';
 
 const accountFormSchema = z.object({
-  userid: z.string().min(1, {
+  userId: z.string().min(1, {
     message: "사용자 아이디을 입력하세요.",
   }),
-  password: z.string().min(4, {
+  userPwd: z.string().min(4, {
     message: "패스워드는 4자리 이상입니다.",
   }),
 });
@@ -31,8 +31,8 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 const defaultValues: Partial<AccountFormValues> = {
-  userid: "admin",
-  password: "password123",
+  userId: "admin",
+  userPwd: "password123",
 };
 
 function Login() {
@@ -51,8 +51,8 @@ function Login() {
 
         // Server Action 호출
         const formData = new FormData();
-        formData.append('userid', data.userid);
-        formData.append('password', data.password);
+        formData.append('userid', data.userId);
+        formData.append('password', data.userPwd);
 
         const loginResult = await login(formData);
 
@@ -64,18 +64,18 @@ function Login() {
           });
           return;
         }
-
-        toast({
-          title: "Login Success",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">
-                {JSON.stringify(loginResult.data, null, 2)}
-              </code>
-            </pre>
-          ),
-        });
-
+        /*
+                toast({
+                  title: "Login Success",
+                  description: (
+                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+                      <code className="text-white">
+                        {JSON.stringify(loginResult.data, null, 2)}
+                      </code>
+                    </pre>
+                  ),
+                });
+        */
         router.push('/paserver', { scroll: false });
       } catch (error: unknown) {
         console.log("onSubmit error: " + error);
@@ -107,7 +107,7 @@ function Login() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
-            name="userid"
+            name="userId"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>사용자 아이디</FormLabel>
@@ -121,7 +121,7 @@ function Login() {
 
           <FormField
             control={form.control}
-            name="password"
+            name="userPwd"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>패스워드</FormLabel>

@@ -17,17 +17,17 @@ import lombok.NoArgsConstructor;
 public class TokenValidationResponse {
 
     private boolean valid;
-    private String username;
+    private String userId;
     private UserRole role;
     private String message;
 
     /**
      * 유효한 토큰에 대한 응답 생성
      */
-    public static TokenValidationResponse valid(String username, UserRole role) {
+    public static TokenValidationResponse valid(String userId, UserRole role) {
         return TokenValidationResponse.builder()
                 .valid(true)
-                .username(username)
+                .userId(userId)
                 .role(role)
                 .message("Token is valid")
                 .build();

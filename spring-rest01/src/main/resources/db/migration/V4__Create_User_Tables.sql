@@ -1,7 +1,7 @@
 -- 1. CHMM_USER_INFO (사용자 정보)
  CREATE TABLE CHMM_USER_INFO (
      USER_ID             VARCHAR(50) PRIMARY KEY,    -- 사용자_아이디 (기본 키)
-     USER_EMAIL          VARCHAR(100) UNIQUE,        -- 사용자_이메일 (고유)
+     USER_EMAIL          VARCHAR(100),               -- 사용자_이메일
      USER_MOBILE         VARCHAR(20),                -- 사용자_모바일
      USER_NAME           VARCHAR(100) NOT NULL,      -- 사용자_명
      USER_NICK           VARCHAR(100),               -- 사용자_닉네임
@@ -11,12 +11,6 @@
      USER_STAT_CD        VARCHAR(10),                -- 사용자_상태_코드 (예: 'ACTIVE', 'INACTIVE')
      USER_SNSID          VARCHAR(100),               -- 사용자_SNS_아이디
      USE_YN              CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 ('1': 사용, '0': 미사용)
-     ACCOUNT_NON_LOCK    CHAR(1) DEFAULT '1' NOT NULL, -- 사용자 계정 잠김 여부 ('1': 잠금 아님, '0': 잠김)
-     PASSWORD_LOCK_CNT   INTEGER DEFAULT 0 NOT NULL, -- 비밀번호 잠금 시도 횟수
-     ACCOUNT_START_DT    TIMESTAMP WITHOUT TIME ZONE, -- 사용자 시작날짜
-     ACCOUNT_END_DT      TIMESTAMP WITHOUT TIME ZONE, -- 사용자 종료날짜
-     PASSWORD_EXPIRE_DT  TIMESTAMP WITHOUT TIME ZONE, -- 패스워드 만료 날짜
-     MDM_YN              CHAR(1) DEFAULT 'N' NOT NULL, -- 모바일 기기 관리 여부 ('Y': 사용, 'N': 미사용)
      SYS_INSERT_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_입력_일시
      SYS_INSERT_USER_ID  VARCHAR(50),                -- 시스템_입력_사용자_아이디
      SYS_UPDATE_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_수정_일시

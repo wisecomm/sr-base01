@@ -23,23 +23,17 @@ export interface UserDetail {
     userStatCd: string;
     userSnsid?: string;
     useYn: string;
-    accountNonLock: string;
-    passwordLockCnt: number;
-    accountStartDt?: string;
-    accountEndDt?: string;
-    passwordExpireDt?: string;
-    mdmYn: string;
     sysInsertDtm?: string;
     sysUpdateDtm?: string;
 }
 
 export interface UserInfo {
-    id: number;
-    username: string;
-    email: string;
-    role: string;
-    createdAt: string;
-    lastLoginAt: string;
+    userId: string;
+    userName: string;
+    userEmail: string;
+    userRole: string;
+    createdAt?: string;
+    lastLoginAt?: string;
 }
 
 export interface LoginData {

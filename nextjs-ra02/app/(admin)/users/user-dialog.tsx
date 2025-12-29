@@ -58,26 +58,28 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
     });
 
     React.useEffect(() => {
-        if (user) {
-            form.reset({
-                userId: user.userId,
-                userName: user.userName,
-                userEmail: user.userEmail,
-                userNick: user.userNick,
-                userPwd: "",
-                useYn: user.useYn,
-            });
-        } else {
-            form.reset({
-                userId: "",
-                userName: "",
-                userEmail: "",
-                userNick: "",
-                userPwd: "",
-                useYn: "1",
-            });
+        if (open) {
+            if (user) {
+                form.reset({
+                    userId: user.userId || "",
+                    userName: user.userName || "",
+                    userEmail: user.userEmail || "",
+                    userNick: user.userNick || "",
+                    userPwd: "",
+                    useYn: user.useYn || "1",
+                });
+            } else {
+                form.reset({
+                    userId: "",
+                    userName: "",
+                    userEmail: "",
+                    userNick: "",
+                    userPwd: "",
+                    useYn: "1",
+                });
+            }
         }
-    }, [user, form]);
+    }, [open, user, form]);
 
     const onFormSubmit = async (data: UserFormValues) => {
         // Remove password if empty in edit mode
@@ -91,7 +93,6 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
     return (
         <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
             <DialogContent className="sm:max-w-[425px]">
-
                 <DialogHeader>
                     <DialogTitle>{isEdit ? "Edit User" : "Add New User"}</DialogTitle>
                     <DialogDescription>

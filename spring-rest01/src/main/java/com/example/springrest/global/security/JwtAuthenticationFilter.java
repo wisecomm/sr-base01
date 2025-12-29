@@ -36,11 +36,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String jwt = extractJwtFromRequest(request);
 
             if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-                String username = jwtTokenProvider.extractUsername(jwt);
+                String userId = jwtTokenProvider.extractUserId(jwt);
 
                 // UserDetails 생성 (간소화된 버전 - 실제로는 DB 조회 필요)
                 UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                        .username(username)
+                        .username(userId)
                         .password("") // JWT 검증 후이므로 비밀번호 불필요
                         .authorities("ROLE_" + jwtTokenProvider.extractRole(jwt).name())
                         .build();
@@ -53,7 +53,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // SecurityContext에 인증 정보 설정
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                log.debug("JWT authentication successful for user: {}", username);
+                log.debug("JWT authentication successful for user: {}", userId);
             }
         } catch (Exception e) {
             log.error("JWT authentication failed: {}", e.getMessage());

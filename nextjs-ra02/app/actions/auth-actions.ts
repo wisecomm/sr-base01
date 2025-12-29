@@ -45,8 +45,8 @@ export const clearSession = () => {
 };
 
 export async function login(formData: FormData): Promise<ApiResponse<LoginData>> {
-    const username = formData.get('userid') as string;
-    const password = formData.get('password') as string;
+    const userId = formData.get('userid') as string;
+    const userPwd = formData.get('password') as string;
 
     try {
         // We call the Spring Boot backend directly via the /api prefix
@@ -56,7 +56,7 @@ export async function login(formData: FormData): Promise<ApiResponse<LoginData>>
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username, password }),
+            body: JSON.stringify({ userId, userPwd }),
         });
 
         if (!response.ok) {

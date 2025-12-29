@@ -8,7 +8,6 @@ import {
     getCoreRowModel,
     getFilteredRowModel,
     getPaginationRowModel,
-    getSortedRowModel,
     useReactTable,
     PaginationState,
 } from "@tanstack/react-table";
@@ -62,12 +61,12 @@ export default function UsersPage() {
         setDialogOpen(true);
     };
 
-    const handleEdit = (user: UserDetail) => {
+    const handleEdit = React.useCallback((user: UserDetail) => {
         setSelectedUser(user);
         setDialogOpen(true);
-    };
+    }, []);
 
-    const handleDelete = async (user: UserDetail) => {
+    const handleDelete = React.useCallback(async (user: UserDetail) => {
         if (confirm(`Are you sure you want to delete user ${user.userId}?`)) {
             const result = await deleteUser(user.userId);
             if (result.code === "200") {
@@ -76,7 +75,7 @@ export default function UsersPage() {
                 alert(result.message || "Failed to delete user.");
             }
         }
-    };
+    }, [fetchData]);
 
     const handleFormSubmit = async (formData: Partial<UserDetail>) => {
         let result;
@@ -104,11 +103,11 @@ export default function UsersPage() {
         columns,
         pageCount,
         manualPagination: true,
+        enableSorting: false,
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
