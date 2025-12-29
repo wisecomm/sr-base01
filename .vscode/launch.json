@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Debug (Spring Boot) - spring-rest01",
+            "request": "launch",
+            "mainClass": "com.example.springrest.Application",
+            "projectName": "spring-rest01",
+            "cwd": "${workspaceFolder}/spring-rest01",
+            "env": {
+                "SPRING_PROFILES_ACTIVE": "dev"
+            }
+        }
+    ]
+}
