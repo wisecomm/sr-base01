@@ -27,12 +27,6 @@ public class UserInfo {
     private String userStatCd; // 사용자_상태_코드
     private String userSnsid; // 사용자_SNS_아이디
     private String useYn; // 사용 여부
-    private String accountNonLock; // 사용자 계정 잠김 여부
-    private Integer passwordLockCnt; // 비밀번호 잠금 시도 횟수
-    private LocalDateTime accountStartDt; // 사용자 시작날짜
-    private LocalDateTime accountEndDt; // 사용자 종료날짜
-    private LocalDateTime passwordExpireDt; // 패스워드 만료 날짜
-    private String mdmYn; // 모바일 기기 관리 여부
     private LocalDateTime sysInsertDtm; // 시스템_입력_일시
     private String sysInsertUserId; // 시스템_입력_사용자_아이디
     private LocalDateTime sysUpdateDtm; // 시스템_수정_일시

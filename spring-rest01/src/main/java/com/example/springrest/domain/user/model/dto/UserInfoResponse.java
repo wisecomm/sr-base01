@@ -32,12 +32,6 @@ public class UserInfoResponse {
     private String userStatCd;
     private String userSnsid;
     private String useYn;
-    private String accountNonLock;
-    private Integer passwordLockCnt;
-    private LocalDateTime accountStartDt;
-    private LocalDateTime accountEndDt;
-    private LocalDateTime passwordExpireDt;
-    private String mdmYn;
     private LocalDateTime sysInsertDtm;
     private LocalDateTime sysUpdateDtm;
 }

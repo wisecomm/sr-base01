@@ -15,12 +15,6 @@
         <result property="userStatCd" column="USER_STAT_CD"/>
         <result property="userSnsid" column="USER_SNSID"/>
         <result property="useYn" column="USE_YN"/>
-        <result property="accountNonLock" column="ACCOUNT_NON_LOCK"/>
-        <result property="passwordLockCnt" column="PASSWORD_LOCK_CNT"/>
-        <result property="accountStartDt" column="ACCOUNT_START_DT"/>
-        <result property="accountEndDt" column="ACCOUNT_END_DT"/>
-        <result property="passwordExpireDt" column="PASSWORD_EXPIRE_DT"/>
-        <result property="mdmYn" column="MDM_YN"/>
         <result property="sysInsertDtm" column="SYS_INSERT_DTM"/>
         <result property="sysInsertUserId" column="SYS_INSERT_USER_ID"/>
         <result property="sysUpdateDtm" column="SYS_UPDATE_DTM"/>
@@ -29,8 +23,7 @@
 
     <sql id="UserInfoColumns">
         USER_ID, USER_EMAIL, USER_MOBILE, USER_NAME, USER_NICK, USER_PWD, USER_MSG, USER_DESC, 
-        USER_STAT_CD, USER_SNSID, USE_YN, ACCOUNT_NON_LOCK, PASSWORD_LOCK_CNT, 
-        ACCOUNT_START_DT, ACCOUNT_END_DT, PASSWORD_EXPIRE_DT, MDM_YN, 
+        USER_STAT_CD, USER_SNSID, USE_YN, 
         SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
     </sql>
 
@@ -50,8 +43,7 @@
             <include refid="UserInfoColumns"/>
         ) VALUES (
             #{userId}, #{userEmail}, #{userMobile}, #{userName}, #{userNick}, #{userPwd}, #{userMsg}, #{userDesc}, 
-            #{userStatCd}, #{userSnsid}, #{useYn}, #{accountNonLock}, #{passwordLockCnt}, 
-            #{accountStartDt}, #{accountEndDt}, #{passwordExpireDt}, #{mdmYn}, 
+            #{userStatCd}, #{userSnsid}, #{useYn}, 
             NOW(), #{sysInsertUserId}, NOW(), #{sysUpdateUserId}
         )
     </insert>
@@ -68,12 +60,6 @@
             USER_STAT_CD = #{userStatCd},
             USER_SNSID = #{userSnsid},
             USE_YN = #{useYn},
-            ACCOUNT_NON_LOCK = #{accountNonLock},
-            PASSWORD_LOCK_CNT = #{passwordLockCnt},
-            ACCOUNT_START_DT = #{accountStartDt},
-            ACCOUNT_END_DT = #{accountEndDt},
-            PASSWORD_EXPIRE_DT = #{passwordExpireDt},
-            MDM_YN = #{mdmYn},
             SYS_UPDATE_DTM = NOW(),
             SYS_UPDATE_USER_ID = #{sysUpdateUserId}
         WHERE USER_ID = #{userId}

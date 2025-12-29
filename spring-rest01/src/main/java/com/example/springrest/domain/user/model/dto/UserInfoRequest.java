@@ -5,8 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 /**
  * 사용자 정보 요청 DTO
  */
@@ -26,10 +24,4 @@ public class UserInfoRequest {
     private String userStatCd;
     private String userSnsid;
     private String useYn;
-    private String accountNonLock;
-    private Integer passwordLockCnt;
-    private LocalDateTime accountStartDt;
-    private LocalDateTime accountEndDt;
-    private LocalDateTime passwordExpireDt;
-    private String mdmYn;
 }

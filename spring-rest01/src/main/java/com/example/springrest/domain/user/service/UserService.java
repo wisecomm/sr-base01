@@ -94,12 +94,6 @@ public class UserService {
                 .userStatCd(entity.getUserStatCd())
                 .userSnsid(entity.getUserSnsid())
                 .useYn(entity.getUseYn())
-                .accountNonLock(entity.getAccountNonLock())
-                .passwordLockCnt(entity.getPasswordLockCnt())
-                .accountStartDt(entity.getAccountStartDt())
-                .accountEndDt(entity.getAccountEndDt())
-                .passwordExpireDt(entity.getPasswordExpireDt())
-                .mdmYn(entity.getMdmYn())
                 .sysInsertDtm(entity.getSysInsertDtm())
                 .sysUpdateDtm(entity.getSysUpdateDtm())
                 .build();
@@ -118,12 +112,6 @@ public class UserService {
                 .userStatCd(request.getUserStatCd())
                 .userSnsid(request.getUserSnsid())
                 .useYn(request.getUseYn())
-                .accountNonLock(request.getAccountNonLock())
-                .passwordLockCnt(request.getPasswordLockCnt())
-                .accountStartDt(request.getAccountStartDt())
-                .accountEndDt(request.getAccountEndDt())
-                .passwordExpireDt(request.getPasswordExpireDt())
-                .mdmYn(request.getMdmYn())
                 .build();
     }
 }

@@ -151,12 +151,6 @@ public class AuthService {
                 .userStatCd(user.getUserStatCd())
                 .userSnsid(user.getUserSnsid())
                 .useYn(user.getUseYn())
-                .accountNonLock(user.getAccountNonLock())
-                .passwordLockCnt(user.getPasswordLockCnt())
-                .accountStartDt(user.getAccountStartDt())
-                .accountEndDt(user.getAccountEndDt())
-                .passwordExpireDt(user.getPasswordExpireDt())
-                .mdmYn(user.getMdmYn())
                 .sysInsertDtm(user.getSysInsertDtm())
                 .sysUpdateDtm(user.getSysUpdateDtm())
                 .build();

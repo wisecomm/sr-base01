@@ -64,6 +64,11 @@ const sidebarItems: SidebarItem[] = [
                 icon: CreditCard,
             },
             {
+                title: "사용자 관리",
+                href: "/users",
+                icon: CreditCard,
+            },
+            {
                 title: "Paserver",
                 href: "/paserver",
                 icon: Table,
