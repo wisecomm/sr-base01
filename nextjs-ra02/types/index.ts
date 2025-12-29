@@ -43,3 +43,21 @@ export interface LoginData {
     expiresIn: number;
     user: UserInfo;
 }
+
+export interface MenuInfo {
+    menuId: string;
+    menuLvl: number;
+    menuUri?: string | null;
+    menuName: string;
+    upperMenuId?: string | null;
+    menuDesc?: string | null;
+    menuSeq?: number | null;
+    leftMenuYn: string;
+    useYn: string;
+    adminMenuYn: string;
+    menuHelpUri?: string | null;
+    menuScript?: string | null;
+    personalDataYn: string;
+    sysInsertDtm?: string;
+    sysUpdateDtm?: string;
+}

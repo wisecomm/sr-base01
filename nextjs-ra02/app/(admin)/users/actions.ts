@@ -8,7 +8,7 @@ import { ApiResponse, PageResponse, UserDetail } from "@/types";
  */
 export async function getUsers(page: number, size: number): Promise<ApiResponse<PageResponse<UserDetail>>> {
     try {
-        const response = await api.get<PageResponse<UserDetail>>(`/v1/user/users?page=${page + 1}&size=${size}`);
+        const response = await api.get<PageResponse<UserDetail>>(`/v1/mgmt/users?page=${page + 1}&size=${size}`);
         return response;
     } catch (error) {
         console.error("Failed to fetch users:", error);
@@ -25,7 +25,7 @@ export async function getUsers(page: number, size: number): Promise<ApiResponse<
  */
 export async function createUser(data: Partial<UserDetail>): Promise<ApiResponse<void>> {
     try {
-        const response = await api.post<void>("/v1/user/users", data);
+        const response = await api.post<void>("/v1/mgmt/users", data);
         return response;
     } catch (error) {
         console.error("Failed to create user:", error);
@@ -42,7 +42,7 @@ export async function createUser(data: Partial<UserDetail>): Promise<ApiResponse
  */
 export async function updateUser(userId: string, data: Partial<UserDetail>): Promise<ApiResponse<void>> {
     try {
-        const response = await api.put<void>(`/v1/user/users/${userId}`, data);
+        const response = await api.put<void>(`/v1/mgmt/users/${userId}`, data);
         return response;
     } catch (error) {
         console.error("Failed to update user:", error);
@@ -59,7 +59,7 @@ export async function updateUser(userId: string, data: Partial<UserDetail>): Pro
  */
 export async function deleteUser(userId: string): Promise<ApiResponse<void>> {
     try {
-        const response = await api.delete<void>(`/v1/user/users/${userId}`);
+        const response = await api.delete<void>(`/v1/mgmt/users/${userId}`);
         return response;
     } catch (error) {
         console.error("Failed to delete user:", error);

@@ -1,0 +1,130 @@
+"use client";
+
+import * as React from "react";
+import { MenuInfo } from "@/types";
+import { getMenus, createMenu, updateMenu, deleteMenu } from "./actions";
+import { MenuTree } from "./menu-tree";
+import { MenuForm } from "./menu-form";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+
+export default function MenusPage() {
+    const [menus, setMenus] = React.useState<MenuInfo[]>([]);
+    const [selectedMenu, setSelectedMenu] = React.useState<MenuInfo | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    const fetchMenus = React.useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const result = await getMenus();
+            if (result.code === "200" && result.data) {
+                setMenus(result.data);
+            }
+        } catch (error) {
+            console.error("Failed to fetch menus:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        fetchMenus();
+    }, [fetchMenus]);
+
+    const handleSelect = (menu: MenuInfo) => {
+        setSelectedMenu(menu);
+    };
+
+    const handleAddChild = (parentId: string, level: number) => {
+        setSelectedMenu({
+            menuId: "",
+            menuName: "",
+            menuLvl: level,
+            upperMenuId: parentId,
+            leftMenuYn: "Y",
+            useYn: "1",
+            adminMenuYn: "N",
+            personalDataYn: "N",
+        } as MenuInfo);
+    };
+
+    const handleFormSubmit = async (formData: Partial<MenuInfo>) => {
+        let result;
+        const menuId = formData.menuId!;
+
+        if (selectedMenu && selectedMenu.menuId) {
+            result = await updateMenu(selectedMenu.menuId, formData);
+        } else {
+            result = await createMenu(formData);
+        }
+
+        if (result.code === "200") {
+            await fetchMenus();
+            // Try to find the new/updated menu in the fresh list
+            if (menuId) {
+                // We'll let the user select it manually or we could try to find it
+            }
+        } else {
+            alert(result.message || "An error occurred.");
+        }
+    };
+
+    const handleDelete = async (menuId: string) => {
+        if (confirm(`Are you sure you want to delete menu ${menuId}?`)) {
+            const result = await deleteMenu(menuId);
+            if (result.code === "200") {
+                setSelectedMenu(null);
+                fetchMenus();
+            } else {
+                alert(result.message || "Failed to delete menu.");
+            }
+        }
+    };
+
+    return (
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
+            <div className="max-w-[1600px] mx-auto space-y-6">
+                <div>
+                    <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Menu Management</h1>
+                    <p className="text-slate-500 dark:text-slate-400">Organize and configure system navigation menu hierarchy.</p>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    {/* Left Column: Menu Tree */}
+                    <Card className="lg:col-span-4 shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-200px)]">
+
+                        <CardContent className="flex-1 overflow-auto p-4">
+                            {isLoading ? (
+                                <div className="space-y-4">
+                                    {[...Array(8)].map((_, i) => (
+                                        <div key={i} className="flex items-center gap-2">
+                                            <Skeleton className="h-4 w-4 rounded" />
+                                            <Skeleton className="h-4 flex-1" />
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <MenuTree
+                                    items={menus}
+                                    selectedId={selectedMenu?.menuId}
+                                    onSelect={handleSelect}
+                                    onAddChild={handleAddChild}
+                                />
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Right Column: Menu Detail Form */}
+                    <div className="lg:col-span-8">
+                        <MenuForm
+                            item={selectedMenu}
+                            allMenus={menus}
+                            onSubmit={handleFormSubmit}
+                            onDelete={handleDelete}
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

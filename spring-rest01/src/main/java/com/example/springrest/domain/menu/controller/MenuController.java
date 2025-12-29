@@ -2,7 +2,7 @@ package com.example.springrest.domain.menu.controller;
 
 import com.example.springrest.global.model.dto.ApiResponse;
 import com.example.springrest.domain.menu.model.dto.MenuInfoRequest;
-import com.example.springrest.domain.menu.model.dto.MenuInfoResponse;
+import com.example.springrest.domain.menu.model.entity.MenuInfo;
 import com.example.springrest.domain.menu.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,7 +17,7 @@ import java.util.List;
 @Tag(name = "User - Menu Management", description = "메뉴 관리 API")
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user/menus")
+@RequestMapping("/api/v1/mgmt/menus")
 @RequiredArgsConstructor
 public class MenuController {
 
@@ -25,14 +25,14 @@ public class MenuController {
 
     @Operation(summary = "메뉴 목록 조회")
     @GetMapping
-    public ResponseEntity<ApiResponse<List<MenuInfoResponse>>> getAllMenus() {
+    public ResponseEntity<ApiResponse<List<MenuInfo>>> getAllMenus() {
         return ResponseEntity.ok(ApiResponse.success(menuService.getAllMenus()));
     }
 
     @Operation(summary = "메뉴 상세 조회")
     @GetMapping("/{menuId}")
-    public ResponseEntity<ApiResponse<MenuInfoResponse>> getMenuById(@PathVariable String menuId) {
-        MenuInfoResponse menu = menuService.getMenuById(menuId);
+    public ResponseEntity<ApiResponse<MenuInfo>> getMenuById(@PathVariable String menuId) {
+        MenuInfo menu = menuService.getMenuById(menuId);
         return menu != null ? ResponseEntity.ok(ApiResponse.success(menu)) : ResponseEntity.notFound().build();
     }
 

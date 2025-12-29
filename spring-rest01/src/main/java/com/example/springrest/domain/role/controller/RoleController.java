@@ -18,7 +18,7 @@ import java.util.List;
 @Tag(name = "User - Role Management", description = "역할 관리 API")
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/user/roles")
+@RequestMapping("/api/v1/mgmt/roles")
 @RequiredArgsConstructor
 public class RoleController {
 
