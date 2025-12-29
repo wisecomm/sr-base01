@@ -17,8 +17,7 @@ export default function AdminLayout({
     useEffect(() => {
         const token = getAccessToken();
         if (!token) {
-            // TODO: 로그인 페이지로 이동 잠시 막음
-            //            router.push("/login");
+            router.push("/login");
         }
     }, [router]);
 

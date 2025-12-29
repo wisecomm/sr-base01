@@ -21,27 +21,27 @@ interface ColumnProps {
 export const getColumns = ({ onEdit, onDelete }: ColumnProps): ColumnDef<UserDetail>[] => [
     {
         accessorKey: "userId",
-        header: "User ID",
+        header: () => <div className="text-center">User ID</div>,
         size: 100,
     },
     {
         accessorKey: "userName",
-        header: "Name",
+        header: () => <div className="text-center">Name</div>,
         size: 150,
     },
     {
         accessorKey: "userEmail",
-        header: "Email",
+        header: () => <div className="text-center">Email</div>,
         size: 200,
     },
     {
         accessorKey: "userNick",
-        header: "Nickname",
+        header: () => <div className="text-center">Nickname</div>,
         size: 150,
     },
     {
         accessorKey: "useYn",
-        header: "Use Y/N",
+        header: () => <div className="text-center">Use Y/N</div>,
         size: 80,
         cell: ({ row }) => (
             <div className="text-center">
@@ -55,45 +55,51 @@ export const getColumns = ({ onEdit, onDelete }: ColumnProps): ColumnDef<UserDet
     },
     {
         accessorKey: "sysInsertDtm",
-        header: "Created At",
+        header: () => <div className="text-center">Created At</div>,
         size: 180,
         cell: ({ row }) => {
             const date = row.getValue("sysInsertDtm") as string;
             if (!date) return "-";
-            return new Date(date).toLocaleString();
+            return (
+                <div className="text-center">
+                    {new Date(date).toLocaleString()}
+                </div>
+            );
         },
     },
     {
         id: "actions",
-        header: "Actions",
+        header: () => <div className="text-center">Actions</div>,
         size: 100,
         cell: ({ row }) => {
             const user = row.original;
 
             return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => onEdit(user)}>
-                            <SquarePen className="mr-2 h-4 w-4" />
-                            Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                            className="text-red-600 focus:text-red-600"
-                            onClick={() => onDelete(user)}
-                        >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                        </DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <div className="text-center">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">Open menu</span>
+                                <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem onClick={() => onEdit(user)}>
+                                <SquarePen className="mr-2 h-4 w-4" />
+                                Edit
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                className="text-red-600 focus:text-red-600"
+                                onClick={() => onDelete(user)}
+                            >
+                                <Trash2 className="mr-2 h-4 w-4" />
+                                Delete
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+                </div>
             );
         },
     },
