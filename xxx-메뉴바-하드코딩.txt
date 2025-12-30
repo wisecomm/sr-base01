@@ -1,0 +1,65 @@
+
+const sidebarItems: SidebarItem[] = [
+    {
+        title: "대시보드",
+        href: "/dashboard",
+        image: "/images/menus/dashboard.svg",
+    },
+    {
+        title: "관리",
+        image: "/images/menus/settings.svg",
+        children: [
+            {
+                title: "결제 관리",
+                href: "/payments",
+                image: "/images/menus/payments.svg",
+            },
+            {
+                title: "사용자 관리",
+                href: "/users",
+                image: "/images/menus/users.svg",
+            },
+            {
+                title: "메뉴 관리",
+                href: "/menus",
+                image: "/images/menus/menus.svg",
+            },
+            {
+                title: "역할 관리",
+                href: "/roles",
+                image: "/images/menus/settings.svg",
+            },
+            {
+                title: "Paserver",
+                href: "/paserver",
+                image: "/images/menus/paserver.svg",
+            },
+            {
+                title: "게시글 관리",
+                href: "/posts",
+                image: "/images/menus/posts.svg",
+            },
+            {
+                title: "사진 관리",
+                href: "/photos",
+                image: "/images/menus/photos.svg",
+            },
+        ],
+    },
+    {
+        title: "정보",
+        image: "/images/menus/about.svg",
+        children: [
+            {
+                title: "소개",
+                href: "/about",
+                image: "/images/menus/about.svg",
+            },
+            {
+                title: "환영합니다",
+                href: "/welcome",
+                image: "/images/menus/welcome.svg",
+            },
+        ],
+    },
+];
