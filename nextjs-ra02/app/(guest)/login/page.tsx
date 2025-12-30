@@ -98,7 +98,7 @@ function Login() {
           alt="Next.js logo"
           width={180}
           height={38}
-          style={{ width: 180, height: 38 }}
+          style={{ width: "auto", height: "auto" }}
           priority
         />
       </div>
