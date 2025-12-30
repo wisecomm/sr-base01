@@ -33,15 +33,11 @@ const menuFormSchema = z.object({
     menuName: z.string().min(1, "Menu name is required."),
     menuLvl: z.number().min(0),
     menuUri: z.string().optional().or(z.literal("")),
+    menuImgUri: z.string().optional().or(z.literal("")),
     upperMenuId: z.string().min(1),
     menuDesc: z.string().optional().or(z.literal("")),
     menuSeq: z.number().min(0).optional(),
-    leftMenuYn: z.string().min(1),
     useYn: z.string().min(1),
-    adminMenuYn: z.string().min(1),
-    menuHelpUri: z.string().optional().or(z.literal("")),
-    menuScript: z.string().optional().or(z.literal("")),
-    personalDataYn: z.string().min(1),
 });
 
 type MenuFormValues = z.infer<typeof menuFormSchema>;
@@ -63,15 +59,11 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
             menuName: "",
             menuLvl: 1,
             menuUri: "",
+            menuImgUri: "",
             upperMenuId: "none",
             menuDesc: "",
             menuSeq: 0,
-            leftMenuYn: "Y",
             useYn: "1",
-            adminMenuYn: "N",
-            menuHelpUri: "",
-            menuScript: "",
-            personalDataYn: "N",
         },
     });
 
@@ -82,15 +74,11 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                 menuName: item.menuName,
                 menuLvl: item.menuLvl,
                 menuUri: item.menuUri || "",
+                menuImgUri: item.menuImgUri || "",
                 upperMenuId: item.upperMenuId || "none",
                 menuDesc: item.menuDesc || "",
                 menuSeq: item.menuSeq || 0,
-                leftMenuYn: item.leftMenuYn,
                 useYn: item.useYn,
-                adminMenuYn: item.adminMenuYn,
-                menuHelpUri: item.menuHelpUri || "",
-                menuScript: item.menuScript || "",
-                personalDataYn: item.personalDataYn,
             });
         } else {
             form.reset({
@@ -98,15 +86,11 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                 menuName: "",
                 menuLvl: 1,
                 menuUri: "",
+                menuImgUri: "",
                 upperMenuId: "none",
                 menuDesc: "",
                 menuSeq: 0,
-                leftMenuYn: "Y",
                 useYn: "1",
-                adminMenuYn: "N",
-                menuHelpUri: "",
-                menuScript: "",
-                personalDataYn: "N",
             });
         }
     }, [item, form]);
@@ -116,9 +100,8 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
             ...data,
             upperMenuId: data.upperMenuId === "none" ? null : data.upperMenuId,
             menuUri: data.menuUri === "" ? null : data.menuUri,
+            menuImgUri: data.menuImgUri === "" ? null : data.menuImgUri,
             menuDesc: data.menuDesc === "" ? null : data.menuDesc,
-            menuHelpUri: data.menuHelpUri === "" ? null : data.menuHelpUri,
-            menuScript: data.menuScript === "" ? null : data.menuScript,
         };
         await onSubmit(sanitizedData);
     };
@@ -217,6 +200,20 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                         </FormItem>
                                     )}
                                 />
+                                <FormField
+                                    control={form.control}
+                                    name="menuImgUri"
+                                    render={({ field }) => (
+                                        <FormItem>
+                                            <FormLabel>Menu Image URI</FormLabel>
+                                            <FormControl>
+                                                <Input placeholder="/images/icons/dashboard.png" {...field} />
+                                            </FormControl>
+                                            <FormDescription>Path to the menu icon/image.</FormDescription>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
                                 <div className="grid grid-cols-2 gap-4">
                                     <FormField
                                         control={form.control}
@@ -251,7 +248,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                         <Separator />
 
                         {/* Controls Section */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                             <FormField
                                 control={form.control}
                                 name="useYn"
@@ -265,42 +262,6 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                             <Switch
                                                 checked={field.value === "1"}
                                                 onCheckedChange={(checked: boolean) => field.onChange(checked ? "1" : "0")}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="leftMenuYn"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                        <div className="space-y-0.5">
-                                            <FormLabel className="text-base">Side Menu</FormLabel>
-                                            <FormDescription>Show in sidebar.</FormDescription>
-                                        </div>
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value === "Y"}
-                                                onCheckedChange={(checked: boolean) => field.onChange(checked ? "Y" : "N")}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="adminMenuYn"
-                                render={({ field }) => (
-                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                        <div className="space-y-0.5">
-                                            <FormLabel className="text-base">Admin Only</FormLabel>
-                                            <FormDescription>Restrict to admins.</FormDescription>
-                                        </div>
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value === "Y"}
-                                                onCheckedChange={(checked: boolean) => field.onChange(checked ? "Y" : "N")}
                                             />
                                         </FormControl>
                                     </FormItem>

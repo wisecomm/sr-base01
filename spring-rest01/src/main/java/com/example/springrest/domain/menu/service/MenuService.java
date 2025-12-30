@@ -50,16 +50,12 @@ public class MenuService {
                 .menuId(request.getMenuId())
                 .menuLvl(request.getMenuLvl())
                 .menuUri(request.getMenuUri())
+                .menuImgUri(request.getMenuImgUri())
                 .menuName(request.getMenuName())
                 .upperMenuId(request.getUpperMenuId())
                 .menuDesc(request.getMenuDesc())
                 .menuSeq(request.getMenuSeq())
-                .leftMenuYn(request.getLeftMenuYn())
                 .useYn(request.getUseYn())
-                .adminMenuYn(request.getAdminMenuYn())
-                .menuHelpUri(request.getMenuHelpUri())
-                .menuScript(request.getMenuScript())
-                .personalDataYn(request.getPersonalDataYn())
                 .build();
     }
 }

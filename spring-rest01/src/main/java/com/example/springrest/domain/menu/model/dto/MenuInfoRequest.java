@@ -18,14 +18,10 @@ public class MenuInfoRequest {
     private String menuId;
     private Integer menuLvl;
     private String menuUri;
+    private String menuImgUri;
     private String menuName;
     private String upperMenuId;
     private String menuDesc;
     private Integer menuSeq;
-    private String leftMenuYn;
     private String useYn;
-    private String adminMenuYn;
-    private String menuHelpUri;
-    private String menuScript;
-    private String personalDataYn;
 }

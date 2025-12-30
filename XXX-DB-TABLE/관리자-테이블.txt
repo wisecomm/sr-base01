@@ -42,16 +42,12 @@
      MENU_ID             VARCHAR(50) PRIMARY KEY,    -- 메뉴_아이디 (기본 키)
      MENU_LVL            INTEGER NOT NULL,           -- 메뉴_레벨
      MENU_URI            VARCHAR(255),               -- 메뉴_URI
+     MENU_IMG_URI        VARCHAR(255),               -- 메뉴_이미지_URI
      MENU_NAME           VARCHAR(100) NOT NULL,      -- 메뉴_명
      UPPER_MENU_ID       VARCHAR(50),                -- 상위_메뉴_아이디 (자기 참조 FK)
      MENU_DESC           TEXT,                       -- 메뉴_설명
      MENU_SEQ            INTEGER,                    -- 메뉴_순서
-     LEFT_MENU_YN        CHAR(1) DEFAULT 'Y' NOT NULL, -- 좌측 메뉴 여부 ('Y': 예, 'N': 아니오)
      USE_YN              CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 ('1': 사용, '0': 미사용)
-     ADMIN_MENU_YN       CHAR(1) DEFAULT 'N' NOT NULL, -- 어드민 메뉴 여부 ('Y': 예, 'N': 아니오)
-     MENU_HELP_URI       VARCHAR(255),               -- 도움말 리소스 경로
-     MENU_SCRIPT         TEXT,                       -- 메뉴 스크립트
-     PERSONAL_DATA_YN    CHAR(1) DEFAULT 'N' NOT NULL, -- 개인정보 포함 여부 ('Y': 예, 'N': 아니오)
      SYS_INSERT_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_입력_일시
      SYS_INSERT_USER_ID  VARCHAR(50),                -- 시스템_입력_관리자_아이디
      SYS_UPDATE_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_수정_일시
