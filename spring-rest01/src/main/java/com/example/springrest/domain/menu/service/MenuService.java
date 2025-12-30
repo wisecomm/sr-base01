@@ -24,6 +24,10 @@ public class MenuService {
         return menuInfoMapper.findAll();
     }
 
+    public List<MenuInfo> getMenusByUserId(String userId) {
+        return menuInfoMapper.findByUserId(userId);
+    }
+
     public MenuInfo getMenuById(String menuId) {
         return menuInfoMapper.findById(menuId);
     }

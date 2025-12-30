@@ -17,6 +17,20 @@ export async function getMenus(): Promise<ApiResponse<MenuInfo[]>> {
     }
 }
 
+export async function getMyMenus(): Promise<ApiResponse<MenuInfo[]>> {
+    try {
+        const response = await api.get<MenuInfo[]>("/v1/mgmt/menus/me");
+        return response;
+    } catch (error: unknown) {
+        const err = error as { response?: { data?: { code?: string; message?: string } } };
+        return {
+            code: err.response?.data?.code || "500",
+            message: err.response?.data?.message || "Failed to fetch your menus",
+            data: null,
+        };
+    }
+}
+
 export async function getMenu(menuId: string): Promise<ApiResponse<MenuInfo>> {
     try {
         const response = await api.get<MenuInfo>(`/v1/mgmt/menus/${menuId}`);

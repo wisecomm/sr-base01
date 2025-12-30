@@ -10,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,6 +29,15 @@ public class MenuController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<MenuInfo>>> getAllMenus() {
         return ResponseEntity.ok(ApiResponse.success(menuService.getAllMenus()));
+    }
+
+    @Operation(summary = "나의 권한 메뉴 조회")
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<List<MenuInfo>>> getMyMenus() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+        log.info("Fetching menus for current user: {}", userId);
+        return ResponseEntity.ok(ApiResponse.success(menuService.getMenusByUserId(userId)));
     }
 
     @Operation(summary = "메뉴 상세 조회")

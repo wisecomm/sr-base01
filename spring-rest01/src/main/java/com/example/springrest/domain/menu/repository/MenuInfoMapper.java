@@ -15,6 +15,8 @@ public interface MenuInfoMapper {
 
     List<MenuInfo> findAll();
 
+    List<MenuInfo> findByUserId(@Param("userId") String userId);
+
     int insert(MenuInfo menuInfo);
 
     int update(MenuInfo menuInfo);

@@ -36,6 +36,36 @@
         ORDER BY MENU_LVL, MENU_SEQ
     </select>
 
+    <select id="findByUserId" resultMap="MenuInfoResultMap">
+        WITH RECURSIVE MENU_TREE AS (
+            -- Base case: menus directly assigned to user's roles
+            SELECT 
+                M.MENU_ID, M.MENU_LVL, M.MENU_URI, M.MENU_IMG_URI, M.MENU_NAME, 
+                M.UPPER_MENU_ID, M.MENU_DESC, M.MENU_SEQ, M.USE_YN, 
+                M.SYS_INSERT_DTM, M.SYS_INSERT_USER_ID, M.SYS_UPDATE_DTM, M.SYS_UPDATE_USER_ID
+            FROM CHMM_MENU_INFO M
+            JOIN CHMM_ROLE_MENU_MAP RM ON M.MENU_ID = RM.MENU_ID
+            JOIN CHMM_USER_ROLE_MAP UR ON RM.ROLE_ID = UR.ROLE_ID
+            WHERE UR.USER_ID = #{userId}
+              AND M.USE_YN = '1'
+              AND RM.USE_YN = '1'
+              AND UR.USE_YN = '1'
+            
+            UNION
+            
+            -- Recursive Case: parents of the menus found so far
+            SELECT 
+                P.MENU_ID, P.MENU_LVL, P.MENU_URI, P.MENU_IMG_URI, P.MENU_NAME, 
+                P.UPPER_MENU_ID, P.MENU_DESC, P.MENU_SEQ, P.USE_YN, 
+                P.SYS_INSERT_DTM, P.SYS_INSERT_USER_ID, P.SYS_UPDATE_DTM, P.SYS_UPDATE_USER_ID
+            FROM CHMM_MENU_INFO P
+            JOIN MENU_TREE T ON P.MENU_ID = T.UPPER_MENU_ID
+            WHERE P.USE_YN = '1'
+        )
+        SELECT DISTINCT * FROM MENU_TREE
+        ORDER BY MENU_LVL, MENU_SEQ
+    </select>
+
     <insert id="insert">
         INSERT INTO CHMM_MENU_INFO (
             <include refid="MenuInfoColumns"/>

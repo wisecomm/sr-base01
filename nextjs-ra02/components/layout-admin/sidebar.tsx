@@ -11,8 +11,13 @@ import {
     ChevronDown,
     LucideIcon,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { getMyMenus } from "@/app/(admin)/menus/actions";
+import { MenuInfo } from "@/types";
+
+
+
 import {
     Tooltip,
     TooltipContent,
@@ -34,6 +39,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 interface SidebarItem {
+    id: string;
     title: string;
     href?: string;
     icon?: LucideIcon;
@@ -41,70 +47,67 @@ interface SidebarItem {
     children?: SidebarItem[];
 }
 
-const sidebarItems: SidebarItem[] = [
+const staticSidebarItems: SidebarItem[] = [
     {
+        id: "dashboard",
         title: "대시보드",
         href: "/dashboard",
         image: "/images/menus/dashboard.svg",
     },
-    {
-        title: "관리",
-        image: "/images/menus/settings.svg",
-        children: [
-            {
-                title: "결제 관리",
-                href: "/payments",
-                image: "/images/menus/payments.svg",
-            },
-            {
-                title: "사용자 관리",
-                href: "/users",
-                image: "/images/menus/users.svg",
-            },
-            {
-                title: "메뉴 관리",
-                href: "/menus",
-                image: "/images/menus/menus.svg",
-            },
-            {
-                title: "역할 관리",
-                href: "/roles",
-                image: "/images/menus/settings.svg",
-            },
-            {
-                title: "Paserver",
-                href: "/paserver",
-                image: "/images/menus/paserver.svg",
-            },
-            {
-                title: "게시글 관리",
-                href: "/posts",
-                image: "/images/menus/posts.svg",
-            },
-            {
-                title: "사진 관리",
-                href: "/photos",
-                image: "/images/menus/photos.svg",
-            },
-        ],
-    },
-    {
-        title: "정보",
-        image: "/images/menus/about.svg",
-        children: [
-            {
-                title: "소개",
-                href: "/about",
-                image: "/images/menus/about.svg",
-            },
-            {
-                title: "환영합니다",
-                href: "/welcome",
-                image: "/images/menus/welcome.svg",
-            },
-        ],
-    },
 ];
+
+const buildMenuTree = (menus: MenuInfo[]): SidebarItem[] => {
+    const menuMap: Record<string, SidebarItem> = {};
+    const rootItems: SidebarItem[] = [];
+
+    // 1. Map all items (Level 2 and below)
+    menus.forEach((menu) => {
+        if (menu.menuLvl === 1) return; // Skip Level 1 root
+
+        menuMap[menu.menuId] = {
+            id: menu.menuId,
+            title: menu.menuName,
+            href: menu.menuUri || undefined,
+            image: menu.menuImgUri || undefined,
+            children: [],
+        };
+    });
+
+    // 2. Build hierarchy
+    menus.forEach((menu) => {
+        if (menu.menuLvl === 1) return; // Skip Level 1
+
+        const item = menuMap[menu.menuId];
+
+        // Root candidate if level is 2
+        if (menu.menuLvl === 2) {
+            rootItems.push(item);
+        }
+        // Otherwise, try to find parent
+        else if (menu.upperMenuId && menuMap[menu.upperMenuId]) {
+            menuMap[menu.upperMenuId].children!.push(item);
+        }
+        // Fallback for Level 3+ with missing parent (should be avoided by Backend recursive fetch)
+        else {
+            rootItems.push(item);
+        }
+    });
+
+    // 3. Cleanup empty children
+    const finalizeItems = (items: SidebarItem[]) => {
+        items.forEach(it => {
+            if (it.children?.length === 0) {
+                delete it.children;
+            } else if (it.children) {
+                finalizeItems(it.children);
+            }
+        });
+    };
+    finalizeItems(rootItems);
+
+    return rootItems;
+};
+
 
 const IconRenderer = ({ icon: Icon, image, className }: { icon?: LucideIcon, image?: string, className?: string }) => {
     if (image) {
@@ -129,53 +132,63 @@ export function Sidebar() {
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({
-        "관리": true,
-        "정보": true,
-    });
+    const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>(staticSidebarItems);
+    const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
+    const isFetched = useRef(false);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
+        if (isFetched.current) return;
+
+        const loadMenus = async () => {
             setMounted(true);
-        }, 0);
-        return () => clearTimeout(timer);
+            isFetched.current = true;
+            try {
+                const res = await getMyMenus();
+                if (res.code === "200" && res.data && res.data.length > 0) {
+                    const dynamicItems = buildMenuTree(res.data);
+                    setSidebarItems(dynamicItems);
+
+                    // Auto-open all root groups
+                    const initialOpen: Record<string, boolean> = {};
+                    dynamicItems.forEach(item => {
+                        if (item.children) initialOpen[item.title] = true;
+                    });
+                    setOpenGroups(initialOpen);
+                }
+            } catch (error) {
+                console.error("Failed to load dynamic menus:", error);
+            }
+        };
+        loadMenus();
     }, []);
+
 
     const toggleGroup = (title: string) => {
         setOpenGroups(prev => ({ ...prev, [title]: !prev[title] }));
     };
 
-    if (!mounted) {
-        return (
-            <div className={cn(
-                "hidden border-r bg-slate-50/40 dark:bg-slate-950/40 md:block transition-all duration-300",
-                isCollapsed ? "w-[70px]" : "md:w-64 lg:w-72"
-            )} />
-        );
-    }
+    if (!mounted) return null;
 
     return (
         <TooltipProvider>
             <div
                 className={cn(
-                    "hidden border-r bg-slate-50/40 dark:bg-slate-950/40 md:block transition-all duration-300",
-                    isCollapsed ? "w-[70px]" : "md:w-64 lg:w-72"
+                    "relative flex flex-col border-r bg-slate-50/40 transition-all duration-300 dark:bg-slate-900/40",
+                    isCollapsed ? "w-[70px]" : "w-[240px]"
                 )}
             >
                 <div className="flex h-full flex-col gap-2">
-                    <div className={cn(
-                        "flex h-14 items-center border-b px-4 font-semibold lg:h-[60px]",
-                        isCollapsed ? "justify-center" : "justify-between"
-                    )}>
+                    <div className="flex h-[60px] items-center border-b px-4 justify-between">
                         {!isCollapsed && (
-                            <Link href="/" className="flex items-center gap-2 font-bold truncate">
-                                <span className="">NextGen 관리자</span>
+                            <Link href="/" className="flex items-center gap-2 font-semibold">
+                                <div className="h-8 w-8 rounded-lg bg-primary" />
+                                <span className="text-lg">Admin Panel</span>
                             </Link>
                         )}
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8"
+                            className={cn("h-8 w-8", isCollapsed && "mx-auto")}
                             onClick={() => setIsCollapsed(!isCollapsed)}
                         >
                             {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -183,12 +196,12 @@ export function Sidebar() {
                     </div>
                     <div className="flex-1 overflow-auto py-2">
                         <nav className="grid items-start px-2 text-sm font-medium gap-1">
-                            {sidebarItems.map((item, index) => {
+                            {sidebarItems.map((item) => {
                                 if (item.children) {
                                     // Group Item
                                     if (isCollapsed) {
                                         return (
-                                            <DropdownMenu key={index}>
+                                            <DropdownMenu key={item.id}>
                                                 <Tooltip delayDuration={0}>
                                                     <TooltipTrigger asChild>
                                                         <DropdownMenuTrigger asChild>
@@ -209,8 +222,8 @@ export function Sidebar() {
                                                     <DropdownMenuLabel>{item.title}</DropdownMenuLabel>
                                                     <DropdownMenuSeparator />
                                                     {item.children.map((child) => (
-                                                        <DropdownMenuItem key={child.href} asChild>
-                                                            <Link href={child.href!} className="cursor-pointer">
+                                                        <DropdownMenuItem key={child.id} asChild>
+                                                            <Link href={child.href || "#"} className="cursor-pointer">
                                                                 <IconRenderer icon={child.icon} image={child.image} className="mr-2" />
                                                                 <span>{child.title}</span>
                                                             </Link>
@@ -222,7 +235,7 @@ export function Sidebar() {
                                     } else {
                                         return (
                                             <Collapsible
-                                                key={index}
+                                                key={item.id}
                                                 open={openGroups[item.title]}
                                                 onOpenChange={() => toggleGroup(item.title)}
                                                 className="w-full"
@@ -247,8 +260,8 @@ export function Sidebar() {
                                                 <CollapsibleContent className="space-y-1 px-2 py-1">
                                                     {item.children.map((child) => (
                                                         <Link
-                                                            key={child.href}
-                                                            href={child.href!}
+                                                            key={child.id}
+                                                            href={child.href || "#"}
                                                             className={cn(
                                                                 "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary pl-9",
                                                                 pathname === child.href
@@ -267,10 +280,10 @@ export function Sidebar() {
                                 } else {
                                     // Single Item
                                     return (
-                                        <Tooltip key={item.href}>
+                                        <Tooltip key={item.id}>
                                             <TooltipTrigger asChild>
                                                 <Link
-                                                    href={item.href!}
+                                                    href={item.href || "#"}
                                                     className={cn(
                                                         "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                                                         pathname === item.href
