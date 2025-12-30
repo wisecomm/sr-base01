@@ -26,8 +26,10 @@ mybatis:
 
 # JWT 설정
 jwt:
-  secret: devSecretKeyForTestingPurposesOnlyMustBe256BitsOrMoreForHS256Algorithm
-  expiration: 1800000  # 30분 (밀리초)
+  secret: +F7Wq6PrRGUw7Ig+UUEHP2xQZFyURaNu1HjTpfUi5Q0=
+  #expiration: 30000            # Access Token: 30초 (테스트용)
+  expiration: 86400000  # 1일 (밀리초)
+  refresh-expiration: 604800000 # Refresh Token: 7일 (밀리초)
 
 # Swagger 설정 (개발 환경에서만 활성화)
 springdoc:

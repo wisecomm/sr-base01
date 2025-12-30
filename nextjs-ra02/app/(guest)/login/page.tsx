@@ -31,8 +31,8 @@ const accountFormSchema = z.object({
 type AccountFormValues = z.infer<typeof accountFormSchema>;
 
 const defaultValues: Partial<AccountFormValues> = {
-  userId: "admin",
-  userPwd: "password123",
+  userId: "",
+  userPwd: "",
 };
 
 function Login() {
