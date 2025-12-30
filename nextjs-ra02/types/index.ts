@@ -57,3 +57,14 @@ export interface MenuInfo {
     sysInsertDtm?: string;
     sysUpdateDtm?: string;
 }
+
+export interface RoleInfo {
+    roleId: string;
+    roleName: string;
+    roleDesc?: string;
+    useYn: string;
+    sysInsertDtm?: string;
+    sysUpdateDtm?: string;
+    sysInsertUserId?: string;
+    sysUpdateUserId?: string;
+}

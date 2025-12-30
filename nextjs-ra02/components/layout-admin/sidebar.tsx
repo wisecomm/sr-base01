@@ -67,6 +67,11 @@ const sidebarItems: SidebarItem[] = [
                 image: "/images/menus/menus.svg",
             },
             {
+                title: "역할 관리",
+                href: "/roles",
+                image: "/images/menus/settings.svg",
+            },
+            {
                 title: "Paserver",
                 href: "/paserver",
                 image: "/images/menus/paserver.svg",
