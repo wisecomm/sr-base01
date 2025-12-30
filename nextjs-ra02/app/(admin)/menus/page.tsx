@@ -19,13 +19,18 @@ export default function MenusPage() {
             const result = await getMenus();
             if (result.code === "200" && result.data) {
                 setMenus(result.data);
+                // Auto-select first menu if none is selected
+                if (!selectedMenu && result.data.length > 0) {
+                    const firstRoot = result.data.find(m => !m.upperMenuId) || result.data[0];
+                    setSelectedMenu(firstRoot);
+                }
             }
         } catch (error) {
             console.error("Failed to fetch menus:", error);
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [selectedMenu]);
 
     React.useEffect(() => {
         fetchMenus();

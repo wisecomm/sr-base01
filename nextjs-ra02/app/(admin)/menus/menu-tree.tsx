@@ -20,6 +20,16 @@ export function MenuTree({ items, selectedId, onSelect, onAddChild }: MenuTreePr
         setExpanded(prev => ({ ...prev, [id]: !prev[id] }));
     };
 
+    React.useEffect(() => {
+        if (items.length > 0) {
+            const initialExpanded: Record<string, boolean> = {};
+            items.filter(item => !item.upperMenuId).forEach(item => {
+                initialExpanded[item.menuId] = true;
+            });
+            setExpanded(prev => ({ ...initialExpanded, ...prev }));
+        }
+    }, [items]);
+
     const buildTree = (parentId?: string) => {
         return items
             .filter(item => item.upperMenuId === parentId || (!parentId && !item.upperMenuId))
