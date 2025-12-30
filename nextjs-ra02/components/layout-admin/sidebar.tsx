@@ -181,6 +181,13 @@ export function Sidebar() {
                     <div className="flex h-[60px] items-center border-b px-4 justify-between">
                         {!isCollapsed && (
                             <Link href="/" className="flex items-center gap-2 font-semibold">
+                                <Image
+                                    src="/next.svg"
+                                    alt="Logo"
+                                    width={24}
+                                    height={24}
+                                    className="dark:invert"
+                                />
                                 <span className="text-lg">Admin Panel</span>
                             </Link>
                         )}
