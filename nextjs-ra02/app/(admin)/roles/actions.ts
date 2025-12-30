@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 
 import { api } from "@/lib/axiosClient";
 import { ApiResponse, PageResponse, RoleInfo } from "@/types";
@@ -28,11 +29,15 @@ export async function getRoles(page: number, size: number): Promise<ApiResponse<
                 pages: Math.ceil(total / size)
             }
         };
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("getRoles error:", error);
+        let message = "Internal Server Error";
+        if (axios.isAxiosError(error)) {
+            message = error.response?.data?.message || error.message;
+        }
         return {
             code: "500",
-            message: error.response?.data?.message || "Internal Server Error",
+            message: message,
             data: null
         };
     }
@@ -42,10 +47,14 @@ export async function createRole(data: Partial<RoleInfo>): Promise<ApiResponse<v
     try {
         const response = await api.post<void>(API_BASE_URL, data);
         return response;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        let message = "Failed to create role";
+        if (axios.isAxiosError(error)) {
+            message = error.response?.data?.message || error.message;
+        }
         return {
             code: "500",
-            message: error.response?.data?.message || "Failed to create role",
+            message: message,
             data: null
         };
     }
@@ -55,10 +64,14 @@ export async function updateRole(roleId: string, data: Partial<RoleInfo>): Promi
     try {
         const response = await api.put<void>(`${API_BASE_URL}/${roleId}`, data);
         return response;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        let message = "Failed to update role";
+        if (axios.isAxiosError(error)) {
+            message = error.response?.data?.message || error.message;
+        }
         return {
             code: "500",
-            message: error.response?.data?.message || "Failed to update role",
+            message: message,
             data: null
         };
     }
@@ -68,10 +81,14 @@ export async function deleteRole(roleId: string): Promise<ApiResponse<void>> {
     try {
         const response = await api.delete<void>(`${API_BASE_URL}/${roleId}`);
         return response;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        let message = "Failed to delete role";
+        if (axios.isAxiosError(error)) {
+            message = error.response?.data?.message || error.message;
+        }
         return {
             code: "500",
-            message: error.response?.data?.message || "Failed to delete role",
+            message: message,
             data: null
         };
     }
