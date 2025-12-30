@@ -2,7 +2,6 @@
 
 import * as React from "react";
 import {
-    ColumnFiltersState,
     SortingState,
     VisibilityState,
     getCoreRowModel,
@@ -21,7 +20,6 @@ import { RoleDialog } from "./role-dialog";
 export default function RolesPage() {
     const [data, setData] = React.useState<RoleInfo[]>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
@@ -105,7 +103,6 @@ export default function RolesPage() {
         manualPagination: true,
         enableSorting: false,
         onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
         getCoreRowModel: getCoreRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
@@ -114,7 +111,6 @@ export default function RolesPage() {
         onPaginationChange: setPagination,
         state: {
             sorting,
-            columnFilters,
             columnVisibility,
             rowSelection,
             pagination,
@@ -133,7 +129,6 @@ export default function RolesPage() {
 
                 <div className="w-full space-y-4">
                     <DataTableToolbar
-                        table={table}
                         onAdd={handleAdd}
                         onRefresh={fetchData}
                         isLoading={isLoading}
