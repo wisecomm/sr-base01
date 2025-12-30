@@ -14,7 +14,7 @@ import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { RoleInfo } from "@/types";
-import { getRoles, createRole, updateRole, deleteRole } from "./actions";
+import { getRoles, createRole, updateRole, deleteRole, assignRoleMenus } from "./actions";
 import { RoleDialog } from "./role-dialog";
 
 export default function RolesPage() {
@@ -75,8 +75,10 @@ export default function RolesPage() {
         }
     }, [fetchData]);
 
-    const handleFormSubmit = async (formData: Partial<RoleInfo>) => {
+    const handleFormSubmit = async (formData: Partial<RoleInfo>, menuIds: string[]) => {
         let result;
+        const roleId = formData.roleId || selectedRole?.roleId;
+
         if (selectedRole) {
             result = await updateRole(selectedRole.roleId, formData);
         } else {
@@ -84,6 +86,13 @@ export default function RolesPage() {
         }
 
         if (result.code === "200") {
+            // After role is created/updated, assign menus
+            if (roleId) {
+                const assignResult = await assignRoleMenus(roleId, menuIds);
+                if (assignResult.code !== "200") {
+                    alert(assignResult.message || "Failed to assign menus, but role was saved.");
+                }
+            }
             setDialogOpen(false);
             fetchData();
         } else {

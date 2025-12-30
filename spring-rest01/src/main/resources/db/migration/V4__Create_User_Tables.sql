@@ -44,27 +44,29 @@
      SYS_INSERT_USER_ID  VARCHAR(50),                -- 시스템_입력_사용자_아이디
      SYS_UPDATE_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_수정_일시
      SYS_UPDATE_USER_ID  VARCHAR(50),                -- 시스템_수정_사용자_아이디
-     FOREIGN KEY (UPPER_MENU_ID) REFERENCES CHMM_MENU_INFO(MENU_ID) -- 상위 메뉴 참조
+     FOREIGN KEY (UPPER_MENU_ID) REFERENCES CHMM_MENU_INFO(MENU_ID) ON UPDATE CASCADE -- 상위 메뉴 참조
  );
  
- -- 4. CHMM_USER_ROLE_MAP (사용자-역할 매핑)
- CREATE TABLE CHMM_USER_ROLE_MAP (
-     USER_ID             VARCHAR(50) NOT NULL,       -- 사용자_아이디 (FK)
-     ROLE_ID             VARCHAR(50) NOT NULL,       -- 롤_아이디 (FK)
-     USE_YN              CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 ('1': 사용, '0': 미사용)
-     SYS_INSERT_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_입력_일시
-     PRIMARY KEY (USER_ID, ROLE_ID),                 -- 복합 기본 키
-     FOREIGN KEY (USER_ID) REFERENCES CHMM_USER_INFO(USER_ID) ON DELETE CASCADE, -- 사용자 삭제 시 매핑 삭제
-     FOREIGN KEY (ROLE_ID) REFERENCES CHMM_ROLE_INFO(ROLE_ID) ON DELETE CASCADE  -- 역할 삭제 시 매핑 삭제
- );
- 
- -- 5. CHMM_ROLE_MENU_MAP (역할-메뉴 매핑)
+ -- 4. CHMM_ROLE_MENU_MAP (역할-메뉴 매핑)
  CREATE TABLE CHMM_ROLE_MENU_MAP (
      ROLE_ID             VARCHAR(50) NOT NULL,       -- 롤_아이디 (FK)
      MENU_ID             VARCHAR(50) NOT NULL,       -- 메뉴_아이디 (FK)
      USE_YN              CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 ('1': 사용, '0': 미사용)
      SYS_INSERT_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_입력_일시
      PRIMARY KEY (ROLE_ID, MENU_ID),                 -- 복합 기본 키
-     FOREIGN KEY (ROLE_ID) REFERENCES CHMM_ROLE_INFO(ROLE_ID) ON DELETE CASCADE, -- 역할 삭제 시 매핑 삭제
-     FOREIGN KEY (MENU_ID) REFERENCES CHMM_MENU_INFO(MENU_ID) ON DELETE CASCADE  -- 메뉴 삭제 시 매핑 삭제
+     FOREIGN KEY (ROLE_ID) REFERENCES CHMM_ROLE_INFO(ROLE_ID) ON DELETE CASCADE ON UPDATE CASCADE, -- 역할 삭제 시 매핑 삭제
+     FOREIGN KEY (MENU_ID) REFERENCES CHMM_MENU_INFO(MENU_ID) ON DELETE CASCADE ON UPDATE CASCADE  -- 메뉴 삭제 시 매핑 삭제
  );
+
+-- 5. CHMM_USER_ROLE_MAP (사용자-역할 매핑)
+ CREATE TABLE CHMM_USER_ROLE_MAP (
+     USER_ID             VARCHAR(50) NOT NULL,       -- 사용자_아이디 (FK)
+     ROLE_ID             VARCHAR(50) NOT NULL,       -- 롤_아이디 (FK)
+     USE_YN              CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 ('1': 사용, '0': 미사용)
+     SYS_INSERT_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_입력_일시
+     PRIMARY KEY (USER_ID, ROLE_ID),                 -- 복합 기본 키
+     FOREIGN KEY (USER_ID) REFERENCES CHMM_USER_INFO(USER_ID) ON DELETE CASCADE ON UPDATE CASCADE, -- 사용자 삭제 시 매핑 삭제
+     FOREIGN KEY (ROLE_ID) REFERENCES CHMM_ROLE_INFO(ROLE_ID) ON DELETE CASCADE ON UPDATE CASCADE  -- 역할 삭제 시 매핑 삭제
+ );
+ 
+ 

@@ -36,6 +36,12 @@ public class RoleService {
         return role != null ? convertToResponse(role) : null;
     }
 
+    public List<String> getMenuIdsByRoleId(String roleId) {
+        return roleMenuMapper.findByRoleId(roleId).stream()
+                .map(RoleMenuMap::getMenuId)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public void createRole(RoleInfoRequest request) {
         RoleInfo role = convertToEntity(request);

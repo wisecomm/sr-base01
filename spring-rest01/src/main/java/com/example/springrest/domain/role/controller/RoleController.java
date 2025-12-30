@@ -37,6 +37,12 @@ public class RoleController {
         return role != null ? ResponseEntity.ok(ApiResponse.success(role)) : ResponseEntity.notFound().build();
     }
 
+    @Operation(summary = "역할에 부여된 메뉴 아이디 목록 조회")
+    @GetMapping("/{roleId}/menus")
+    public ResponseEntity<ApiResponse<List<String>>> getRoleMenus(@PathVariable String roleId) {
+        return ResponseEntity.ok(ApiResponse.success(roleService.getMenuIdsByRoleId(roleId)));
+    }
+
     @Operation(summary = "역할 생성")
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> createRole(@Valid @RequestBody RoleInfoRequest request) {

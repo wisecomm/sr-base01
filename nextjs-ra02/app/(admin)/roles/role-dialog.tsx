@@ -4,7 +4,10 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { RoleInfo } from "@/types";
+import { RoleInfo, MenuInfo } from "@/types";
+import { getMenus } from "../menus/actions";
+import { getRoleMenus } from "./actions";
+import { MenuCheckboxTree } from "./menu-checkbox-tree";
 import {
     Dialog,
     DialogContent,
@@ -32,6 +35,7 @@ const roleFormSchema = z.object({
     roleName: z.string().min(1, "Name is required."),
     roleDesc: z.string().optional().or(z.literal("")),
     useYn: z.string().min(1),
+    menuIds: z.array(z.string()),
 });
 
 type RoleFormValues = z.infer<typeof roleFormSchema>;
@@ -40,7 +44,7 @@ interface RoleDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     role?: RoleInfo | null;
-    onSubmit: (data: Partial<RoleInfo>) => Promise<void>;
+    onSubmit: (data: Partial<RoleInfo>, menuIds: string[]) => Promise<void>;
 }
 
 export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogProps) {
@@ -53,17 +57,35 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
             roleName: "",
             roleDesc: "",
             useYn: "1",
+            menuIds: [],
         },
     });
+
+    const [allMenus, setAllMenus] = React.useState<MenuInfo[]>([]);
+
+    React.useEffect(() => {
+        if (open) {
+            getMenus().then(res => {
+                if (res.code === "200" && res.data) {
+                    setAllMenus(res.data);
+                }
+            });
+        }
+    }, [open]);
 
     React.useEffect(() => {
         if (open) {
             if (role) {
-                form.reset({
-                    roleId: role.roleId || "",
-                    roleName: role.roleName || "",
-                    roleDesc: role.roleDesc || "",
-                    useYn: role.useYn || "1",
+                // Fetch assigned menus for this role
+                getRoleMenus(role.roleId).then(res => {
+                    const savedMenuIds = res.code === "200" && res.data ? res.data : [];
+                    form.reset({
+                        roleId: role.roleId || "",
+                        roleName: role.roleName || "",
+                        roleDesc: role.roleDesc || "",
+                        useYn: role.useYn || "1",
+                        menuIds: savedMenuIds,
+                    });
                 });
             } else {
                 form.reset({
@@ -71,18 +93,20 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                     roleName: "",
                     roleDesc: "",
                     useYn: "1",
+                    menuIds: [],
                 });
             }
         }
-    }, [open, role, form]);
+    }, [open, role, form, allMenus]);
 
     const onFormSubmit = async (data: RoleFormValues) => {
-        await onSubmit(data);
+        const { menuIds, ...roleData } = data;
+        await onSubmit(roleData, menuIds);
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[500px]">
                 <DialogHeader>
                     <DialogTitle>{isEdit ? "Edit Role" : "Add New Role"}</DialogTitle>
                     <DialogDescription>
@@ -128,6 +152,26 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                                     <FormControl>
                                         <Textarea placeholder="Describe the permissions of this role..." {...field} />
                                     </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <FormField
+                            control={form.control}
+                            name="menuIds"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Menu Permissions</FormLabel>
+                                    <FormControl>
+                                        <MenuCheckboxTree
+                                            items={allMenus}
+                                            selectedIds={field.value}
+                                            onCheckedChange={field.onChange}
+                                        />
+                                    </FormControl>
+                                    <FormDescription>
+                                        Select the menus accessible by this role.
+                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}

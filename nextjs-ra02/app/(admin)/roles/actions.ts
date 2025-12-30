@@ -93,3 +93,37 @@ export async function deleteRole(roleId: string): Promise<ApiResponse<void>> {
         };
     }
 }
+
+export async function getRoleMenus(roleId: string): Promise<ApiResponse<string[]>> {
+    try {
+        const response = await api.get<string[]>(`${API_BASE_URL}/${roleId}/menus`);
+        return response;
+    } catch (error: unknown) {
+        let message = "Failed to fetch role menus";
+        if (axios.isAxiosError(error)) {
+            message = error.response?.data?.message || error.message;
+        }
+        return {
+            code: "500",
+            message: message,
+            data: null
+        };
+    }
+}
+
+export async function assignRoleMenus(roleId: string, menuIds: string[]): Promise<ApiResponse<void>> {
+    try {
+        const response = await api.post<void>(`${API_BASE_URL}/assign-menus`, { roleId, menuIds });
+        return response;
+    } catch (error: unknown) {
+        let message = "Failed to assign menus to role";
+        if (axios.isAxiosError(error)) {
+            message = error.response?.data?.message || error.message;
+        }
+        return {
+            code: "500",
+            message: message,
+            data: null
+        };
+    }
+}
