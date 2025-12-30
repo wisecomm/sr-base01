@@ -47,6 +47,9 @@ public class UserService {
 
     @Transactional
     public void createUser(UserInfoRequest request) {
+        if (userInfoMapper.findById(request.getUserId()) != null) {
+            throw new IllegalArgumentException("이미 존재하는 사용자 ID입니다: " + request.getUserId());
+        }
         UserInfo user = convertToEntity(request);
         user.setUserPwd(passwordEncoder.encode(request.getUserPwd()));
         userInfoMapper.insert(user);
@@ -78,6 +81,12 @@ public class UserService {
                     .build();
             userRoleMapper.insert(mapping);
         }
+    }
+
+    public List<String> getUserRoleIds(String userId) {
+        return userRoleMapper.findByUserId(userId).stream()
+                .map(UserRoleMap::getRoleId)
+                .toList();
     }
 
     private UserInfo convertToEntity(UserInfoRequest request) {

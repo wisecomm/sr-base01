@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "User - User Management", description = "사용자 계정 관리 API")
 @Slf4j
 @RestController
@@ -66,5 +68,11 @@ public class UserController {
     public ResponseEntity<ApiResponse<Void>> assignRoles(@Valid @RequestBody UserRoleAssignRequest request) {
         userService.assignRoles(request.getUserId(), request.getRoleIds());
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "사용자 역할 목록 조회")
+    @GetMapping("/{userId}/roles")
+    public ResponseEntity<ApiResponse<List<String>>> getUserRoles(@PathVariable String userId) {
+        return ResponseEntity.ok(ApiResponse.success(userService.getUserRoleIds(userId)));
     }
 }

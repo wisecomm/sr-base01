@@ -28,6 +28,7 @@
     <select id="findAll" resultMap="RoleInfoResultMap">
         SELECT <include refid="RoleInfoColumns"/>
         FROM CHMM_ROLE_INFO
+        ORDER BY ROLE_ID ASC
     </select>
 
     <insert id="insert">

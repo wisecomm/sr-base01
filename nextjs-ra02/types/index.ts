@@ -23,6 +23,7 @@ export interface UserDetail {
     userStatCd: string;
     userSnsid?: string;
     useYn: string;
+    roleIds?: string[];
     sysInsertDtm?: string;
     sysUpdateDtm?: string;
 }

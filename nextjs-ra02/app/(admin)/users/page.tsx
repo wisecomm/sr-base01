@@ -77,15 +77,23 @@ export default function UsersPage() {
         }
     }, [fetchData]);
 
-    const handleFormSubmit = async (formData: Partial<UserDetail>) => {
+    const handleFormSubmit = async (formData: Partial<UserDetail>, roleIds: string[]) => {
         let result;
+        let userId = selectedUser?.userId;
+
         if (selectedUser) {
             result = await updateUser(selectedUser.userId, formData);
         } else {
             result = await createUser(formData);
+            userId = formData.userId; // Use the userId from form for new users
         }
 
         if (result.code === "200") {
+            // Assign roles if userId is available
+            if (userId) {
+                const { assignUserRoles } = await import("./actions");
+                await assignUserRoles(userId, roleIds);
+            }
             setDialogOpen(false);
             fetchData();
         } else {
