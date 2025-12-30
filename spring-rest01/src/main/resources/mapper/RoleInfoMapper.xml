@@ -7,8 +7,6 @@
         <id property="roleId" column="ROLE_ID"/>
         <result property="roleName" column="ROLE_NAME"/>
         <result property="roleDesc" column="ROLE_DESC"/>
-        <result property="roleStartDt" column="ROLE_START_DT"/>
-        <result property="roleEndDt" column="ROLE_END_DT"/>
         <result property="useYn" column="USE_YN"/>
         <result property="sysInsertDtm" column="SYS_INSERT_DTM"/>
         <result property="sysInsertUserId" column="SYS_INSERT_USER_ID"/>
@@ -17,7 +15,7 @@
     </resultMap>
 
     <sql id="RoleInfoColumns">
-        ROLE_ID, ROLE_NAME, ROLE_DESC, ROLE_START_DT, ROLE_END_DT, USE_YN, 
+        ROLE_ID, ROLE_NAME, ROLE_DESC, USE_YN, 
         SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
     </sql>
 
@@ -36,7 +34,7 @@
         INSERT INTO CHMM_ROLE_INFO (
             <include refid="RoleInfoColumns"/>
         ) VALUES (
-            #{roleId}, #{roleName}, #{roleDesc}, #{roleStartDt}, #{roleEndDt}, #{useYn}, 
+            #{roleId}, #{roleName}, #{roleDesc}, #{useYn}, 
             NOW(), #{sysInsertUserId}, NOW(), #{sysUpdateUserId}
         )
     </insert>
@@ -45,8 +43,6 @@
         UPDATE CHMM_ROLE_INFO
         SET ROLE_NAME = #{roleName},
             ROLE_DESC = #{roleDesc},
-            ROLE_START_DT = #{roleStartDt},
-            ROLE_END_DT = #{roleEndDt},
             USE_YN = #{useYn},
             SYS_UPDATE_DTM = NOW(),
             SYS_UPDATE_USER_ID = #{sysUpdateUserId}

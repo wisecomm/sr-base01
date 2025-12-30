@@ -22,8 +22,6 @@
      ROLE_ID             VARCHAR(50) PRIMARY KEY,    -- 롤_아이디 (기본 키)
      ROLE_NAME           VARCHAR(100) NOT NULL UNIQUE, -- 롤_명 (고유)
      ROLE_DESC           TEXT,                       -- 롤_설명
-     ROLE_START_DT       TIMESTAMP WITHOUT TIME ZONE, -- 롤_시작_일시
-     ROLE_END_DT         TIMESTAMP WITHOUT TIME ZONE, -- 롤_종료_일시
      USE_YN              CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 ('1': 사용, '0': 미사용)
      SYS_INSERT_DTM      TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP, -- 시스템_입력_일시
      SYS_INSERT_USER_ID  VARCHAR(50),                -- 시스템_입력_사용자_아이디

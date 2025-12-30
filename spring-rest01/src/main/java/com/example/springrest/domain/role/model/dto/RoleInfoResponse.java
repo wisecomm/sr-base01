@@ -18,8 +18,6 @@ public class RoleInfoResponse {
     private String roleId;
     private String roleName;
     private String roleDesc;
-    private LocalDateTime roleStartDt;
-    private LocalDateTime roleEndDt;
     private String useYn;
     private LocalDateTime sysInsertDtm;
     private LocalDateTime sysUpdateDtm;

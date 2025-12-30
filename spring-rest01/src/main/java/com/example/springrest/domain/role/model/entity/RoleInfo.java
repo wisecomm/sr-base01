@@ -19,8 +19,6 @@ public class RoleInfo {
     private String roleId; // 롤_아이디
     private String roleName; // 롤_명
     private String roleDesc; // 롤_설명
-    private LocalDateTime roleStartDt; // 롤_시작_일시
-    private LocalDateTime roleEndDt; // 롤_종료_일시
     private String useYn; // 사용 여부
     private LocalDateTime sysInsertDtm; // 시스템_입력_일시
     private String sysInsertUserId; // 시스템_입력_사용자_아이디

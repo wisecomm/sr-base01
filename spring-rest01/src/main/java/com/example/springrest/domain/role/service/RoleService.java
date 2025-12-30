@@ -72,8 +72,6 @@ public class RoleService {
                 .roleId(entity.getRoleId())
                 .roleName(entity.getRoleName())
                 .roleDesc(entity.getRoleDesc())
-                .roleStartDt(entity.getRoleStartDt())
-                .roleEndDt(entity.getRoleEndDt())
                 .useYn(entity.getUseYn())
                 .sysInsertDtm(entity.getSysInsertDtm())
                 .sysUpdateDtm(entity.getSysUpdateDtm())
@@ -85,8 +83,6 @@ public class RoleService {
                 .roleId(request.getRoleId())
                 .roleName(request.getRoleName())
                 .roleDesc(request.getRoleDesc())
-                .roleStartDt(request.getRoleStartDt())
-                .roleEndDt(request.getRoleEndDt())
                 .useYn(request.getUseYn())
                 .build();
     }
