@@ -1,22 +1,15 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import {
-    CreditCard,
-    FileText,
-    Image as ImageIcon,
-    LogOut,
     ChevronLeft,
     ChevronRight,
-    LayoutDashboard,
-    Info,
-    Home,
+    LogOut,
     ChevronDown,
-    Settings,
     LucideIcon,
-    Table,
 } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -43,7 +36,8 @@ import {
 interface SidebarItem {
     title: string;
     href?: string;
-    icon: LucideIcon;
+    icon?: LucideIcon;
+    image?: string;
     children?: SidebarItem[];
 }
 
@@ -51,62 +45,80 @@ const sidebarItems: SidebarItem[] = [
     {
         title: "대시보드",
         href: "/dashboard",
-        icon: LayoutDashboard,
+        image: "/images/menus/dashboard.svg",
     },
     {
         title: "관리",
-        icon: Settings,
+        image: "/images/menus/settings.svg",
         children: [
-
             {
                 title: "결제 관리",
                 href: "/payments",
-                icon: CreditCard,
+                image: "/images/menus/payments.svg",
             },
             {
                 title: "사용자 관리",
                 href: "/users",
-                icon: CreditCard,
+                image: "/images/menus/users.svg",
             },
             {
                 title: "메뉴 관리",
                 href: "/menus",
-                icon: Table,
+                image: "/images/menus/menus.svg",
             },
             {
                 title: "Paserver",
                 href: "/paserver",
-                icon: Table,
+                image: "/images/menus/paserver.svg",
             },
             {
                 title: "게시글 관리",
                 href: "/posts",
-                icon: FileText,
+                image: "/images/menus/posts.svg",
             },
             {
                 title: "사진 관리",
                 href: "/photos",
-                icon: ImageIcon,
+                image: "/images/menus/photos.svg",
             },
         ],
     },
     {
         title: "정보",
-        icon: Info,
+        image: "/images/menus/about.svg",
         children: [
             {
                 title: "소개",
                 href: "/about",
-                icon: Info,
+                image: "/images/menus/about.svg",
             },
             {
                 title: "환영합니다",
                 href: "/welcome",
-                icon: Home,
+                image: "/images/menus/welcome.svg",
             },
         ],
     },
 ];
+
+const IconRenderer = ({ icon: Icon, image, className }: { icon?: LucideIcon, image?: string, className?: string }) => {
+    if (image) {
+        return (
+            <div className={cn("relative h-6 w-6 shrink-0", className)}>
+                <Image
+                    src={image}
+                    alt=""
+                    fill
+                    className="object-contain"
+                />
+            </div>
+        );
+    }
+    if (Icon) {
+        return <Icon className={cn("h-4 w-4 shrink-0", className)} />;
+    }
+    return null;
+};
 
 export function Sidebar() {
     const pathname = usePathname();
@@ -167,8 +179,6 @@ export function Sidebar() {
                     <div className="flex-1 overflow-auto py-2">
                         <nav className="grid items-start px-2 text-sm font-medium gap-1">
                             {sidebarItems.map((item, index) => {
-                                const Icon = item.icon;
-
                                 if (item.children) {
                                     // Group Item
                                     if (isCollapsed) {
@@ -181,7 +191,7 @@ export function Sidebar() {
                                                                 variant="ghost"
                                                                 className="flex h-9 w-full items-center justify-center p-0"
                                                             >
-                                                                <Icon className="h-4 w-4" />
+                                                                <IconRenderer icon={item.icon} image={item.image} />
                                                                 <span className="sr-only">{item.title}</span>
                                                             </Button>
                                                         </DropdownMenuTrigger>
@@ -196,7 +206,7 @@ export function Sidebar() {
                                                     {item.children.map((child) => (
                                                         <DropdownMenuItem key={child.href} asChild>
                                                             <Link href={child.href!} className="cursor-pointer">
-                                                                <child.icon className="mr-2 h-4 w-4" />
+                                                                <IconRenderer icon={child.icon} image={child.image} className="mr-2" />
                                                                 <span>{child.title}</span>
                                                             </Link>
                                                         </DropdownMenuItem>
@@ -218,7 +228,7 @@ export function Sidebar() {
                                                         className="flex w-full items-center justify-between p-2 hover:bg-slate-100 dark:hover:bg-slate-800"
                                                     >
                                                         <div className="flex items-center gap-3">
-                                                            <Icon className="h-4 w-4" />
+                                                            <IconRenderer icon={item.icon} image={item.image} />
                                                             <span className="font-semibold">{item.title}</span>
                                                         </div>
                                                         <ChevronDown
@@ -241,7 +251,7 @@ export function Sidebar() {
                                                                     : "text-muted-foreground"
                                                             )}
                                                         >
-                                                            <child.icon className="h-4 w-4" />
+                                                            <IconRenderer icon={child.icon} image={child.image} />
                                                             <span>{child.title}</span>
                                                         </Link>
                                                     ))}
@@ -264,7 +274,7 @@ export function Sidebar() {
                                                         isCollapsed && "justify-center px-2"
                                                     )}
                                                 >
-                                                    <Icon className="h-4 w-4" />
+                                                    <IconRenderer icon={item.icon} image={item.image} />
                                                     {!isCollapsed && <span>{item.title}</span>}
                                                 </Link>
                                             </TooltipTrigger>

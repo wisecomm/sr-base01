@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { MenuInfo } from "@/types";
 import { ChevronRight, ChevronDown, Folder, File, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 interface MenuTreeProps {
     items: MenuInfo[];
@@ -66,7 +67,17 @@ export function MenuTree({ items, selectedId, onSelect, onAddChild }: MenuTreePr
                             </div>
                         ) : null}
                     </div>
-                    {hasChildren ? (
+                    {item.menuImgUri ? (
+                        <div className="relative w-4 h-4 mr-2 shrink-0">
+                            <Image
+                                src={item.menuImgUri}
+                                alt=""
+                                fill
+                                className="object-contain"
+                                unoptimized
+                            />
+                        </div>
+                    ) : hasChildren ? (
                         <Folder className={cn("w-4 h-4 mr-2", isSelected ? "text-primary" : "text-slate-400")} />
                     ) : (
                         <File className={cn("w-4 h-4 mr-2", isSelected ? "text-primary" : "text-slate-400")} />

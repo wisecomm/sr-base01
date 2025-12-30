@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { MenuInfo } from "@/types";
@@ -206,9 +207,22 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                     render={({ field }) => (
                                         <FormItem>
                                             <FormLabel>Menu Image URI</FormLabel>
-                                            <FormControl>
-                                                <Input placeholder="/images/icons/dashboard.png" {...field} />
-                                            </FormControl>
+                                            <div className="flex gap-4 items-start">
+                                                <FormControl className="flex-1">
+                                                    <Input placeholder="/images/icons/dashboard.png" {...field} />
+                                                </FormControl>
+                                                {field.value && (
+                                                    <div className="relative w-10 h-10 border rounded shrink-0 bg-slate-50 flex items-center justify-center overflow-hidden">
+                                                        <Image
+                                                            src={field.value}
+                                                            alt="Preview"
+                                                            fill
+                                                            className="object-contain p-1"
+                                                            unoptimized
+                                                        />
+                                                    </div>
+                                                )}
+                                            </div>
                                             <FormDescription>Path to the menu icon/image.</FormDescription>
                                             <FormMessage />
                                         </FormItem>
@@ -304,6 +318,6 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                     </form>
                 </Form>
             </CardContent>
-        </Card>
+        </Card >
     );
 }
