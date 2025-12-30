@@ -94,7 +94,7 @@ function Login() {
       <div className="flex justify-center">
         <Image
           className="dark:invert"
-          src="/image/myimage/next.svg"
+          src="/next.svg"
           alt="Next.js logo"
           width={180}
           height={38}
