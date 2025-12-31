@@ -5,6 +5,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -35,5 +36,45 @@ public class SwaggerConfig {
                                                                                 .scheme("bearer")
                                                                                 .bearerFormat("JWT")
                                                                                 .description("JWT token for authentication")));
+        }
+
+        @Bean
+        public GroupedOpenApi authApi() {
+                return GroupedOpenApi.builder()
+                                .group("01. 인증 (Auth)")
+                                .pathsToMatch("/api/v1/auth/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi allApi() {
+                return GroupedOpenApi.builder()
+                                .group("02. 전체 API")
+                                .pathsToMatch("/api/v1/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi userApi() {
+                return GroupedOpenApi.builder()
+                                .group("03. 사용자 관리 (User)")
+                                .pathsToMatch("/api/v1/mgmt/users/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi menuApi() {
+                return GroupedOpenApi.builder()
+                                .group("04. 메뉴 관리 (Menu)")
+                                .pathsToMatch("/api/v1/mgmt/menus/**")
+                                .build();
+        }
+
+        @Bean
+        public GroupedOpenApi roleApi() {
+                return GroupedOpenApi.builder()
+                                .group("05. 권한 관리 (Role)")
+                                .pathsToMatch("/api/v1/mgmt/roles/**")
+                                .build();
         }
 }
