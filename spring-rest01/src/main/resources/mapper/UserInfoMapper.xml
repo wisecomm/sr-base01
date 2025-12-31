@@ -19,24 +19,33 @@
         <result property="sysInsertUserId" column="SYS_INSERT_USER_ID"/>
         <result property="sysUpdateDtm" column="SYS_UPDATE_DTM"/>
         <result property="sysUpdateUserId" column="SYS_UPDATE_USER_ID"/>
+        <collection property="roles" ofType="com.example.springrest.domain.user.model.enums.UserRole">
+            <result column="ROLE_ID"/>
+        </collection>
     </resultMap>
 
     <sql id="UserInfoColumns">
-        USER_ID, USER_EMAIL, USER_MOBILE, USER_NAME, USER_NICK, USER_PWD, USER_MSG, USER_DESC, 
-        USER_STAT_CD, USER_SNSID, USE_YN, 
-        SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
+        u.USER_ID, u.USER_EMAIL, u.USER_MOBILE, u.USER_NAME, u.USER_NICK, u.USER_PWD, u.USER_MSG, u.USER_DESC, 
+        u.USER_STAT_CD, u.USER_SNSID, u.USE_YN, 
+        u.SYS_INSERT_DTM, u.SYS_INSERT_USER_ID, u.SYS_UPDATE_DTM, u.SYS_UPDATE_USER_ID
     </sql>
 
     <select id="findById" resultMap="UserInfoResultMap">
-        SELECT <include refid="UserInfoColumns"/>
-        FROM CHMM_USER_INFO
-        WHERE USER_ID = #{userId}
+        SELECT 
+            <include refid="UserInfoColumns"/>,
+            r.ROLE_ID
+        FROM CHMM_USER_INFO u
+        LEFT JOIN CHMM_USER_ROLE_MAP r ON u.USER_ID = r.USER_ID AND r.USE_YN = '1'
+        WHERE u.USER_ID = #{userId}
     </select>
 
     <select id="findAll" resultMap="UserInfoResultMap">
-        SELECT <include refid="UserInfoColumns"/>
-        FROM CHMM_USER_INFO
-        ORDER BY USER_ID
+        SELECT 
+            <include refid="UserInfoColumns"/>,
+            r.ROLE_ID
+        FROM CHMM_USER_INFO u
+        LEFT JOIN CHMM_USER_ROLE_MAP r ON u.USER_ID = r.USER_ID AND r.USE_YN = '1'
+        ORDER BY u.USER_ID
     </select>
 
     <insert id="insert">

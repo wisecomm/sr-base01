@@ -6,6 +6,7 @@ package com.example.springrest.domain.user.model.enums;
  * ADMIN: 사용자
  */
 public enum UserRole {
-    USER,
-    ADMIN
+    ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_GUEST
 }

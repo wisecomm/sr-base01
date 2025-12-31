@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * 토큰 검증 응답 DTO
  * POST /api/v1/auth/validate 엔드포인트에서 반환
@@ -18,17 +20,17 @@ public class TokenValidationResponse {
 
     private boolean valid;
     private String userId;
-    private UserRole role;
+    private List<UserRole> roles;
     private String message;
 
     /**
      * 유효한 토큰에 대한 응답 생성
      */
-    public static TokenValidationResponse valid(String userId, UserRole role) {
+    public static TokenValidationResponse valid(String userId, List<UserRole> roles) {
         return TokenValidationResponse.builder()
                 .valid(true)
                 .userId(userId)
-                .role(role)
+                .roles(roles)
                 .message("Token is valid")
                 .build();
     }

@@ -2,7 +2,6 @@ package com.example.springrest.domain.user.service;
 
 import com.example.springrest.domain.user.model.dto.UserInfoRequest;
 import com.example.springrest.domain.user.model.entity.UserInfo;
-import com.example.springrest.domain.user.model.enums.UserRole;
 import com.example.springrest.domain.user.model.entity.UserRoleMap;
 import com.example.springrest.domain.user.repository.UserInfoMapper;
 import com.example.springrest.domain.user.repository.UserRoleMapper;
@@ -39,9 +38,6 @@ public class UserService {
 
     public UserInfo getUserById(String userId) {
         UserInfo user = userInfoMapper.findById(userId);
-        if (user != null) {
-            user.setUserRole(UserRole.ADMIN);
-        }
         return user;
     }
 

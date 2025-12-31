@@ -52,16 +52,12 @@ public class AuthService {
             throw new AuthenticationException("Invalid User ID or password");
         }
 
-        // JWT 토큰 생성 (기본적으로 ADMIN 역할 부여 또는 매핑 테이블에서 가져와야 함)
-        // 일단은 기본 ADMIN 역할 부여 (하드코딩된 부분은 나중에 매핑 테이블 연동 필요)
-        UserRole role = UserRole.ADMIN;
-
-        String token = jwtTokenProvider.generateToken(user.getUserId(), role);
+        // JWT 토큰 생성 (매핑 테이블에서 가져온 역할 정보 사용)
+        String token = jwtTokenProvider.generateToken(user.getUserId(), user.getRoles());
         String refreshToken = jwtTokenProvider.generateRefreshToken(user.getUserId());
         Long expiresIn = jwtTokenProvider.getExpirationMs();
 
-        // 응답 생성
-        user.setUserRole(role);
+        log.info("User {} logged in successfully with roles: {}", userId, user.getRoles());
 
         log.info("User {} logged in successfully", userId);
 
@@ -97,16 +93,12 @@ public class AuthService {
             throw new JwtException("User not found");
         }
 
-        // 역할 정보 추출 (토큰에서 가져오거나 DB 재조회)
-        UserRole role = UserRole.ADMIN;
-
         // 새로운 토큰 생성
-        String newToken = jwtTokenProvider.generateToken(user.getUserId(), role);
+        String newToken = jwtTokenProvider.generateToken(user.getUserId(), user.getRoles());
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getUserId());
         Long expiresIn = jwtTokenProvider.getExpirationMs();
 
-        // 사용자 정보 생성
-        user.setUserRole(role);
+        log.info("Token refreshed for user: {}", userId);
 
         log.info("Token refreshed for user: {}", userId);
 
@@ -132,7 +124,6 @@ public class AuthService {
             throw new IllegalArgumentException("User not found: " + userId);
         }
 
-        user.setUserRole(UserRole.ADMIN);
         return user;
     }
 
@@ -151,9 +142,9 @@ public class AuthService {
 
             // 사용자 아이디와 역할 추출
             String userId = jwtTokenProvider.extractUserId(token);
-            UserRole role = jwtTokenProvider.extractRole(token);
+            java.util.List<UserRole> roles = jwtTokenProvider.extractRoles(token);
 
-            return TokenValidationResponse.valid(userId, role);
+            return TokenValidationResponse.valid(userId, roles);
 
         } catch (JwtException e) {
             log.warn("Token validation failed: {}", e.getMessage());

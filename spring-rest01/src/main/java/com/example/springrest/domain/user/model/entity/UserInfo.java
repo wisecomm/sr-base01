@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 /**
  * 사용자 상세 정보 엔티티
@@ -19,7 +20,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class UserInfo {
     private String userId; // 사용자_아이디
-    private UserRole userRole; // 사용자_역할
+    private Set<UserRole> roles; // 사용자_역할 목록
     private String userEmail; // 사용자_이메일
     private String userMobile; // 사용자_모바일
     private String userName; // 사용자_명

@@ -12,7 +12,8 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * JWT 토큰 생성/검증 유틸리티
@@ -40,16 +41,20 @@ public class JwtTokenProvider {
      * JWT 토큰 생성
      * 
      * @param userId 사용자 아이디
-     * @param role   사용자 역할
+     * @param roles  사용자 역할 목록
      * @return JWT 토큰 문자열
      */
-    public String generateToken(String userId, UserRole role) {
+    public String generateToken(String userId, Collection<UserRole> roles) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getExpiration());
 
+        String rolesString = roles.stream()
+                .map(Enum::name)
+                .collect(Collectors.joining(","));
+
         return Jwts.builder()
                 .subject(userId)
-                .claim("role", role.name())
+                .claim("role", rolesString)
                 .claim("type", "ACCESS")
                 .issuedAt(now)
                 .expiration(expiryDate)
@@ -87,14 +92,19 @@ public class JwtTokenProvider {
     }
 
     /**
-     * JWT 토큰에서 역할 추출
+     * JWT 토큰에서 역할 목록 추출
      * 
      * @param token JWT 토큰
-     * @return 사용자 역할
+     * @return 사용자 역할 목록
      */
-    public UserRole extractRole(String token) {
-        String roleName = getClaims(token).get("role", String.class);
-        return UserRole.valueOf(roleName);
+    public List<UserRole> extractRoles(String token) {
+        String rolesString = getClaims(token).get("role", String.class);
+        if (rolesString == null || rolesString.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(rolesString.split(","))
+                .map(UserRole::valueOf)
+                .collect(Collectors.toList());
     }
 
     /**

@@ -32,7 +32,7 @@ export interface UserInfo {
     userId: string;
     userName: string;
     userEmail: string;
-    userRole: string;
+    roles: string[];
     createdAt?: string;
     lastLoginAt?: string;
 }

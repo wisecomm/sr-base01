@@ -18,6 +18,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useRouter } from 'next/navigation';
+import { useAppStore } from "@/store/useAppStore";
 
 const accountFormSchema = z.object({
   userId: z.string().min(1, {
@@ -38,6 +39,7 @@ const defaultValues: Partial<AccountFormValues> = {
 function Login() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const setUser = useAppStore((state) => state.setUser);
 
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
@@ -56,7 +58,7 @@ function Login() {
 
         const loginResult = await login(formData);
 
-        if (loginResult.code !== '200') {
+        if (loginResult.code !== '200' || !loginResult.data) {
           toast({
             title: "Login Failed",
             description: loginResult.message,
@@ -64,18 +66,10 @@ function Login() {
           });
           return;
         }
-        /*
-                toast({
-                  title: "Login Success",
-                  description: (
-                    <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                      <code className="text-white">
-                        {JSON.stringify(loginResult.data, null, 2)}
-                      </code>
-                    </pre>
-                  ),
-                });
-        */
+
+        // Zustand store에 사용자 정보 저장
+        setUser(loginResult.data.user);
+
         router.push('/paserver', { scroll: false });
       } catch (error: unknown) {
         console.log("onSubmit error: " + error);

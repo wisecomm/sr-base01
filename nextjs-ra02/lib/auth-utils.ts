@@ -45,13 +45,17 @@ export async function handleTokenRefresh(): Promise<string | null> {
     return null;
 }
 
+import { useAppStore } from "@/store/useAppStore";
+
 /**
  * Handle unauthorized access (401).
  * Clears the session and redirects to the login page.
  */
 export function handleUnauthorized() {
     clearSession();
+    // Clear Zustand store as well
     if (typeof window !== "undefined") {
+        useAppStore.getState().clearUser();
         window.location.href = "/login";
     }
 }

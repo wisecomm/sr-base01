@@ -11,11 +11,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * JWT 인증 필터
@@ -42,7 +44,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
                         .username(userId)
                         .password("") // JWT 검증 후이므로 비밀번호 불필요
-                        .authorities("ROLE_" + jwtTokenProvider.extractRole(jwt).name())
+                        .authorities(jwtTokenProvider.extractRoles(jwt).stream()
+                                .map(role -> new SimpleGrantedAuthority(role.name()))
+                                .collect(Collectors.toList()))
                         .build();
 
                 // Spring Security 인증 객체 생성
