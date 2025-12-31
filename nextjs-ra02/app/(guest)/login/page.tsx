@@ -1,28 +1,20 @@
 "use client";
 
-import React, { useTransition } from "react";
-import Image from "next/image";
+import React, { useTransition, useState } from "react";
 import { login } from "@/app/actions/auth-actions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useRouter } from 'next/navigation';
 import { useAppStore } from "@/store/useAppStore";
+import { cn } from "@/lib/utils";
 
 const accountFormSchema = z.object({
   userId: z.string().min(1, {
-    message: "사용자 아이디을 입력하세요.",
+    message: "사용자 아이디를 입력하세요.",
   }),
   userPwd: z.string().min(4, {
     message: "패스워드는 4자리 이상입니다.",
@@ -40,6 +32,7 @@ function Login() {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const setUser = useAppStore((state) => state.setUser);
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
@@ -49,9 +42,6 @@ function Login() {
   const onSubmit = (data: AccountFormValues) => {
     startTransition(async () => {
       try {
-        console.log(data);
-
-        // Server Action 호출
         const formData = new FormData();
         formData.append('userid', data.userId);
         formData.append('password', data.userPwd);
@@ -60,21 +50,19 @@ function Login() {
 
         if (loginResult.code !== '200' || !loginResult.data) {
           toast({
-            title: "Login Failed",
+            title: "로그인 실패",
             description: loginResult.message,
             variant: "destructive",
           });
           return;
         }
 
-        // Zustand store에 사용자 정보 저장
         setUser(loginResult.data.user);
-
         router.push('/paserver', { scroll: false });
       } catch (error: unknown) {
-        console.log("onSubmit error: " + error);
+        console.error("onSubmit error:", error);
         toast({
-          title: "Error",
+          title: "오류",
           description: "로그인 처리 중 오류가 발생했습니다.",
           variant: "destructive",
         });
@@ -83,63 +71,127 @@ function Login() {
   };
 
   return (
-    <div className="p-8 space-y-6 bg-white rounded shadow-md w-[400px]">
-      <h2 className="text-2xl font-bold text-center">Login</h2>
-      <div className="flex justify-center">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          style={{ width: "auto", height: "auto" }}
-          priority
-        />
+    <div className="font-sans bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased selection:bg-[#137fec]/30">
+      {/* Header */}
+      <div className="sticky top-0 z-20 w-full bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div className="flex items-center p-4 pb-3 justify-between max-w-md mx-auto w-full">
+          <div className="text-slate-900 flex size-10 shrink-0 items-center justify-center rounded-lg bg-slate-50 border border-slate-200">
+            <span className="material-symbols-outlined text-[#137fec]">barcode_scanner</span>
+          </div>
+          <h2 className="text-slate-900 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">
+            재고 관리 시스템
+          </h2>
+        </div>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <FormField
-            control={form.control}
-            name="userId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>사용자 아이디</FormLabel>
-                <FormControl>
-                  <Input placeholder="Enter your userid" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+      <main className="flex-1 flex flex-col w-full max-w-md mx-auto p-4 justify-center">
+        <div className="flex flex-col items-center pb-8 pt-4">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center shadow-lg shadow-blue-500/30 mb-6">
+            <span className="material-symbols-outlined text-white text-[32px]">inventory_2</span>
+          </div>
+          <h1 className="text-slate-900 tracking-tight text-[32px] font-bold leading-tight text-center mb-2">
+            로그인
+          </h1>
+          <p className="text-slate-500 text-base font-normal leading-relaxed text-center max-w-[300px]">
+            작업자 ID와 비밀번호를 입력하거나<br />사원증을 스캔하세요.
+          </p>
+        </div>
 
-          <FormField
-            control={form.control}
-            name="userPwd"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>패스워드</FormLabel>
-                <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Enter your password"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-6 w-full">
+            {/* User ID Field */}
+            <FormField
+              control={form.control}
+              name="userId"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full space-y-0">
+                  <FormLabel className="text-slate-700 text-sm font-semibold leading-normal pb-2 ml-1">
+                    사용자 ID
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex w-full items-stretch rounded-xl shadow-sm">
+                      <div className="relative flex-1">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="material-symbols-outlined text-slate-400">badge</span>
+                        </div>
+                        <input
+                          {...field}
+                          className="flex w-full min-w-0 resize-none overflow-hidden rounded-l-xl border border-slate-300 bg-white text-slate-900 focus:outline-0 focus:ring-2 focus:ring-[#137fec]/50 focus:border-[#137fec] h-14 placeholder:text-slate-400 pl-10 pr-2 text-base font-normal leading-normal transition-all"
+                          placeholder="ID 입력"
+                        />
+                      </div>
+                      <button
+                        className="flex items-center justify-center px-4 rounded-r-xl border border-l-0 border-slate-300 bg-slate-50 hover:bg-slate-100 transition-colors group"
+                        type="button"
+                      >
+                        <span className="material-symbols-outlined text-slate-500 group-hover:text-[#137fec] transition-colors">qr_code_scanner</span>
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage className="mt-1" />
+                </FormItem>
+              )}
+            />
 
-          <Button
-            type="submit"
-            className="w-full px-4 py-2 font-bold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-200"
-            disabled={isPending}
-          >
-            {isPending ? "로그인 중..." : "로그인"}
-          </Button>
-        </form>
-      </Form>
+            {/* Password Field */}
+            <FormField
+              control={form.control}
+              name="userPwd"
+              render={({ field }) => (
+                <FormItem className="flex flex-col w-full space-y-0">
+                  <div className="flex justify-between items-baseline pb-2 px-1">
+                    <FormLabel className="text-slate-700 text-sm font-semibold leading-normal">
+                      비밀번호
+                    </FormLabel>
+                  </div>
+                  <FormControl>
+                    <div className="flex w-full items-stretch rounded-xl shadow-sm">
+                      <div className="relative flex-1">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <span className="material-symbols-outlined text-slate-400">lock</span>
+                        </div>
+                        <input
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          className="flex w-full min-w-0 resize-none overflow-hidden rounded-l-xl border border-slate-300 bg-white text-slate-900 focus:outline-0 focus:ring-2 focus:ring-[#137fec]/50 focus:border-[#137fec] h-14 placeholder:text-slate-400 pl-10 pr-2 text-base font-normal leading-normal transition-all"
+                          placeholder="비밀번호 입력"
+                        />
+                      </div>
+                      <button
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="flex items-center justify-center px-4 rounded-r-xl border border-l-0 border-slate-300 bg-slate-50 hover:bg-slate-100 transition-colors group"
+                        type="button"
+                      >
+                        <span className="material-symbols-outlined text-slate-500 group-hover:text-slate-700">
+                          {showPassword ? "visibility" : "visibility_off"}
+                        </span>
+                      </button>
+                    </div>
+                  </FormControl>
+                  <div className="flex justify-between items-center mt-1">
+                    <FormMessage />
+                    <a className="text-sm font-medium text-[#137fec] hover:text-blue-700 transition-colors ml-auto" href="#">
+                      비밀번호 찾기
+                    </a>
+                  </div>
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className={cn(
+                "flex w-full items-center justify-center rounded-xl bg-[#137fec] h-14 px-4 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-blue-600 active:scale-[0.98] transition-all shadow-lg shadow-blue-500/20 mt-2",
+                isPending && "opacity-70 cursor-not-allowed"
+              )}
+            >
+              {isPending ? "로그인 중..." : "로그인"}
+            </Button>
+          </form>
+        </Form>
+      </main>
+
     </div>
   );
 }
