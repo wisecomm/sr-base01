@@ -1,5 +1,6 @@
 "use client";
 
+import { api } from "@/lib/axiosClient";
 import { ApiResponse, LoginData } from "@/types";
 
 // For static export, we use localStorage or client-side cookies.
@@ -49,31 +50,17 @@ export async function login(formData: FormData): Promise<ApiResponse<LoginData>>
     const userPwd = formData.get('password') as string;
 
     try {
-        // We call the Spring Boot backend directly via the /api prefix
-        // which will be handled by the same server in production.
-        const response = await fetch("/api/v1/auth/login", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userId, userPwd }),
-        });
+        const response = await api.post<LoginData>("/v1/auth/login", { userId, userPwd });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+        if (response.code === '200' && response.data) {
+            setSession(response.data);
         }
 
-        const apiResponse: ApiResponse<LoginData> = await response.json();
-
-        if (apiResponse.code === '200' && apiResponse.data) {
-            setSession(apiResponse.data);
-        }
-
-        return apiResponse;
-    } catch (error) {
+        return response;
+    } catch (error: unknown) {
         console.error('Login error:', error);
-        const message = error instanceof Error ? error.message : '서버 에러가 발생했습니다.';
+        const err = error as { response?: { data?: { code?: string; message?: string } }; message?: string };
+        const message = err.response?.data?.message || err.message || '서버 에러가 발생했습니다.';
         return { code: '500', message, data: null };
     }
 }

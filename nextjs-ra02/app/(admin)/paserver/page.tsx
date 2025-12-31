@@ -14,49 +14,30 @@ import {
 import { columns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { Payment } from "./columns";
 import * as React from "react";
-import { getPaserverData } from "@/components/data-table/paserver-actions";
+import { useUsers } from "@/hooks/useUserQuery";
 
 export default function PaserverPage() {
-  const [data, setData] = React.useState<Payment[]>([]);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [enableMultiSelection, setEnableMultiSelection] = React.useState(true);
 
-  // Pagination state
+  // Pagination state (0-indexed for React Table)
   const [pagination, setPagination] = React.useState<PaginationState>({
     pageIndex: 0,
     pageSize: 10,
   });
-  const [pageCount, setPageCount] = React.useState(0);
-  const [isLoading, setIsLoading] = React.useState(false);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        console.log("페이지 콜:", pagination.pageIndex);
-        const result = await getPaserverData(pagination.pageIndex, pagination.pageSize);
-        setData(result.data);
-        setPageCount(result.pageCount);
-      } catch (error) {
-        console.error("Failed to fetch data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [pagination.pageIndex, pagination.pageSize]);
+  // Fetch data using TanStack Query (1-indexed for Backend)
+  const { data, isLoading } = useUsers(pagination.pageIndex + 1, pagination.pageSize);
 
   const table = useReactTable({
-    data,
+    data: data?.list || [],
     columns,
-    pageCount, // Pass pageCount to the table
-    manualPagination: true, // Enable manual pagination
+    pageCount: data?.pages || -1,
+    manualPagination: true,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -65,14 +46,14 @@ export default function PaserverPage() {
     getFilteredRowModel: getFilteredRowModel(),
     onColumnVisibilityChange: setColumnVisibility,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination, // Update pagination state
+    onPaginationChange: setPagination,
     enableMultiRowSelection: enableMultiSelection,
     state: {
       sorting,
       columnFilters,
       columnVisibility,
       rowSelection,
-      pagination, // Pass pagination state
+      pagination,
     },
   });
 
@@ -81,14 +62,18 @@ export default function PaserverPage() {
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Paserver</h1>
-            <p className="text-muted-foreground">Manage your paserver history</p>
+            <h1 className="text-3xl font-bold tracking-tight">사용자 관리</h1>
+            <p className="text-muted-foreground">시스템 사용자 계정 및 권한을 관리합니다.</p>
           </div>
         </div>
 
         <div className="w-full space-y-4">
           <DataTableToolbar table={table} />
-          <DataTable table={table} showSeparators={false} />
+          {isLoading && !data ? (
+            <div className="flex h-32 items-center justify-center">Loading users...</div>
+          ) : (
+            <DataTable table={table} showSeparators={false} />
+          )}
         </div>
       </div>
     </div>

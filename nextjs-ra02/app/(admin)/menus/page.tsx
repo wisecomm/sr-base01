@@ -2,39 +2,27 @@
 
 import * as React from "react";
 import { MenuInfo } from "@/types";
-import { getMenus, createMenu, updateMenu, deleteMenu } from "./actions";
+import { useMenus, useCreateMenu, useUpdateMenu, useDeleteMenu } from "@/hooks/useMenuQuery";
 import { MenuTree } from "./menu-tree";
 import { MenuForm } from "./menu-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MenusPage() {
-    const [menus, setMenus] = React.useState<MenuInfo[]>([]);
+    const { data: menus = [], isLoading } = useMenus();
+    const createMenuMutation = useCreateMenu();
+    const updateMenuMutation = useUpdateMenu();
+    const deleteMenuMutation = useDeleteMenu();
+
     const [selectedMenu, setSelectedMenu] = React.useState<MenuInfo | null>(null);
-    const [isLoading, setIsLoading] = React.useState(true);
 
-    const fetchMenus = React.useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const result = await getMenus();
-            if (result.code === "200" && result.data) {
-                setMenus(result.data);
-                // Auto-select first menu if none is selected
-                if (!selectedMenu && result.data.length > 0) {
-                    const firstRoot = result.data.find(m => !m.upperMenuId) || result.data[0];
-                    setSelectedMenu(firstRoot);
-                }
-            }
-        } catch (error) {
-            console.error("Failed to fetch menus:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [selectedMenu]);
-
+    // Auto-select first menu if none is selected and data is available
     React.useEffect(() => {
-        fetchMenus();
-    }, [fetchMenus]);
+        if (!selectedMenu && menus.length > 0) {
+            const firstRoot = menus.find((m: MenuInfo) => !m.upperMenuId) || menus[0];
+            setSelectedMenu(firstRoot);
+        }
+    }, [menus, selectedMenu]);
 
     const handleSelect = (menu: MenuInfo) => {
         setSelectedMenu(menu);
@@ -54,34 +42,26 @@ export default function MenusPage() {
     };
 
     const handleFormSubmit = async (formData: Partial<MenuInfo>) => {
-        let result;
-        const menuId = formData.menuId!;
-
-        if (selectedMenu && selectedMenu.menuId) {
-            result = await updateMenu(selectedMenu.menuId, formData);
-        } else {
-            result = await createMenu(formData);
-        }
-
-        if (result.code === "200") {
-            await fetchMenus();
-            // Try to find the new/updated menu in the fresh list
-            if (menuId) {
-                // We'll let the user select it manually or we could try to find it
+        try {
+            if (selectedMenu && selectedMenu.menuId) {
+                await updateMenuMutation.mutateAsync({ id: selectedMenu.menuId, data: formData });
+            } else {
+                await createMenuMutation.mutateAsync(formData);
             }
-        } else {
-            alert(result.message || "An error occurred.");
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            alert(message || "An error occurred.");
         }
     };
 
     const handleDelete = async (menuId: string) => {
         if (confirm(`Are you sure you want to delete menu ${menuId}?`)) {
-            const result = await deleteMenu(menuId);
-            if (result.code === "200") {
+            try {
+                await deleteMenuMutation.mutateAsync(menuId);
                 setSelectedMenu(null);
-                fetchMenus();
-            } else {
-                alert(result.message || "Failed to delete menu.");
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : String(error);
+                alert(message || "Failed to delete menu.");
             }
         }
     };
@@ -97,7 +77,6 @@ export default function MenusPage() {
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     {/* Left Column: Menu Tree */}
                     <Card className="lg:col-span-4 shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-200px)]">
-
                         <CardContent className="flex-1 overflow-auto p-4">
                             {isLoading ? (
                                 <div className="space-y-4">

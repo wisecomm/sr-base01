@@ -15,11 +15,10 @@ import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { UserDetail } from "@/types";
-import { getUsers, createUser, updateUser, deleteUser } from "./actions";
+import { useUsers, useUpdateUser, useCreateUser, useDeleteUser, useAssignUserRoles } from "@/hooks/useUserQuery";
 import { UserDialog } from "./user-dialog";
 
 export default function UsersPage() {
-    const [data, setData] = React.useState<UserDetail[]>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -30,31 +29,16 @@ export default function UsersPage() {
         pageIndex: 0,
         pageSize: 10,
     });
-    const [pageCount, setPageCount] = React.useState(0);
-    const [isLoading, setIsLoading] = React.useState(false);
+
+    const { data: usersData, isLoading, refetch } = useUsers(pagination.pageIndex, pagination.pageSize);
+    const createUserMutation = useCreateUser();
+    const updateUserMutation = useUpdateUser();
+    const deleteUserMutation = useDeleteUser();
+    const assignRolesMutation = useAssignUserRoles();
 
     // Dialog state
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [selectedUser, setSelectedUser] = React.useState<UserDetail | null>(null);
-
-    const fetchData = React.useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const result = await getUsers(pagination.pageIndex, pagination.pageSize);
-            if (result.code === "200" && result.data) {
-                setData(result.data.list);
-                setPageCount(result.data.pages);
-            }
-        } catch (error) {
-            console.error("Failed to fetch users:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [pagination.pageIndex, pagination.pageSize]);
-
-    React.useEffect(() => {
-        fetchData();
-    }, [fetchData]);
 
     const handleAdd = () => {
         setSelectedUser(null);
@@ -68,36 +52,32 @@ export default function UsersPage() {
 
     const handleDelete = React.useCallback(async (user: UserDetail) => {
         if (confirm(`Are you sure you want to delete user ${user.userId}?`)) {
-            const result = await deleteUser(user.userId);
-            if (result.code === "200") {
-                fetchData();
-            } else {
-                alert(result.message || "Failed to delete user.");
+            try {
+                await deleteUserMutation.mutateAsync(user.userId);
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : String(error);
+                alert(message || "Failed to delete user.");
             }
         }
-    }, [fetchData]);
+    }, [deleteUserMutation]);
 
     const handleFormSubmit = async (formData: Partial<UserDetail>, roleIds: string[]) => {
-        let result;
-        let userId = selectedUser?.userId;
+        try {
+            const userId = selectedUser?.userId || formData.userId;
 
-        if (selectedUser) {
-            result = await updateUser(selectedUser.userId, formData);
-        } else {
-            result = await createUser(formData);
-            userId = formData.userId; // Use the userId from form for new users
-        }
+            if (selectedUser) {
+                await updateUserMutation.mutateAsync({ id: selectedUser.userId, data: formData });
+            } else {
+                await createUserMutation.mutateAsync(formData);
+            }
 
-        if (result.code === "200") {
-            // Assign roles if userId is available
             if (userId) {
-                const { assignUserRoles } = await import("./actions");
-                await assignUserRoles(userId, roleIds);
+                await assignRolesMutation.mutateAsync({ userId, roleIds });
             }
             setDialogOpen(false);
-            fetchData();
-        } else {
-            alert(result.message || "An error occurred.");
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            alert(message || "An error occurred.");
         }
     };
 
@@ -107,9 +87,9 @@ export default function UsersPage() {
     }), [handleEdit, handleDelete]);
 
     const table = useReactTable({
-        data,
+        data: usersData?.list || [],
         columns,
-        pageCount,
+        pageCount: usersData?.pages || -1,
         manualPagination: true,
         enableSorting: false,
         onSortingChange: setSorting,
@@ -143,7 +123,7 @@ export default function UsersPage() {
                     <DataTableToolbar
                         table={table}
                         onAdd={handleAdd}
-                        onRefresh={fetchData}
+                        onRefresh={() => refetch()}
                         isLoading={isLoading}
                     />
                     <DataTable table={table} showSeparators={true} />

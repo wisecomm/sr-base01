@@ -11,9 +11,9 @@ import {
     ChevronDown,
     LucideIcon,
 } from "lucide-react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { getMyMenus } from "@/app/(admin)/menus/actions";
+import { useMyMenus } from "@/hooks/useMenuQuery";
 import { MenuInfo } from "@/types";
 
 
@@ -132,39 +132,31 @@ export function Sidebar() {
     const pathname = usePathname();
     const [mounted, setMounted] = useState(false);
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [sidebarItems, setSidebarItems] = useState<SidebarItem[]>(staticSidebarItems);
+    const { data: menus } = useMyMenus();
     const [openGroups, setOpenGroups] = useState<Record<string, boolean>>({});
-    const isFetched = useRef(false);
+    const [hasInitializedGroups, setHasInitializedGroups] = useState(false);
+
+    const sidebarItems = menus ? buildMenuTree(menus) : staticSidebarItems;
 
     useEffect(() => {
-        if (isFetched.current) return;
-
-        const loadMenus = async () => {
-            setMounted(true);
-            isFetched.current = true;
-            try {
-                const res = await getMyMenus();
-                if (res.code === "200" && res.data && res.data.length > 0) {
-                    const dynamicItems = buildMenuTree(res.data);
-                    setSidebarItems(dynamicItems);
-
-                    // Auto-open all root groups
-                    const initialOpen: Record<string, boolean> = {};
-                    dynamicItems.forEach(item => {
-                        if (item.children) initialOpen[item.title] = true;
-                    });
-                    setOpenGroups(initialOpen);
-                }
-            } catch (error) {
-                console.error("Failed to load dynamic menus:", error);
-            }
-        };
-        loadMenus();
+        const timer = setTimeout(() => setMounted(true), 0);
+        return () => clearTimeout(timer);
     }, []);
+
+    // Initial groups open only once when menus are first loaded
+    if (menus && menus.length > 0 && !hasInitializedGroups) {
+        const dynamicItems = buildMenuTree(menus);
+        const initialOpen: Record<string, boolean> = {};
+        dynamicItems.forEach(item => {
+            if (item.children) initialOpen[item.title] = true;
+        });
+        setOpenGroups(initialOpen);
+        setHasInitializedGroups(true);
+    }
 
 
     const toggleGroup = (title: string) => {
-        setOpenGroups(prev => ({ ...prev, [title]: !prev[title] }));
+        setOpenGroups((prev: Record<string, boolean>) => ({ ...prev, [title]: !prev[title] }));
     };
 
     if (!mounted) return null;

@@ -4,9 +4,9 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { RoleInfo, MenuInfo } from "@/types";
-import { getMenus } from "../menus/actions";
-import { getRoleMenus } from "./actions";
+import { RoleInfo } from "@/types";
+import { useMenus } from "@/hooks/useMenuQuery";
+import { useRoleMenus } from "@/hooks/useRoleQuery";
 import { MenuCheckboxTree } from "./menu-checkbox-tree";
 import {
     Dialog,
@@ -50,6 +50,9 @@ interface RoleDialogProps {
 export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogProps) {
     const isEdit = !!role;
 
+    const { data: allMenus = [] } = useMenus();
+    const { data: roleMenuIds = [], isLoading: isRoleMenusLoading } = useRoleMenus(role?.roleId);
+
     const form = useForm<RoleFormValues>({
         resolver: zodResolver(roleFormSchema),
         defaultValues: {
@@ -61,31 +64,16 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
         },
     });
 
-    const [allMenus, setAllMenus] = React.useState<MenuInfo[]>([]);
-
-    React.useEffect(() => {
-        if (open) {
-            getMenus().then(res => {
-                if (res.code === "200" && res.data) {
-                    setAllMenus(res.data);
-                }
-            });
-        }
-    }, [open]);
-
+    // Reset form when role or menu data changes
     React.useEffect(() => {
         if (open) {
             if (role) {
-                // Fetch assigned menus for this role
-                getRoleMenus(role.roleId).then(res => {
-                    const savedMenuIds = res.code === "200" && res.data ? res.data : [];
-                    form.reset({
-                        roleId: role.roleId || "",
-                        roleName: role.roleName || "",
-                        roleDesc: role.roleDesc || "",
-                        useYn: role.useYn || "1",
-                        menuIds: savedMenuIds,
-                    });
+                form.reset({
+                    roleId: role.roleId || "",
+                    roleName: role.roleName || "",
+                    roleDesc: role.roleDesc || "",
+                    useYn: role.useYn || "1",
+                    menuIds: roleMenuIds,
                 });
             } else {
                 form.reset({
@@ -97,7 +85,7 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                 });
             }
         }
-    }, [open, role, form, allMenus]);
+    }, [open, role, roleMenuIds, form]);
 
     const onFormSubmit = async (data: RoleFormValues) => {
         const { menuIds, ...roleData } = data;
@@ -163,11 +151,15 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                                 <FormItem>
                                     <FormLabel>Menu Permissions</FormLabel>
                                     <FormControl>
-                                        <MenuCheckboxTree
-                                            items={allMenus}
-                                            selectedIds={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
+                                        {isRoleMenusLoading && isEdit ? (
+                                            <div className="h-20 flex items-center justify-center text-sm text-muted-foreground">Loading permissions...</div>
+                                        ) : (
+                                            <MenuCheckboxTree
+                                                items={allMenus}
+                                                selectedIds={field.value}
+                                                onCheckedChange={field.onChange}
+                                            />
+                                        )}
                                     </FormControl>
                                     <FormDescription>
                                         Select the menus accessible by this role.

@@ -12,16 +12,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import { UserDetail } from "@/types";
 
-export type Payment = {
-  id: string;
-  amount: number;
-  status: "pending" | "processing" | "success" | "failed";
-  email: string;
-  date: string;
-};
-
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<UserDetail>[] = [
   {
     id: "select",
     header: ({ table }) => {
@@ -51,52 +44,60 @@ export const columns: ColumnDef<Payment>[] = [
     size: 50,
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: () => <div className="capitalize">success</div>,
-    size: 100,
-  },
-  {
-    accessorKey: "email",
+    accessorKey: "userId",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          아이디
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-    size: 300,
+    cell: ({ row }) => <div className="font-medium">{row.getValue("userId")}</div>,
   },
   {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
+    accessorKey: "userName",
+    header: "이름",
+    cell: ({ row }) => <div>{row.getValue("userName")}</div>,
+  },
+  {
+    accessorKey: "userEmail",
+    header: "이메일",
+    cell: ({ row }) => <div>{row.getValue("userEmail")}</div>,
+  },
+  {
+    accessorKey: "userMobile",
+    header: "연락처",
+    cell: ({ row }) => <div>{row.getValue("userMobile")}</div>,
+  },
+  {
+    accessorKey: "userStatCd",
+    header: "상태",
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
-      return <div className="text-right font-medium">{formatted}</div>;
+      const status = row.getValue("userStatCd") as string;
+      return (
+        <div className={status === "10" ? "text-green-600" : "text-red-500"}>
+          {status === "10" ? "활성" : "중지"}
+        </div>
+      );
     },
-    size: 100,
   },
   {
-    accessorKey: "date",
-    header: "Date",
-    cell: ({ row }) => <div>{row.getValue("date")}</div>,
-    size: 150,
+    accessorKey: "sysInsertDtm",
+    header: "등록일",
+    cell: ({ row }) => {
+      const dtm = row.getValue("sysInsertDtm") as string;
+      return <div>{dtm ? new Date(dtm).toLocaleDateString() : "-"}</div>;
+    },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original;
+      const user = row.original;
 
       return (
         <DropdownMenu>
@@ -107,13 +108,13 @@ export const columns: ColumnDef<Payment>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(payment.id)}>
-              Copy payment ID
+            <DropdownMenuLabel>작업</DropdownMenuLabel>
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(user.userId)}>
+              아이디 복사
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuItem>상세 보기</DropdownMenuItem>
+            <DropdownMenuItem className="text-red-600">삭제</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

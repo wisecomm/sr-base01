@@ -18,9 +18,9 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
     return (
         <div className="flex items-center py-4">
             <Input
-                placeholder="Filter emails..."
-                value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
-                onChange={(event) => table.getColumn("email")?.setFilterValue(event.target.value)}
+                placeholder="Filter user emails..."
+                value={(table.getColumn("userEmail")?.getFilterValue() as string) ?? ""}
+                onChange={(event) => table.getColumn("userEmail")?.setFilterValue(event.target.value)}
                 className="max-w-sm"
             />
             <DropdownMenu>

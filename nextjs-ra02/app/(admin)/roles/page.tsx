@@ -14,11 +14,10 @@ import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { RoleInfo } from "@/types";
-import { getRoles, createRole, updateRole, deleteRole, assignRoleMenus } from "./actions";
+import { useRoles, useCreateRole, useUpdateRole, useDeleteRole, useAssignRoleMenus } from "@/hooks/useRoleQuery";
 import { RoleDialog } from "./role-dialog";
 
 export default function RolesPage() {
-    const [data, setData] = React.useState<RoleInfo[]>([]);
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
@@ -28,31 +27,15 @@ export default function RolesPage() {
         pageIndex: 0,
         pageSize: 10,
     });
-    const [pageCount, setPageCount] = React.useState(0);
-    const [isLoading, setIsLoading] = React.useState(false);
 
-    // Dialog state
+    const { data: rolesData, isLoading, refetch } = useRoles(pagination.pageIndex, pagination.pageSize);
+    const createRoleMutation = useCreateRole();
+    const updateRoleMutation = useUpdateRole();
+    const deleteRoleMutation = useDeleteRole();
+    const assignMenusMutation = useAssignRoleMenus();
+
     const [dialogOpen, setDialogOpen] = React.useState(false);
     const [selectedRole, setSelectedRole] = React.useState<RoleInfo | null>(null);
-
-    const fetchData = React.useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const result = await getRoles(pagination.pageIndex, pagination.pageSize);
-            if (result.code === "200" && result.data) {
-                setData(result.data.list);
-                setPageCount(result.data.pages);
-            }
-        } catch (error) {
-            console.error("Failed to fetch roles:", error);
-        } finally {
-            setIsLoading(false);
-        }
-    }, [pagination.pageIndex, pagination.pageSize]);
-
-    React.useEffect(() => {
-        fetchData();
-    }, [fetchData]);
 
     const handleAdd = () => {
         setSelectedRole(null);
@@ -66,37 +49,35 @@ export default function RolesPage() {
 
     const handleDelete = React.useCallback(async (role: RoleInfo) => {
         if (confirm(`Are you sure you want to delete role ${role.roleId}?`)) {
-            const result = await deleteRole(role.roleId);
-            if (result.code === "200") {
-                fetchData();
-            } else {
-                alert(result.message || "Failed to delete role.");
+            try {
+                await deleteRoleMutation.mutateAsync(role.roleId);
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : String(error);
+                alert(message || "Failed to delete role.");
             }
         }
-    }, [fetchData]);
+    }, [deleteRoleMutation]);
 
     const handleFormSubmit = async (formData: Partial<RoleInfo>, menuIds: string[]) => {
-        let result;
-        const roleId = formData.roleId || selectedRole?.roleId;
+        try {
+            let roleId = selectedRole?.roleId;
 
-        if (selectedRole) {
-            result = await updateRole(selectedRole.roleId, formData);
-        } else {
-            result = await createRole(formData);
-        }
+            if (selectedRole) {
+                await updateRoleMutation.mutateAsync({ id: selectedRole.roleId, data: formData });
+            } else {
+                // If the backend doesn't return the new ID, we might need to adjust this
+                // But usually, roleId is part of the formData if it's user-provided
+                roleId = formData.roleId;
+                await createRoleMutation.mutateAsync(formData);
+            }
 
-        if (result.code === "200") {
-            // After role is created/updated, assign menus
             if (roleId) {
-                const assignResult = await assignRoleMenus(roleId, menuIds);
-                if (assignResult.code !== "200") {
-                    alert(assignResult.message || "Failed to assign menus, but role was saved.");
-                }
+                await assignMenusMutation.mutateAsync({ roleId, menuIds });
             }
             setDialogOpen(false);
-            fetchData();
-        } else {
-            alert(result.message || "An error occurred.");
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            alert(message || "An error occurred.");
         }
     };
 
@@ -106,9 +87,9 @@ export default function RolesPage() {
     }), [handleEdit, handleDelete]);
 
     const table = useReactTable({
-        data,
+        data: rolesData?.list || [],
         columns,
-        pageCount,
+        pageCount: rolesData?.pages || -1,
         manualPagination: true,
         enableSorting: false,
         onSortingChange: setSorting,
@@ -139,7 +120,7 @@ export default function RolesPage() {
                 <div className="w-full space-y-4">
                     <DataTableToolbar
                         onAdd={handleAdd}
-                        onRefresh={fetchData}
+                        onRefresh={() => refetch()}
                         isLoading={isLoading}
                     />
                     <DataTable table={table} showSeparators={true} />
