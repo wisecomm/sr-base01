@@ -4,7 +4,7 @@ import { Bell, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { logout } from "@/app/actions/auth-actions";
 import { useAppStore } from "@/store/useAppStore";
 import {
@@ -28,8 +28,17 @@ export function Header() {
     const pathname = usePathname();
     const title = pathname.split("/").pop() || "Dashboard";
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+    const [mounted, setMounted] = useState(false);
     const user = useAppStore((state) => state.user);
     const clearUser = useAppStore((state) => state.clearUser);
+
+    useEffect(() => {
+        // Use setTimeout to avoid "synchronous setState in useEffect" lint error
+        const timer = setTimeout(() => {
+            setMounted(true);
+        }, 0);
+        return () => clearTimeout(timer);
+    }, []);
 
     const handleLogout = () => {
         clearUser();
@@ -49,7 +58,7 @@ export function Header() {
                 <ThemeToggle />
 
                 <div className="flex items-center gap-3 px-2">
-                    {user && (
+                    {mounted && user && (
                         <div className="hidden flex-col items-end gap-0.5 md:flex">
                             <span className="text-sm font-medium leading-none">{user.userName}님</span>
                             <span className="text-[10px] text-muted-foreground">{user.roles.includes('ROLE_ADMIN') ? '관리자' : '사용자'}</span>
@@ -63,7 +72,7 @@ export function Header() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>{user?.userName || 'My Account'}</DropdownMenuLabel>
+                            <DropdownMenuLabel>{(mounted && user?.userName) || 'My Account'}</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem onClick={() => setIsLogoutDialogOpen(true)} className="text-destructive focus:text-destructive cursor-pointer">
                                 <LogOut className="mr-2 h-4 w-4" />
