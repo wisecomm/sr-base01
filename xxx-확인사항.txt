@@ -1,12 +1,5 @@
 
 
 
--- 페이지 리프래쉬 처리
-        // 4. 토큰 만료 처리 (401)
-        if (response.status === 401) {
-            return await handleTokenRefresh(request, path);
-        }
-
-
 - JWT 토큰 생성 
 : openssl rand -base64 32
