@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useTransition, useState } from "react";
+import Image from "next/image";
 import { login } from "@/app/actions/auth-actions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -76,7 +77,14 @@ function Login() {
       <div className="sticky top-0 z-20 w-full bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div className="flex items-center p-4 pb-3 justify-between max-w-md mx-auto w-full">
           <div className="text-slate-900 flex size-10 shrink-0 items-center justify-center rounded-lg bg-slate-50 border border-slate-200">
-            <span className="material-symbols-outlined text-[#137fec]">barcode_scanner</span>
+            <Image
+              src="/images/ap/scan-barcode.svg"
+              alt="Barcode Scanner"
+              width={24}
+              height={24}
+              className="brightness-0 saturate-100 invert-[39%] sepia-[91%] font-semibold saturate-[2586%] hue-rotate-[197deg] brightness-[98%] contrast-[93%]"
+              style={{ filter: "invert(42%) sepia(93%) saturate(1518%) hue-rotate(189deg) brightness(97%) contrast(92%)" }}
+            />
           </div>
           <h2 className="text-slate-900 text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">
             재고 관리 시스템
@@ -87,7 +95,13 @@ function Login() {
       <main className="flex-1 flex flex-col w-full max-w-md mx-auto p-4 justify-center">
         <div className="flex flex-col items-center pb-8 pt-4">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center shadow-lg shadow-blue-500/30 mb-6">
-            <span className="material-symbols-outlined text-white text-[32px]">inventory_2</span>
+            <Image
+              src="/images/ap/boxes.svg"
+              alt="Inventory"
+              width={32}
+              height={32}
+              className="invert brightness-0"
+            />
           </div>
           <h1 className="text-slate-900 tracking-tight text-[32px] font-bold leading-tight text-center mb-2">
             로그인
@@ -111,21 +125,21 @@ function Login() {
                   <FormControl>
                     <div className="flex w-full items-stretch rounded-xl shadow-sm">
                       <div className="relative flex-1">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <span className="material-symbols-outlined text-slate-400">badge</span>
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                          <Image
+                            src="/images/ap/id-card-lanyard.svg"
+                            alt="ID Card"
+                            width={20}
+                            height={20}
+                            className="opacity-40"
+                          />
                         </div>
                         <input
                           {...field}
-                          className="flex w-full min-w-0 resize-none overflow-hidden rounded-l-xl border border-slate-300 bg-white text-slate-900 focus:outline-0 focus:ring-2 focus:ring-[#137fec]/50 focus:border-[#137fec] h-14 placeholder:text-slate-400 pl-10 pr-2 text-base font-normal leading-normal transition-all"
+                          className="flex w-full min-w-0 resize-none overflow-hidden rounded-xl border border-slate-300 bg-white text-slate-900 focus:outline-0 focus:ring-2 focus:ring-[#137fec]/50 focus:border-[#137fec] h-14 placeholder:text-slate-400 pl-10 pr-2 text-base font-normal leading-normal transition-all"
                           placeholder="ID 입력"
                         />
                       </div>
-                      <button
-                        className="flex items-center justify-center px-4 rounded-r-xl border border-l-0 border-slate-300 bg-slate-50 hover:bg-slate-100 transition-colors group"
-                        type="button"
-                      >
-                        <span className="material-symbols-outlined text-slate-500 group-hover:text-[#137fec] transition-colors">qr_code_scanner</span>
-                      </button>
                     </div>
                   </FormControl>
                   <FormMessage className="mt-1" />
@@ -147,8 +161,14 @@ function Login() {
                   <FormControl>
                     <div className="flex w-full items-stretch rounded-xl shadow-sm">
                       <div className="relative flex-1">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                          <span className="material-symbols-outlined text-slate-400">lock</span>
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
+                          <Image
+                            src="/images/ap/lock-keyhole.svg"
+                            alt="Lock"
+                            width={20}
+                            height={20}
+                            className="opacity-40"
+                          />
                         </div>
                         <input
                           {...field}
@@ -162,9 +182,13 @@ function Login() {
                         className="flex items-center justify-center px-4 rounded-r-xl border border-l-0 border-slate-300 bg-slate-50 hover:bg-slate-100 transition-colors group"
                         type="button"
                       >
-                        <span className="material-symbols-outlined text-slate-500 group-hover:text-slate-700">
-                          {showPassword ? "visibility" : "visibility_off"}
-                        </span>
+                        <Image
+                          src={showPassword ? "/images/ap/eye.svg" : "/images/ap/eye-off.svg"}
+                          alt="Toggle Password"
+                          width={20}
+                          height={20}
+                          className="opacity-50 group-hover:opacity-80 transition-opacity"
+                        />
                       </button>
                     </div>
                   </FormControl>
@@ -191,7 +215,6 @@ function Login() {
           </form>
         </Form>
       </main>
-
     </div>
   );
 }
