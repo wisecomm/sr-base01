@@ -65,7 +65,7 @@ JWT 기반 사용자 인증 시스템을 구현한 Spring Boot REST API 프로�
 ### 2. 프로젝트 클론
 ```bash
 git clone <repository-url>
-cd spring-rest01
+cd spring-rest
 ```
 
 ### 3. PostgreSQL 실행

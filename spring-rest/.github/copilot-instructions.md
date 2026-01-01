@@ -1,4 +1,4 @@
-# spring-rest01 Development Guidelines
+# spring-rest Development Guidelines
 
 Auto-generated from all feature plans. Last updated: 2025-11-10
 

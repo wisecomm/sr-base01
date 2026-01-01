@@ -73,7 +73,7 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-def frontendDir = "$projectDir/../nextjs-ra02"
+def frontendDir = "$projectDir/../nextjs-client"
 
 task buildFrontend(type: Exec) {
     group = 'build'

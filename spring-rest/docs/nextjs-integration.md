@@ -1,14 +1,14 @@
-# Walkthrough: nextjs-ra02 Integration into spring-rest01
+# Walkthrough: nextjs-client Integration into spring-rest
 
-Finished integrating the `nextjs-ra02` frontend project into the `spring-rest01` Spring Boot project.
+Finished integrating the `nextjs-client` frontend project into the `spring-rest` Spring Boot project.
 
 ## Changes Made
 
-### Frontend (nextjs-ra02)
+### Frontend (nextjs-client)
 - **Enabled Static Export**: Added `output: 'export'` to `next.config.ts`.
 - **Fixed Compatibility**: Removed `"use server"` from `paserver-actions.ts` to allow static export (converted to client-side mock data).
 
-### Backend (spring-rest01)
+### Backend (spring-rest)
 - **Unified Deployment:** Frontend is served from `/` via Spring Boot's static resource handling.
 - **SPA Routing:** Unknown paths like `/login` are automatically redirected to `index.html` for client-side routing.
 - **Environment-Specific CORS:** Restrictive CORS in production, permissive in development.
@@ -21,13 +21,13 @@ Finished integrating the `nextjs-ra02` frontend project into the `spring-rest01`
 
 ### Build Verification
 Ran `./gradlew buildFrontend copyFrontend` successfully.
-- **Output**: Next.js static files are correctly generated and placed in `spring-rest01/src/main/resources/static`.
+- **Output**: Next.js static files are correctly generated and placed in `spring-rest/src/main/resources/static`.
 
 ### File Structure Check
 Verified that `index.html`, `_next/`, and other static assets are present in the target directory.
 
 ```bash
-# Example static files in spring-rest01/src/main/resources/static:
+# Example static files in spring-rest/src/main/resources/static:
 index.html
 paserver.html
 payments.html
@@ -43,7 +43,7 @@ favicon.ico
 - **Build**: `pnpm build` (Generates static files in `/out`)
 - **Test**: `pnpm test:e2e` (Runs Playwright tests)
 
-### Backend (spring-rest01)
+### Backend (spring-rest)
 - **Development**: `./gradlew bootRun` (Runs on `http://localhost:8080`)
 - **Build**: `./gradlew build` (Includes frontend build automatically)
 - **Test**: `./gradlew test` (Runs JUnit tests)

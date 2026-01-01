@@ -3,11 +3,11 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Debug (Spring Boot) - spring-rest01",
+            "name": "Debug (Spring Boot) - spring-rest",
             "request": "launch",
             "mainClass": "com.example.springrest.Application",
-            "projectName": "spring-rest01",
-            "cwd": "${workspaceFolder}/spring-rest01",
+            "projectName": "spring-rest",
+            "cwd": "${workspaceFolder}/spring-rest",
             "env": {
                 "SPRING_PROFILES_ACTIVE": "dev"
             }
