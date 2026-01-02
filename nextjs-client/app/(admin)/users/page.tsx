@@ -17,8 +17,10 @@ import { DataTableToolbar } from "./data-table-toolbar";
 import { UserDetail } from "@/types";
 import { useUsers, useUpdateUser, useCreateUser, useDeleteUser, useAssignUserRoles } from "@/hooks/useUserQuery";
 import { UserDialog } from "./user-dialog";
+import { useToast } from "@/hooks/use-toast";
 
 export default function UsersPage() {
+    const { toast } = useToast();
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
@@ -54,12 +56,13 @@ export default function UsersPage() {
         if (confirm(`Are you sure you want to delete user ${user.userId}?`)) {
             try {
                 await deleteUserMutation.mutateAsync(user.userId);
+                toast({ title: "삭제 완료", description: "사용자가 삭제되었습니다.", variant: "success" });
             } catch (error: unknown) {
                 const message = error instanceof Error ? error.message : String(error);
-                alert(message || "Failed to delete user.");
+                toast({ title: "삭제 실패", description: message || "Failed to delete user.", variant: "destructive" });
             }
         }
-    }, [deleteUserMutation]);
+    }, [deleteUserMutation, toast]);
 
     const handleFormSubmit = async (formData: Partial<UserDetail>, roleIds: string[]) => {
         try {
@@ -67,8 +70,10 @@ export default function UsersPage() {
 
             if (selectedUser) {
                 await updateUserMutation.mutateAsync({ id: selectedUser.userId, data: formData });
+                toast({ title: "수정 완료", description: "사용자 정보가 수정되었습니다.", variant: "success" });
             } else {
                 await createUserMutation.mutateAsync(formData);
+                toast({ title: "등록 완료", description: "새 사용자가 등록되었습니다.", variant: "success" });
             }
 
             if (userId) {
@@ -77,7 +82,7 @@ export default function UsersPage() {
             setDialogOpen(false);
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            alert(message || "An error occurred.");
+            toast({ title: "오류 발생", description: message || "An error occurred.", variant: "destructive" });
         }
     };
 

@@ -6,7 +6,7 @@ import { login } from "@/app/actions/auth-actions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useRouter } from 'next/navigation';
@@ -30,6 +30,7 @@ const defaultValues: Partial<AccountFormValues> = {
 };
 
 function Login() {
+  const { toast } = useToast();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const setUser = useAppStore((state) => state.setUser);

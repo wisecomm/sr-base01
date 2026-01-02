@@ -59,8 +59,6 @@ public class AuthService {
 
         log.info("User {} logged in successfully with roles: {}", userId, user.getRoles());
 
-        log.info("User {} logged in successfully", userId);
-
         return LoginResponse.builder()
                 .token(token)
                 .refreshToken(refreshToken)
@@ -97,8 +95,6 @@ public class AuthService {
         String newToken = jwtTokenProvider.generateToken(user.getUserId(), user.getRoles());
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(user.getUserId());
         Long expiresIn = jwtTokenProvider.getExpirationMs();
-
-        log.info("Token refreshed for user: {}", userId);
 
         log.info("Token refreshed for user: {}", userId);
 

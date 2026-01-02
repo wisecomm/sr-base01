@@ -7,8 +7,10 @@ import { MenuTree } from "./menu-tree";
 import { MenuForm } from "./menu-form";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 export default function MenusPage() {
+    const { toast } = useToast();
     const { data: menus = [], isLoading } = useMenus();
     const createMenuMutation = useCreateMenu();
     const updateMenuMutation = useUpdateMenu();
@@ -45,12 +47,14 @@ export default function MenusPage() {
         try {
             if (selectedMenu && selectedMenu.menuId) {
                 await updateMenuMutation.mutateAsync({ id: selectedMenu.menuId, data: formData });
+                toast({ title: "수정 완료", description: "메뉴 정보가 수정되었습니다.", variant: "success" });
             } else {
                 await createMenuMutation.mutateAsync(formData);
+                toast({ title: "등록 완료", description: "새 메뉴가 등록되었습니다.", variant: "success" });
             }
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error);
-            alert(message || "An error occurred.");
+            toast({ title: "오류 발생", description: message || "An error occurred.", variant: "destructive" });
         }
     };
 
@@ -59,9 +63,10 @@ export default function MenusPage() {
             try {
                 await deleteMenuMutation.mutateAsync(menuId);
                 setSelectedMenu(null);
+                toast({ title: "삭제 완료", description: "메뉴가 삭제되었습니다.", variant: "success" });
             } catch (error: unknown) {
                 const message = error instanceof Error ? error.message : String(error);
-                alert(message || "Failed to delete menu.");
+                toast({ title: "삭제 실패", description: message || "Failed to delete menu.", variant: "destructive" });
             }
         }
     };

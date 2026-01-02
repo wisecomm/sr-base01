@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 };
 
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ToastProvider } from "@/hooks/use-toast";
 
 export default function RootLayout({
   children,
@@ -23,7 +24,9 @@ export default function RootLayout({
     <html lang="ko">
       <head />
       <body className={`${inter.variable} font-sans antialiased`}>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </QueryProvider>
       </body>
     </html>
   );
