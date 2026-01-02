@@ -47,23 +47,6 @@ export default function UsersPage() {
         setDialogOpen(true);
     };
 
-    const handleEdit = React.useCallback((user: UserDetail) => {
-        setSelectedUser(user);
-        setDialogOpen(true);
-    }, []);
-
-    const handleDelete = React.useCallback(async (user: UserDetail) => {
-        if (confirm(`Are you sure you want to delete user ${user.userId}?`)) {
-            try {
-                await deleteUserMutation.mutateAsync(user.userId);
-                toast({ title: "삭제 완료", description: "사용자가 삭제되었습니다.", variant: "success" });
-            } catch (error: unknown) {
-                const message = error instanceof Error ? error.message : String(error);
-                toast({ title: "삭제 실패", description: message || "Failed to delete user.", variant: "destructive" });
-            }
-        }
-    }, [deleteUserMutation, toast]);
-
     const handleFormSubmit = async (formData: Partial<UserDetail>, roleIds: string[]) => {
         try {
             const userId = selectedUser?.userId || formData.userId;
@@ -86,10 +69,10 @@ export default function UsersPage() {
         }
     };
 
-    const columns = React.useMemo(() => getColumns({
-        onEdit: handleEdit,
-        onDelete: handleDelete
-    }), [handleEdit, handleDelete]);
+    const columns = React.useMemo(() => getColumns(), []);
+
+    // Selection mode: 'single' or 'multi' (defaults to 'single' if not specified)
+    const selectionMode: 'single' | 'multi' | undefined = 'single';
 
     const table = useReactTable({
         data: usersData?.list || [],
@@ -105,6 +88,7 @@ export default function UsersPage() {
         onColumnVisibilityChange: setColumnVisibility,
         onRowSelectionChange: setRowSelection,
         onPaginationChange: setPagination,
+        enableMultiRowSelection: (selectionMode as string) === 'multi',
         state: {
             sorting,
             columnFilters,
@@ -113,6 +97,47 @@ export default function UsersPage() {
             pagination,
         },
     });
+
+    const handleEdit = React.useCallback(() => {
+        const selectedRows = table.getSelectedRowModel().rows;
+        if (selectedRows.length !== 1) {
+            toast({
+                title: "알림",
+                description: "수정할 사용자를 한 명만 선택해주세요.",
+                variant: "default",
+            });
+            return;
+        }
+        const user = selectedRows[0].original;
+        setSelectedUser(user);
+        setDialogOpen(true);
+    }, [table, toast]);
+
+    const handleDelete = React.useCallback(async () => {
+        const selectedRows = table.getSelectedRowModel().rows;
+        if (selectedRows.length === 0) {
+            toast({
+                title: "알림",
+                description: "삭제할 사용자를 선택해주세요.",
+                variant: "default",
+            });
+            return;
+        }
+
+        const userIds = selectedRows.map(row => row.original.userId);
+        if (confirm(`선택한 ${userIds.length}명의 사용자를 삭제하시겠습니까?`)) {
+            try {
+                for (const id of userIds) {
+                    await deleteUserMutation.mutateAsync(id);
+                }
+                table.resetRowSelection();
+                toast({ title: "삭제 완료", description: "사용자가 삭제되었습니다.", variant: "success" });
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : String(error);
+                toast({ title: "삭제 실패", description: message || "Failed to delete user.", variant: "destructive" });
+            }
+        }
+    }, [table, deleteUserMutation, toast]);
 
     return (
         <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
@@ -128,6 +153,8 @@ export default function UsersPage() {
                     <DataTableToolbar
                         table={table}
                         onAdd={handleAdd}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
                         onRefresh={() => refetch()}
                         isLoading={isLoading}
                     />

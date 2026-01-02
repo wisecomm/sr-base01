@@ -2,105 +2,32 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { UserDetail } from "@/types";
-import { MoreHorizontal, SquarePen, Trash2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { WiTitleCell, TextCell, DateCell } from "@/components/data-table/cells";
+import { Checkbox } from "@/components/ui/checkbox";
 
-interface ColumnProps {
-    onEdit: (user: UserDetail) => void;
-    onDelete: (user: UserDetail) => void;
-}
-
-export const getColumns = ({ onEdit, onDelete }: ColumnProps): ColumnDef<UserDetail>[] => [
+export const getColumns = (): ColumnDef<UserDetail>[] => [
     {
-        accessorKey: "userId",
-        header: () => <div className="text-center">User ID</div>,
-        size: 100,
-    },
-    {
-        accessorKey: "userName",
-        header: () => <div className="text-center">Name</div>,
-        size: 150,
-    },
-    {
-        accessorKey: "userEmail",
-        header: () => <div className="text-center">Email</div>,
-        size: 200,
-    },
-    {
-        accessorKey: "userNick",
-        header: () => <div className="text-center">Nickname</div>,
-        size: 150,
-    },
-    {
-        accessorKey: "useYn",
-        header: () => <div className="text-center">Use Y/N</div>,
-        size: 80,
+        id: "select",
         cell: ({ row }) => (
-            <div className="text-center">
-                {row.getValue("useYn") === "1" ? (
-                    <span className="px-2 py-1 text-xs font-semibold text-green-700 bg-green-100 rounded-full">Yes</span>
-                ) : (
-                    <span className="px-2 py-1 text-xs font-semibold text-red-700 bg-red-100 rounded-full">No</span>
-                )}
+            <div
+                className="flex justify-center"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label="Select row"
+                />
             </div>
         ),
+        enableSorting: false,
+        enableHiding: false,
+        size: 40,
     },
-    {
-        accessorKey: "sysInsertDtm",
-        header: () => <div className="text-center">Created At</div>,
-        size: 180,
-        cell: ({ row }) => {
-            const date = row.getValue("sysInsertDtm") as string;
-            if (!date) return "-";
-            return (
-                <div className="text-center">
-                    {new Date(date).toLocaleString()}
-                </div>
-            );
-        },
-    },
-    {
-        id: "actions",
-        header: () => <div className="text-center">Actions</div>,
-        size: 100,
-        cell: ({ row }) => {
-            const user = row.original;
-
-            return (
-                <div className="text-center">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                                <span className="sr-only">Open menu</span>
-                                <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={() => onEdit(user)}>
-                                <SquarePen className="mr-2 h-4 w-4" />
-                                Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                                className="text-red-600 focus:text-red-600"
-                                onClick={() => onDelete(user)}
-                            >
-                                <Trash2 className="mr-2 h-4 w-4" />
-                                Delete
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            );
-        },
-    },
+    { accessorKey: "userId", header: () => <WiTitleCell value="아이디" size="100" />, cell: ({ row }) => <TextCell value={row.getValue("userId")} /> },
+    { accessorKey: "userName", header: () => <WiTitleCell value="이름" size="150" />, cell: ({ row }) => <TextCell value={row.getValue("userName")} /> },
+    { accessorKey: "userEmail", header: () => <WiTitleCell value="이메일" size="200" />, cell: ({ row }) => <TextCell value={row.getValue("userEmail")} /> },
+    { accessorKey: "userNick", header: () => <WiTitleCell value="닉네임" size="150" />, cell: ({ row }) => <TextCell value={row.getValue("userNick")} /> },
+    { accessorKey: "useYn", header: () => <WiTitleCell value="사용 여부" size="80" />, cell: ({ row }) => <TextCell value={row.getValue("useYn")} /> },
+    { accessorKey: "sysInsertDtm", header: () => <WiTitleCell value="등록일" size="180" />, cell: ({ row }) => <DateCell value={row.getValue("sysInsertDtm")} format="datetime" /> },
 ];

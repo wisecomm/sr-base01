@@ -3,17 +3,13 @@
 import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, RefreshCw } from "lucide-react";
-import {
-    DropdownMenu,
-    DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Plus, RefreshCw, Pencil, Trash2 } from "lucide-react";
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
     onAdd: () => void;
+    onEdit: () => void;
+    onDelete: () => void;
     onRefresh: () => void;
     isLoading?: boolean;
 }
@@ -21,6 +17,8 @@ interface DataTableToolbarProps<TData> {
 export function DataTableToolbar<TData>({
     table,
     onAdd,
+    onEdit,
+    onDelete,
     onRefresh,
     isLoading
 }: DataTableToolbarProps<TData>) {
@@ -47,31 +45,25 @@ export function DataTableToolbar<TData>({
             <div className="flex items-center space-x-2">
                 <Button onClick={onAdd} className="bg-blue-600 hover:bg-blue-700 text-white">
                     <Plus className="mr-2 h-4 w-4" />
-                    Add User
+                    추가
                 </Button>
 
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="outline">Columns</Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        {table
-                            .getAllColumns()
-                            .filter((column) => column.getCanHide())
-                            .map((column) => {
-                                return (
-                                    <DropdownMenuCheckboxItem
-                                        key={column.id}
-                                        className="capitalize"
-                                        checked={column.getIsVisible()}
-                                        onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                                    >
-                                        {column.id}
-                                    </DropdownMenuCheckboxItem>
-                                );
-                            })}
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <Button
+                    variant="outline"
+                    onClick={onEdit}
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100"
+                >
+                    <Pencil className="mr-2 h-4 w-4" />
+                    수정
+                </Button>
+
+                <Button
+                    variant="destructive"
+                    onClick={onDelete}
+                >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    삭제
+                </Button>
             </div>
         </div>
     );

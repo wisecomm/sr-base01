@@ -11,7 +11,7 @@ import {
     PaginationState,
 } from "@tanstack/react-table";
 import { getColumns } from "./columns";
-import { DataTable } from "@/components/data-table/data-table";
+import { DataTable } from "@/components/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { RoleInfo } from "@/types";
 import { useRoles, useCreateRole, useUpdateRole, useDeleteRole, useAssignRoleMenus } from "@/hooks/useRoleQuery";

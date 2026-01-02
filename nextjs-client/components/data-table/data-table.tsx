@@ -33,8 +33,6 @@ export function DataTable<TData>({
     table,
     showSeparators = false,
 }: DataTableProps<TData>) {
-    const [clickedRowId, setClickedRowId] = React.useState<string | null>(null);
-
     return (
         <div className="w-full space-y-4">
             <div className="rounded-md border bg-white dark:bg-slate-900">
@@ -63,8 +61,8 @@ export function DataTable<TData>({
                                 <TableRow
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
-                                    onClick={() => setClickedRowId(row.id === clickedRowId ? null : row.id)}
-                                    className={`cursor-pointer ${clickedRowId === row.id ? "bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800" : ""}`}
+                                    onClick={() => row.toggleSelected()}
+                                    className={`cursor-pointer ${row.getIsSelected() ? "bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800" : ""}`}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>
