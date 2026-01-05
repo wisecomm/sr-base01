@@ -64,17 +64,22 @@ public class SecurityConfig {
 
                 // 요청별 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // 정적 리소스 허용
-                        .requestMatchers("/", "/index.html", "/static/**", "/*.js", "/*.css", "/*.ico", "/*.png",
-                                "/*.svg")
+                        // 정적 리소스 및 프론트엔드 뷰 허용
+                        .requestMatchers("/", "/index.html", "/static/**", "/_next/**", "/*.js", "/*.css", "/*.ico",
+                                "/*.png", "/*.svg")
                         .permitAll()
+                        .requestMatchers("/login", "/welcome", "/about").permitAll()
+
                         // API 및 기타 설정
-                        .requestMatchers("/api/v1/auth/login").permitAll()
-                        .requestMatchers("/api/v1/auth/refresh").permitAll()
-                        .requestMatchers("/api/v1/auth/validate").permitAll()
+                        .requestMatchers("/api/v1/auth/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
-                        .anyRequest().authenticated());
+
+                        // API 경로는 인증 필요
+                        .requestMatchers("/api/**").authenticated()
+
+                        // 그 외 기타 모든 요청(프론트엔드 라우팅 등) 허용
+                        .anyRequest().permitAll());
 
         return http.build();
     }

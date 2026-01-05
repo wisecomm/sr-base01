@@ -3,7 +3,7 @@ spring:
     name: spring-rest-api
   
   profiles:
-    active: dev
+    active: local
 
 app:
   cors:

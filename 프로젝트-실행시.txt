@@ -2,6 +2,8 @@
 - 터미널에서 실행 : pnpm dev (포트 3000)
 - Run Debug 실행 : 스프링
 
+- 배포시 : ./gradlew clean build -x test
+
 
 . 프론트엔드 작업 시 (빠른 피드백)
 UI 수정 사항을 즉시 확인하고 싶을 때 사용하는 방법입니다.
