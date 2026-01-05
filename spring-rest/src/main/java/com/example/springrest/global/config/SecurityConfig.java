@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -29,6 +30,13 @@ import java.util.Arrays;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/", "/index.html", "/static/**", "/_next/**", "/*.js", "/*.css", "/*.ico", "/*.png",
+                        "/*.svg", "/*.jpg", "/*.jpeg", "/*.gif", "/*.bmp", "/*.woff2", "/*.woff", "/*.ttf");
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -64,11 +72,8 @@ public class SecurityConfig {
 
                 // 요청별 권한 설정
                 .authorizeHttpRequests(auth -> auth
-                        // 정적 리소스 및 프론트엔드 뷰 허용
-                        .requestMatchers("/", "/index.html", "/static/**", "/_next/**", "/*.js", "/*.css", "/*.ico",
-                                "/*.png", "/*.svg")
-                        .permitAll()
-                        .requestMatchers("/login", "/welcome", "/about").permitAll()
+                        // 프론트엔드 뷰 허용 (게스트 페이지)
+                        .requestMatchers("/", "/index.html", "/login", "/welcome", "/about").permitAll()
 
                         // API 및 기타 설정
                         .requestMatchers("/api/v1/auth/**").permitAll()
