@@ -29,10 +29,16 @@ public class SpaWebMvcConfigurer implements WebMvcConfigurer {
                             throws IOException {
                         Resource requestedResource = location.createRelative(resourcePath);
 
-                        // 요청한 리소스가 존재하고 읽기 가능한 경우 해당 리소스 반환
-                        // 단, API 경로는 제외 (API 경로는 404가 나야 함)
-                        if (requestedResource.exists() && requestedResource.isReadable()) {
+                        // 1. 요청한 리소스가 실제 파일로 존재하는 경우 바로 반환
+                        if (requestedResource.exists() && requestedResource.isReadable()
+                                && !requestedResource.getURL().getPath().endsWith("/")) {
                             return requestedResource;
+                        }
+
+                        // 2. 경로 뒤에 .html을 붙여서 파일이 존재하는지 확인 (Next.js static export 대응)
+                        Resource htmlResource = location.createRelative(resourcePath + ".html");
+                        if (htmlResource.exists() && htmlResource.isReadable()) {
+                            return htmlResource;
                         }
 
                         // API 경로(/api/**)는 index.html로 리다이렉트하지 않음
@@ -40,7 +46,7 @@ public class SpaWebMvcConfigurer implements WebMvcConfigurer {
                             return null;
                         }
 
-                        // 그 외의 경우(Next.js 라우팅 경로 등) index.html 반환
+                        // 3. 그 외의 경우 index.html 반환 (SPA 클라이언트 사이드 라우팅)
                         return new ClassPathResource("/static/index.html");
                     }
                 });
