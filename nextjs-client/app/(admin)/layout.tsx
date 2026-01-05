@@ -17,7 +17,7 @@ export default function AdminLayout({
     useEffect(() => {
         const token = getAccessToken();
         if (!token) {
-            router.push("/login");
+            router.replace("/login");
         }
     }, [router]);
 

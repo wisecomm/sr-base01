@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useTransition, useState } from "react";
+import React, { useTransition, useState, useEffect } from "react";
 import Image from "next/image";
-import { login } from "@/app/actions/auth-actions";
+import { login, getAccessToken } from "@/app/actions/auth-actions";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -36,6 +36,13 @@ function Login() {
   const setUser = useAppStore((state) => state.setUser);
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    const token = getAccessToken();
+    if (token) {
+      router.replace("/paserver");
+    }
+  }, [router]);
+
   const form = useForm<AccountFormValues>({
     resolver: zodResolver(accountFormSchema),
     defaultValues,
@@ -60,7 +67,7 @@ function Login() {
         }
 
         setUser(loginResult.data.user);
-        router.push('/paserver', { scroll: false });
+        router.replace('/paserver', { scroll: false });
       } catch (error: unknown) {
         console.error("onSubmit error:", error);
         toast({
