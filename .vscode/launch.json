@@ -9,7 +9,7 @@
             "projectName": "spring-rest",
             "cwd": "${workspaceFolder}/spring-rest",
             "env": {
-                "SPRING_PROFILES_ACTIVE": "dev"
+                "SPRING_PROFILES_ACTIVE": "local"
             }
         }
     ]
