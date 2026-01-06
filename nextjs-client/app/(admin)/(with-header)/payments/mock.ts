@@ -1,4 +1,4 @@
-import { Payment } from "@/app/(admin)/payments/columns";
+import { Payment } from "@/app/(admin)/(with-header)/payments/columns";
 
 export function generatePayments(count: number): Payment[] {
   return Array.from({ length: count }, (_, i) => ({

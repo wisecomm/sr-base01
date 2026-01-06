@@ -1,7 +1,7 @@
 // This is a client-side mock data fetcher
 
-import { Payment } from "../../app/(admin)/payments/columns";
-import { generatePayments } from "@/lib/mock";
+import { Payment } from "../../app/(admin)/(with-header)/payments/columns";
+import { generatePayments } from "@/app/(admin)/(with-header)/payments/mock";
 
 // Simulate a database
 const ALL_PAYMENTS = generatePayments(500);

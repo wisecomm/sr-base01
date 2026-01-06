@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getRoles, createRole, updateRole, deleteRole, getRoleMenus, assignRoleMenus } from "@/app/(admin)/roles/actions";
+import { getRoles, createRole, updateRole, deleteRole, getRoleMenus, assignRoleMenus } from "@/app/(admin)/(with-header)/roles/actions";
 import { RoleInfo } from "@/types";
 
 export const roleKeys = {

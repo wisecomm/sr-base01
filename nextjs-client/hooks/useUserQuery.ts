@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getUsers, createUser, updateUser, deleteUser, getUserRoles, assignUserRoles } from "@/app/(admin)/users/actions";
+import { getUsers, createUser, updateUser, deleteUser, getUserRoles, assignUserRoles } from "@/app/(admin)/(with-header)/users/actions";
 import { UserDetail } from "@/types";
 
 export const userKeys = {

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getMenus, getMyMenus, createMenu, updateMenu, deleteMenu } from "@/app/(admin)/menus/actions";
+import { getMenus, getMyMenus, createMenu, updateMenu, deleteMenu } from "@/app/(admin)/(with-header)/menus/actions";
 import { MenuInfo } from "@/types";
 
 export const menuKeys = {
