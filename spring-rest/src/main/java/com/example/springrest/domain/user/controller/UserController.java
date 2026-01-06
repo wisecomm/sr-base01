@@ -29,8 +29,12 @@ public class UserController {
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<UserInfo>>> getAllUsers(
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(ApiResponse.success(userService.getAllUsers(page, size)));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) String startDate,
+            @RequestParam(required = false) String endDate) {
+        return ResponseEntity
+                .ok(ApiResponse.success(userService.getAllUsers(page, size, userName, startDate, endDate)));
     }
 
     @Operation(summary = "사용자 상세 조회")

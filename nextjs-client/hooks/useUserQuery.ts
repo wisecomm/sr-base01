@@ -5,16 +5,16 @@ import { UserDetail } from "@/types";
 export const userKeys = {
     all: ["users"] as const,
     lists: () => [...userKeys.all, "list"] as const,
-    list: (page: number, size: number) => [...userKeys.lists(), { page, size }] as const,
+    list: (page: number, size: number, userName?: string, startDate?: string, endDate?: string) => [...userKeys.lists(), { page, size, userName, startDate, endDate }] as const,
     detail: (id: string) => [...userKeys.all, "detail", id] as const,
     roles: (id: string) => [...userKeys.detail(id), "roles"] as const,
 };
 
-export function useUsers(page: number, size: number) {
+export function useUsers(page: number, size: number, userName?: string, startDate?: string, endDate?: string) {
     return useQuery({
-        queryKey: userKeys.list(page, size),
+        queryKey: userKeys.list(page, size, userName, startDate, endDate),
         queryFn: async () => {
-            const res = await getUsers(page, size);
+            const res = await getUsers(page, size, userName, startDate, endDate);
             if (res.code !== "200") throw new Error(res.message);
             return res.data;
         },

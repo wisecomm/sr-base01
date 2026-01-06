@@ -1,39 +1,128 @@
 "use client";
 
-import { Table } from "@tanstack/react-table";
+import * as React from "react";
+
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Pencil, Trash2, Search } from "lucide-react";
+import { Plus, Pencil, Trash2, Search, Calendar } from "lucide-react";
 
-interface DataTableToolbarProps<TData> {
-    table: Table<TData>;
+interface DataTableToolbarProps {
     onAdd: () => void;
     onEdit: () => void;
     onDelete: () => void;
-    onRefresh: () => void;
+    onSearch: (params: { userName: string; startDate: string; endDate: string }) => void;
     isLoading?: boolean;
 }
 
-export function DataTableToolbar<TData>({
-    table,
+export function DataTableToolbar({
     onAdd,
     onEdit,
     onDelete,
-    onRefresh,
+    onSearch,
     isLoading
-}: DataTableToolbarProps<TData>) {
+}: DataTableToolbarProps) {
+    const [userName, setUserName] = React.useState("");
+    const [startDate, setStartDate] = React.useState("");
+    const [endDate, setEndDate] = React.useState("");
+
+    const startDateRef = React.useRef<HTMLInputElement>(null);
+    const endDateRef = React.useRef<HTMLInputElement>(null);
+
+    const handleSearch = () => {
+        onSearch({ userName, startDate, endDate });
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent) => {
+        if (event.key === "Enter") {
+            handleSearch();
+        }
+    };
+
+    const handleDateIconClick = (ref: React.RefObject<HTMLInputElement | null>) => {
+        if (ref.current) {
+            try {
+                ref.current.showPicker();
+            } catch (error) {
+                console.error("showPicker failed:", error);
+                ref.current.focus();
+                ref.current.click();
+            }
+        }
+    };
+
     return (
-        <div className="flex items-center justify-between py-4 gap-2">
-            <div className="flex flex-1 items-center space-x-2">
-                <Input
-                    placeholder="Search users..."
-                    value={(table.getColumn("userName")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) => table.getColumn("userName")?.setFilterValue(event.target.value)}
-                    className="max-w-sm"
-                />
+        <div className="flex items-center justify-between py-4 gap-2 flex-wrap">
+            <div className="flex flex-1 items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium whitespace-nowrap">이름</span>
+                    <Input
+                        placeholder="사용자명 입력"
+                        value={userName}
+                        onChange={(event) => setUserName(event.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="w-[150px] lg:w-[200px]"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <span className="text-sm font-medium whitespace-nowrap">등록일</span>
+                    <div className="relative w-[140px]">
+                        <Input
+                            type="text"
+                            placeholder="YYYY-MM-DD"
+                            value={startDate}
+                            onChange={(event) => setStartDate(event.target.value)}
+                            onKeyDown={handleKeyDown}
+                            className="pr-8"
+                        />
+                        <input
+                            type="date"
+                            ref={startDateRef}
+                            className="absolute opacity-0 pointer-events-none"
+                            value={startDate}
+                            onChange={(e) => setStartDate(e.target.value)}
+                            style={{ right: 0, bottom: 0, width: 1, height: 1 }}
+                            tabIndex={-1}
+                        />
+                        <button
+                            className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors"
+                            type="button"
+                            onClick={() => handleDateIconClick(startDateRef)}
+                        >
+                            <Calendar className="h-4 w-4" />
+                        </button>
+                    </div>
+                    <span>-</span>
+                    <div className="relative w-[140px]">
+                        <Input
+                            type="text"
+                            placeholder="YYYY-MM-DD"
+                            value={endDate}
+                            onChange={(event) => setEndDate(event.target.value)}
+                            onKeyDown={handleKeyDown}
+                            className="pr-8"
+                        />
+                        <input
+                            type="date"
+                            ref={endDateRef}
+                            className="absolute opacity-0 pointer-events-none"
+                            value={endDate}
+                            onChange={(e) => setEndDate(e.target.value)}
+                            style={{ right: 0, bottom: 0, width: 1, height: 1 }}
+                            tabIndex={-1}
+                        />
+                        <button
+                            className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors"
+                            type="button"
+                            onClick={() => handleDateIconClick(endDateRef)}
+                        >
+                            <Calendar className="h-4 w-4" />
+                        </button>
+                    </div>
+                </div>
                 <Button
                     variant="outline"
-                    onClick={onRefresh}
+                    onClick={handleSearch}
                     className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     disabled={isLoading}
                 >

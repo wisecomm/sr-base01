@@ -13,7 +13,8 @@ import java.util.List;
 public interface UserInfoMapper {
     UserInfo findById(@Param("userId") String userId);
 
-    List<UserInfo> findAll();
+    List<UserInfo> findAll(@Param("userName") String userName, @Param("startDate") String startDate,
+            @Param("endDate") String endDate);
 
     int insert(UserInfo userInfo);
 

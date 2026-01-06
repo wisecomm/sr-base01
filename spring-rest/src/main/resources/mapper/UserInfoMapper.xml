@@ -45,6 +45,17 @@
             r.ROLE_ID
         FROM CHMM_USER_INFO u
         LEFT JOIN CHMM_USER_ROLE_MAP r ON u.USER_ID = r.USER_ID AND r.USE_YN = '1'
+        <where>
+            <if test="userName != null and userName != ''">
+                AND u.USER_NAME LIKE CONCAT('%', #{userName}, '%')
+            </if>
+            <if test="startDate != null and startDate != ''">
+                AND u.SYS_INSERT_DTM &gt;= #{startDate}::timestamp
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND u.SYS_INSERT_DTM &lt;= #{endDate}::timestamp
+            </if>
+        </where>
         ORDER BY u.USER_ID
     </select>
 

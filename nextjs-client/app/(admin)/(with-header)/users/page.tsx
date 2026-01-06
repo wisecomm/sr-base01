@@ -26,13 +26,16 @@ export default function UsersPage() {
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
 
+    // Search state
+    const [searchParams, setSearchParams] = React.useState({ userName: "", startDate: "", endDate: "" });
+
     // Pagination state
     const [pagination, setPagination] = React.useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
     });
 
-    const { data: usersData, isLoading, refetch } = useUsers(pagination.pageIndex, pagination.pageSize);
+    const { data: usersData, isLoading } = useUsers(pagination.pageIndex, pagination.pageSize, searchParams.userName, searchParams.startDate, searchParams.endDate);
     const createUserMutation = useCreateUser();
     const updateUserMutation = useUpdateUser();
     const deleteUserMutation = useDeleteUser();
@@ -139,15 +142,19 @@ export default function UsersPage() {
         }
     }, [table, deleteUserMutation, toast]);
 
+    const handleSearch = (params: { userName: string; startDate: string; endDate: string }) => {
+        setSearchParams(params);
+        setPagination((prev) => ({ ...prev, pageIndex: 0 }));
+    };
+
     return (
         <div className="w-full space-y-6">
             <div className="w-full space-y-4">
                 <DataTableToolbar
-                    table={table}
                     onAdd={handleAdd}
                     onEdit={handleEdit}
                     onDelete={handleDelete}
-                    onRefresh={() => refetch()}
+                    onSearch={handleSearch}
                     isLoading={isLoading}
                 />
                 <DataTable table={table} showSeparators={true} />

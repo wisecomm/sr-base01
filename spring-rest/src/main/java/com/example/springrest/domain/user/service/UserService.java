@@ -28,9 +28,17 @@ public class UserService {
     private final UserRoleMapper userRoleMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public PageResponse<UserInfo> getAllUsers(int page, int size) {
+    public PageResponse<UserInfo> getAllUsers(int page, int size, String userName, String startDate, String endDate) {
         PageHelper.startPage(page, size, "USER_ID ASC");
-        List<UserInfo> users = userInfoMapper.findAll();
+
+        if (startDate != null && !startDate.isEmpty()) {
+            startDate = startDate + " 00:00:00";
+        }
+        if (endDate != null && !endDate.isEmpty()) {
+            endDate = endDate + " 23:59:59";
+        }
+
+        List<UserInfo> users = userInfoMapper.findAll(userName, startDate, endDate);
         PageInfo<UserInfo> pageInfo = new PageInfo<>(users);
 
         return PageResponse.of(pageInfo, users);

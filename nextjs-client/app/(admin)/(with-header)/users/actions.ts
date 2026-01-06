@@ -7,9 +7,18 @@ import axios from "axios";
 /**
  * 사용자 목록 조회 (페이징)
  */
-export async function getUsers(page: number, size: number): Promise<ApiResponse<PageResponse<UserDetail>>> {
+export async function getUsers(page: number, size: number, userName?: string, startDate?: string, endDate?: string): Promise<ApiResponse<PageResponse<UserDetail>>> {
     try {
-        const response = await api.get<PageResponse<UserDetail>>(`/v1/mgmt/users?page=${page + 1}&size=${size}`);
+        const params = new URLSearchParams({
+            page: (page + 1).toString(),
+            size: size.toString(),
+        });
+
+        if (userName) params.append("userName", userName);
+        if (startDate) params.append("startDate", startDate);
+        if (endDate) params.append("endDate", endDate);
+
+        const response = await api.get<PageResponse<UserDetail>>(`/v1/mgmt/users?${params.toString()}`);
         return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
