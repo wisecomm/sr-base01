@@ -72,46 +72,39 @@ export default function MenusPage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
-            <div className="max-w-[1600px] mx-auto space-y-6">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Menu Management</h1>
-                    <p className="text-slate-500 dark:text-slate-400">Organize and configure system navigation menu hierarchy.</p>
-                </div>
+        <div className="w-full space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                {/* Left Column: Menu Tree */}
+                <Card className="lg:col-span-4 shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-200px)]">
+                    <CardContent className="flex-1 overflow-auto p-4">
+                        {isLoading ? (
+                            <div className="space-y-4">
+                                {[...Array(8)].map((_, i) => (
+                                    <div key={i} className="flex items-center gap-2">
+                                        <Skeleton className="h-4 w-4 rounded" />
+                                        <Skeleton className="h-4 flex-1" />
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <MenuTree
+                                items={menus}
+                                selectedId={selectedMenu?.menuId}
+                                onSelect={handleSelect}
+                                onAddChild={handleAddChild}
+                            />
+                        )}
+                    </CardContent>
+                </Card>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    {/* Left Column: Menu Tree */}
-                    <Card className="lg:col-span-4 shadow-sm overflow-hidden flex flex-col max-h-[calc(100vh-200px)]">
-                        <CardContent className="flex-1 overflow-auto p-4">
-                            {isLoading ? (
-                                <div className="space-y-4">
-                                    {[...Array(8)].map((_, i) => (
-                                        <div key={i} className="flex items-center gap-2">
-                                            <Skeleton className="h-4 w-4 rounded" />
-                                            <Skeleton className="h-4 flex-1" />
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <MenuTree
-                                    items={menus}
-                                    selectedId={selectedMenu?.menuId}
-                                    onSelect={handleSelect}
-                                    onAddChild={handleAddChild}
-                                />
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    {/* Right Column: Menu Detail Form */}
-                    <div className="lg:col-span-8">
-                        <MenuForm
-                            item={selectedMenu}
-                            allMenus={menus}
-                            onSubmit={handleFormSubmit}
-                            onDelete={handleDelete}
-                        />
-                    </div>
+                {/* Right Column: Menu Detail Form */}
+                <div className="lg:col-span-8">
+                    <MenuForm
+                        item={selectedMenu}
+                        allMenus={menus}
+                        onSubmit={handleFormSubmit}
+                        onDelete={handleDelete}
+                    />
                 </div>
             </div>
         </div>

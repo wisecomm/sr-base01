@@ -3,7 +3,7 @@
 import { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, RefreshCw, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Search } from "lucide-react";
 
 interface DataTableToolbarProps<TData> {
     table: Table<TData>;
@@ -33,17 +33,22 @@ export function DataTableToolbar<TData>({
                 />
                 <Button
                     variant="outline"
-                    size="icon"
                     onClick={onRefresh}
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     disabled={isLoading}
-                    title="Refresh"
                 >
-                    <RefreshCw className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`} />
+                    <Search className="mr-2 h-4 w-4" />
+                    조회
                 </Button>
             </div>
 
             <div className="flex items-center space-x-2">
-                <Button onClick={onAdd} className="bg-blue-600 hover:bg-blue-700 text-white">
+
+                <Button
+                    variant="outline"
+                    onClick={onAdd}
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
+                >
                     <Plus className="mr-2 h-4 w-4" />
                     추가
                 </Button>
@@ -51,15 +56,16 @@ export function DataTableToolbar<TData>({
                 <Button
                     variant="outline"
                     onClick={onEdit}
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100"
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                 >
                     <Pencil className="mr-2 h-4 w-4" />
                     수정
                 </Button>
 
                 <Button
-                    variant="destructive"
+                    variant="outline"
                     onClick={onDelete}
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                 >
                     <Trash2 className="mr-2 h-4 w-4" />
                     삭제

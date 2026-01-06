@@ -3,7 +3,6 @@
 import { Bell, User, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { logout } from "@/app/actions/auth-actions";
 import { useAppStore } from "@/store/useAppStore";
@@ -25,8 +24,6 @@ import {
 } from "@/components/ui/dialog";
 
 export function Header() {
-    const pathname = usePathname();
-    const title = pathname.split("/").pop() || "Dashboard";
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
     const [mounted, setMounted] = useState(false);
     const user = useAppStore((state) => state.user);
@@ -48,7 +45,6 @@ export function Header() {
     return (
         <header className="flex h-14 items-center gap-4 border-b bg-slate-50/40 px-6 dark:bg-slate-950/40 lg:h-[60px]">
             <div className="flex-1">
-                <h1 className="text-lg font-semibold capitalize">{title}</h1>
             </div>
             <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon">

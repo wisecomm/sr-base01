@@ -111,23 +111,14 @@ export default function RolesPage() {
     });
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
-            <div className="max-w-7xl mx-auto space-y-6">
-                <div className="flex items-center justify-between">
-                    <div>
-                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-slate-100">Role Management</h1>
-                        <p className="text-slate-500 dark:text-slate-400">Manage system roles and permissions</p>
-                    </div>
-                </div>
-
-                <div className="w-full space-y-4">
-                    <DataTableToolbar
-                        onAdd={handleAdd}
-                        onRefresh={() => refetch()}
-                        isLoading={isLoading}
-                    />
-                    <DataTable table={table} showSeparators={true} />
-                </div>
+        <div className="w-full space-y-6">
+            <div className="w-full space-y-4">
+                <DataTableToolbar
+                    onAdd={handleAdd}
+                    onRefresh={() => refetch()}
+                    isLoading={isLoading}
+                />
+                <DataTable table={table} showSeparators={true} />
             </div>
 
             <RoleDialog

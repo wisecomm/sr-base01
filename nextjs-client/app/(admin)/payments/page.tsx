@@ -55,19 +55,10 @@ export default function PaymentsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 p-6">
-      <div className="max-w-7xl mx-auto space-y-6">
-        <div className="flex items-center gap-4">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
-            <p className="text-muted-foreground">Manage your payment history</p>
-          </div>
-        </div>
-
-        <div className="w-full space-y-4">
-          <DataTableToolbar table={table} />
-          <DataTable table={table} />
-        </div>
+    <div className="w-full space-y-6">
+      <div className="w-full space-y-4">
+        <DataTableToolbar table={table} />
+        <DataTable table={table} />
       </div>
     </div>
   );
