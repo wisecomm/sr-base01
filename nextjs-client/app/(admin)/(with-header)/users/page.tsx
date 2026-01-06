@@ -27,7 +27,22 @@ export default function UsersPage() {
     const [rowSelection, setRowSelection] = React.useState({});
 
     // Search state
-    const [searchParams, setSearchParams] = React.useState({ userName: "", startDate: "", endDate: "" });
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+
+    const formatDate = (date: Date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
+
+    const [searchParams, setSearchParams] = React.useState({
+        userName: "",
+        startDate: formatDate(yesterday),
+        endDate: formatDate(today)
+    });
 
     // Pagination state
     const [pagination, setPagination] = React.useState<PaginationState>({
@@ -156,6 +171,8 @@ export default function UsersPage() {
                     onDelete={handleDelete}
                     onSearch={handleSearch}
                     isLoading={isLoading}
+                    initialStartDate={searchParams.startDate}
+                    initialEndDate={searchParams.endDate}
                 />
                 <DataTable table={table} showSeparators={true} />
             </div>

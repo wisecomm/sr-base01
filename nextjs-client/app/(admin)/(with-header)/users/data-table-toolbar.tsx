@@ -13,6 +13,8 @@ interface DataTableToolbarProps {
     onDelete: () => void;
     onSearch: (params: { userName: string; startDate: string; endDate: string }) => void;
     isLoading?: boolean;
+    initialStartDate?: string;
+    initialEndDate?: string;
 }
 
 export function DataTableToolbar({
@@ -20,11 +22,13 @@ export function DataTableToolbar({
     onEdit,
     onDelete,
     onSearch,
-    isLoading
+    isLoading,
+    initialStartDate = "",
+    initialEndDate = ""
 }: DataTableToolbarProps) {
     const [userName, setUserName] = React.useState("");
-    const [startDate, setStartDate] = React.useState("");
-    const [endDate, setEndDate] = React.useState("");
+    const [startDate, setStartDate] = React.useState(initialStartDate);
+    const [endDate, setEndDate] = React.useState(initialEndDate);
 
     const startDateRef = React.useRef<HTMLInputElement>(null);
     const endDateRef = React.useRef<HTMLInputElement>(null);
