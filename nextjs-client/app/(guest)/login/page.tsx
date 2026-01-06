@@ -39,7 +39,7 @@ function Login() {
   useEffect(() => {
     const token = getAccessToken();
     if (token) {
-      router.replace("/paserver");
+      router.replace("/payments");
     }
   }, [router]);
 
@@ -67,7 +67,7 @@ function Login() {
         }
 
         setUser(loginResult.data.user);
-        router.replace('/paserver', { scroll: false });
+        router.replace('/payments', { scroll: false });
       } catch (error: unknown) {
         console.error("onSubmit error:", error);
         toast({
