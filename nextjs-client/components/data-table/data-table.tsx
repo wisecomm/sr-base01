@@ -5,10 +5,8 @@ import {
     Table as TanstackTable,
     flexRender,
 } from "@tanstack/react-table";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
+import { ChevronLeft, ChevronRight, ChevronFirst, ChevronLast } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
     Table,
     TableBody,
@@ -84,12 +82,9 @@ export function DataTable<TData>({
             <div className="flex items-center justify-end space-x-2 py-4">
 
                 <div className="flex items-center justify-between px-2">
-                    <div className="flex-1 text-sm text-muted-foreground">
-                        Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
-                    </div>
                     <div className="flex items-center space-x-6 lg:space-x-8">
                         <div className="flex items-center space-x-2">
-                            <p className="text-sm font-medium">Rows per page</p>
+                            <p className="text-sm font-medium">페이지당</p>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="outline" className="h-8 w-[70px]">
@@ -115,6 +110,15 @@ export function DataTable<TData>({
                             </DropdownMenu>
                         </div>
                         <div className="flex items-center space-x-2">
+                            <Button
+                                variant="outline"
+                                className="h-8 w-8 p-0"
+                                onClick={() => table.setPageIndex(0)}
+                                disabled={!table.getCanPreviousPage()}
+                            >
+                                <span className="sr-only">Go to first page</span>
+                                <ChevronFirst className="h-4 w-4" />
+                            </Button>
                             <Button
                                 variant="outline"
                                 className="h-8 w-8 p-0"
@@ -153,35 +157,14 @@ export function DataTable<TData>({
                                 <span className="sr-only">Go to next page</span>
                                 <ChevronRight className="h-4 w-4" />
                             </Button>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                            <Input
-                                className="h-8 w-[70px]"
-                                placeholder="Page"
-                                type="number"
-                                min={1}
-                                max={table.getPageCount()}
-                                onKeyDown={(e) => {
-                                    if (e.key === "Enter") {
-                                        const page = Number(e.currentTarget.value) - 1;
-                                        if (page >= 0 && page < table.getPageCount()) {
-                                            table.setPageIndex(page);
-                                        }
-                                    }
-                                }}
-                            />
                             <Button
                                 variant="outline"
-                                className="h-8"
-                                onClick={(e) => {
-                                    const input = e.currentTarget.previousElementSibling as HTMLInputElement;
-                                    const page = Number(input.value) - 1;
-                                    if (page >= 0 && page < table.getPageCount()) {
-                                        table.setPageIndex(page);
-                                    }
-                                }}
+                                className="h-8 w-8 p-0"
+                                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                                disabled={!table.getCanNextPage()}
                             >
-                                Go
+                                <span className="sr-only">Go to last page</span>
+                                <ChevronLast className="h-4 w-4" />
                             </Button>
                         </div>
                     </div>
