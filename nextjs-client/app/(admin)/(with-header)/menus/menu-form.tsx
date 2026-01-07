@@ -2,8 +2,8 @@
 
 import * as React from "react";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Settings } from "lucide-react";
 import * as z from "zod";
 import { MenuInfo } from "@/types";
 import {
@@ -111,7 +111,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
         <Card className="shadow-md">
             <CardHeader>
                 <CardTitle className="text-xl font-bold">
-                    {isEdit ? `Edit Menu: ${item.menuName}` : (item?.upperMenuId && item.upperMenuId !== "none" ? "Add Child Menu" : "Create Root Menu")}
+                    {isEdit ? `메뉴 : ${item.menuName}` : (item?.upperMenuId && item.upperMenuId !== "none" ? "Add Child Menu" : "Create Root Menu")}
                 </CardTitle>
                 <CardDescription>
                     Configure menu settings and access control.
@@ -121,18 +121,18 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
             <CardContent className="pt-6">
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-8">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Basic Info Section */}
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Basic Information</h3>
                                 <FormField
                                     control={form.control}
                                     name="menuId"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Menu ID</FormLabel>
+                                            <FormLabel>메뉴 아이디</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="M001" {...field} disabled={isEdit} />
+                                                <Input placeholder="예: M00001" {...field} disabled={isEdit} className="py-2.5" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -143,9 +143,9 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                     name="menuName"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Menu Name</FormLabel>
+                                            <FormLabel>메뉴 이름</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Dashboard" {...field} />
+                                                <Input placeholder="메뉴 이름을 입력하세요" {...field} className="py-2.5" />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -156,19 +156,19 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                     name="upperMenuId"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Parent Menu</FormLabel>
+                                            <FormLabel>부모 메뉴</FormLabel>
                                             <Select
                                                 onValueChange={field.onChange}
                                                 defaultValue={field.value}
                                                 value={field.value}
                                             >
                                                 <FormControl>
-                                                    <SelectTrigger>
-                                                        <SelectValue placeholder="Root" />
+                                                    <SelectTrigger className="py-2.5">
+                                                        <SelectValue placeholder="상위 메뉴 선택 (없음)" />
                                                     </SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    <SelectItem value="none">Root (No Parent)</SelectItem>
+                                                    <SelectItem value="none">상위 메뉴 선택 (없음)</SelectItem>
                                                     {allMenus
                                                         .filter(m => m.menuId !== item?.menuId) // Prevent self-parenting
                                                         .map(m => (
@@ -185,16 +185,16 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                             </div>
 
                             {/* Path & Sorting Section */}
-                            <div className="space-y-4">
+                            <div className="space-y-6">
                                 <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Path & Display</h3>
                                 <FormField
                                     control={form.control}
                                     name="menuUri"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Menu URI</FormLabel>
+                                            <FormLabel>메뉴 URI</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="/dashboard" {...field} />
+                                                <Input placeholder="/path/to/menu" {...field} className="py-2.5" />
                                             </FormControl>
                                             <FormDescription>Relative URL path for this menu.</FormDescription>
                                             <FormMessage />
@@ -206,22 +206,14 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                     name="menuImgUri"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Menu Image URI</FormLabel>
-                                            <div className="flex gap-4 items-start">
+                                            <FormLabel>메뉴 이미지 URI</FormLabel>
+                                            <div className="flex gap-2 items-start">
                                                 <FormControl className="flex-1">
-                                                    <Input placeholder="/images/icons/dashboard.png" {...field} />
+                                                    <Input placeholder="/images/menus/icon.svg" {...field} className="py-2.5" />
                                                 </FormControl>
-                                                {field.value && (
-                                                    <div className="relative w-10 h-10 border rounded shrink-0 bg-slate-50 flex items-center justify-center overflow-hidden">
-                                                        <Image
-                                                            src={field.value}
-                                                            alt="Preview"
-                                                            fill
-                                                            className="object-contain p-1"
-                                                            unoptimized
-                                                        />
-                                                    </div>
-                                                )}
+                                                <Button type="button" variant="outline" size="icon" className="shrink-0 bg-white dark:bg-slate-800">
+                                                    <Settings className="h-4 w-4" />
+                                                </Button>
                                             </div>
                                             <FormDescription>Path to the menu icon/image.</FormDescription>
                                             <FormMessage />
@@ -234,9 +226,9 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                         name="menuLvl"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Level</FormLabel>
+                                                <FormLabel>레벨</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                                                    <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="py-2.5" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -247,9 +239,9 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                         name="menuSeq"
                                         render={({ field }) => (
                                             <FormItem>
-                                                <FormLabel>Display Order</FormLabel>
+                                                <FormLabel>보여주기 순서</FormLabel>
                                                 <FormControl>
-                                                    <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} />
+                                                    <Input type="number" {...field} onChange={e => field.onChange(parseInt(e.target.value))} className="py-2.5" />
                                                 </FormControl>
                                                 <FormMessage />
                                             </FormItem>
@@ -259,21 +251,24 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                             </div>
                         </div>
 
-                        <Separator />
+                        {/* Use Status and Description */}
+                        <Separator className="border-gray-200 dark:border-slate-700 my-6" />
 
-                        {/* Controls Section */}
-                        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-sm font-medium text-gray-900 dark:text-white">사용 여부</FormLabel>
+                                <FormDescription className="text-sm text-gray-500 dark:text-gray-400">
+                                    Enable or disable this menu.
+                                </FormDescription>
+                            </div>
                             <FormField
                                 control={form.control}
                                 name="useYn"
                                 render={({ field }) => (
-                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                                        <div className="space-y-0.5">
-                                            <FormLabel className="text-base">Use Status</FormLabel>
-                                            <FormDescription>Enable or disable this menu.</FormDescription>
-                                        </div>
+                                    <FormItem>
                                         <FormControl>
                                             <Switch
+                                                className="data-[state=checked]:bg-blue-600"
                                                 checked={field.value === "1"}
                                                 onCheckedChange={(checked: boolean) => field.onChange(checked ? "1" : "0")}
                                             />
@@ -289,9 +284,9 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                 name="menuDesc"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Description</FormLabel>
+                                        <FormLabel>비고</FormLabel>
                                         <FormControl>
-                                            <Textarea placeholder="Describe the purpose of this menu" {...field} />
+                                            <Textarea placeholder="Describe the purpose of this menu" {...field} className="p-3" rows={4} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -299,22 +294,24 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                             />
                         </div>
 
-                        <div className="flex justify-between pt-4">
-                            {isEdit && onDelete ? (
-                                <Button
-                                    type="button"
-                                    variant="destructive"
-                                    onClick={() => onDelete(item.menuId)}
-                                >
-                                    Delete Menu
-                                </Button>
-                            ) : <div></div>}
-                            <div className="flex gap-4">
-                                <Button type="submit">
-                                    {isEdit ? "Update Menu" : "Create Menu"}
+                        {/* Footer Buttons */}
+                        <div className="px-8 py-5 bg-gray-50 dark:bg-slate-900/50 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end rounded-b-xl -mx-8 -mb-8 mt-10">
+                            <div className="flex gap-2">
+                                {isEdit && onDelete && (
+                                    <Button
+                                        type="button"
+                                        variant="destructive"
+                                        onClick={() => onDelete(item.menuId)}
+                                    >
+                                        삭제
+                                    </Button>
+                                )}
+                                <Button type="submit" className="bg-[#111827] hover:bg-[#374151] text-white">
+                                    저장
                                 </Button>
                             </div>
                         </div>
+
                     </form>
                 </Form>
             </CardContent>

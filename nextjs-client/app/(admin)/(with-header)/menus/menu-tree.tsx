@@ -1,11 +1,11 @@
+
 "use client";
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { MenuInfo } from "@/types";
-import { ChevronRight, ChevronDown, Folder, File, Plus } from "lucide-react";
+import { ChevronRight, ChevronDown, Plus, LayoutGrid, Settings, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 
 interface MenuTreeProps {
     items: MenuInfo[];
@@ -47,47 +47,48 @@ export function MenuTree({ items, selectedId, onSelect, onAddChild }: MenuTreePr
             <div key={item.menuId} className="select-none">
                 <div
                     className={cn(
-                        "flex items-center py-1.5 px-2 rounded-md cursor-pointer group transition-colors",
-                        isSelected ? "bg-slate-200 dark:bg-slate-800 text-primary" : "hover:bg-slate-100 dark:hover:bg-slate-900",
-                        item.useYn === "0" && "opacity-50"
+                        "py-2 flex items-center gap-2 text-sm rounded cursor-pointer transition-colors group", // Added group for hover effect
+                        isSelected
+                            ? "bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white font-medium"
+                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
                     )}
                     onClick={() => onSelect(item)}
-                    style={{ paddingLeft: `${level * 16 + 8}px` }}
+                    style={{ paddingLeft: `${level * 16 + 16} px` }}
                 >
-                    <div className="w-4 h-4 mr-1 flex items-center justify-center">
-                        {hasChildren ? (
-                            <div
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    toggleExpand(item.menuId);
-                                }}
-                                className="hover:bg-slate-300 dark:hover:bg-slate-700 rounded p-0.5"
-                            >
-                                {isExpanded ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
-                            </div>
-                        ) : null}
-                    </div>
-                    {item.menuImgUri ? (
-                        <div className="relative w-4 h-4 mr-2 shrink-0">
-                            <Image
-                                src={item.menuImgUri}
-                                alt=""
-                                fill
-                                className="object-contain"
-                                unoptimized
-                            />
-                        </div>
-                    ) : hasChildren ? (
-                        <Folder className={cn("w-4 h-4 mr-2", isSelected ? "text-primary" : "text-slate-400")} />
+                    {hasChildren ? (
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            className="w-6 h-6 -ml-1"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleExpand(item.menuId);
+                            }}
+                        >
+                            {isExpanded ? (
+                                <ChevronDown className="w-3 h-3 text-gray-400" />
+                            ) : (
+                                <ChevronRight className="w-3 h-3 text-gray-400" />
+                            )}
+                        </Button>
                     ) : (
-                        <File className={cn("w-4 h-4 mr-2", isSelected ? "text-primary" : "text-slate-400")} />
+                        // Placeholder for alignment if no children
+                        <div className="w-6 h-6 -ml-1 flex items-center justify-center">
+                            <div className="w-1 h-1 rounded-full bg-gray-400" />
+                        </div>
                     )}
-                    <span className="text-sm font-medium truncate flex-1">{item.menuName}</span>
+
+                    {item.menuId === 'M10000' && <LayoutGrid className="w-4 h-4 text-gray-400" />}
+                    {item.menuId === 'M20000' && <Settings className="w-4 h-4 text-gray-400" />}
+                    {item.menuId === 'M30000' && <Info className="w-4 h-4 text-gray-400" />}
+
+                    <span className="flex-1 truncate">{item.menuName}</span>
+
                     <Button
                         variant="ghost"
                         size="icon"
                         className={cn(
-                            "w-6 h-6 ml-1 transition-opacity",
+                            "w-6 h-6 ml-auto mr-1 transition-opacity",
                             isSelected ? "opacity-100" : "opacity-0 group-hover:opacity-100"
                         )}
                         onClick={(e) => {
@@ -121,3 +122,4 @@ export function MenuTree({ items, selectedId, onSelect, onAddChild }: MenuTreePr
         </div>
     );
 }
+
