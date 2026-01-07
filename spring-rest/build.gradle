@@ -82,10 +82,17 @@ task buildFrontend(type: Exec) {
     workingDir frontendDir
     
     // Check if we should use pnpm or npm
-    if (System.getProperty('os.name').toLowerCase().contains('windows')) {
-        commandLine 'cmd', '/c', 'pnpm install && pnpm build'
+    def isWindows = System.getProperty('os.name').toLowerCase().contains('windows')
+    def pnpmCmd = isWindows ? 'cmd /c pnpm' : 'pnpm'
+    
+    // Determine build command based on profile
+    def profile = project.hasProperty('profile') ? project.property('profile') : 'prod'
+    def buildCmd = (profile == 'dev') ? 'run build:dev' : 'build'
+    
+    if (isWindows) {
+        commandLine 'cmd', '/c', "pnpm install && pnpm ${buildCmd}"
     } else {
-        commandLine 'sh', '-c', 'pnpm install && pnpm build'
+        commandLine 'sh', '-c', "pnpm install && pnpm ${buildCmd}"
     }
 }
 

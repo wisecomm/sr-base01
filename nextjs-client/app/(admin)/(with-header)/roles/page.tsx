@@ -1,246 +1,172 @@
 "use client";
 
 import * as React from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import {
+    ColumnFiltersState,
+    SortingState,
+    VisibilityState,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    useReactTable,
+    PaginationState,
+} from "@tanstack/react-table";
+import { getColumns } from "./columns";
+import { DataTable } from "@/components/data-table/data-table";
+import { DataTableToolbar } from "./data-table-toolbar";
 import { RoleInfo } from "@/types";
-import { useMenus } from "@/hooks/useMenuQuery";
-import { useRoleMenus } from "@/hooks/useRoleQuery";
-import { MenuCheckboxTree } from "./menu-checkbox-tree";
-import { ShieldCheck } from "lucide-react";
-import {
-    Dialog,
-    DialogContent,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
-    FormDescription,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { useRoles, useCreateRole, useUpdateRole, useDeleteRole, useAssignRoleMenus } from "@/hooks/useRoleQuery";
+import { RoleDialog } from "./role-dialog";
+import { useToast } from "@/hooks/use-toast";
 
-const roleFormSchema = z.object({
-    roleId: z.string().min(2, "Role ID must be at least 2 characters."),
-    roleName: z.string().min(1, "Name is required."),
-    roleDesc: z.string().optional().or(z.literal("")),
-    useYn: z.string().min(1),
-    menuIds: z.array(z.string()),
-});
+export default function RolesPage() {
+    const { toast } = useToast();
+    const [sorting, setSorting] = React.useState<SortingState>([]);
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+    const [rowSelection, setRowSelection] = React.useState({});
 
-type RoleFormValues = z.infer<typeof roleFormSchema>;
+    // Search state
+    const [searchId, setSearchId] = React.useState("");
 
-interface RoleDialogProps {
-    open: boolean;
-    onOpenChange: (open: boolean) => void;
-    role?: RoleInfo | null;
-    onSubmit: (data: Partial<RoleInfo>, menuIds: string[]) => Promise<void>;
-}
+    // Pagination state
+    const [pagination, setPagination] = React.useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+    });
 
-export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogProps) {
-    const isEdit = !!role;
+    const { data: rolesData } = useRoles(pagination.pageIndex, pagination.pageSize, searchId);
+    const createRoleMutation = useCreateRole();
+    const updateRoleMutation = useUpdateRole();
+    const deleteRoleMutation = useDeleteRole();
+    const assignRoleMenusMutation = useAssignRoleMenus();
 
-    const { data: allMenus = [] } = useMenus();
-    const { data: fetchedRoleMenuIds, isLoading: isRoleMenusLoading } = useRoleMenus(role?.roleId);
-    const roleMenuIds = React.useMemo(() => fetchedRoleMenuIds || [], [fetchedRoleMenuIds]);
+    // Dialog state
+    const [dialogOpen, setDialogOpen] = React.useState(false);
+    const [selectedRole, setSelectedRole] = React.useState<RoleInfo | null>(null);
 
-    const form = useForm<RoleFormValues>({
-        resolver: zodResolver(roleFormSchema),
-        defaultValues: {
-            roleId: "",
-            roleName: "",
-            roleDesc: "",
-            useYn: "1",
-            menuIds: [],
+    const handleAdd = () => {
+        setSelectedRole(null);
+        setDialogOpen(true);
+    };
+
+    const handleFormSubmit = async (formData: Partial<RoleInfo>, menuIds: string[]) => {
+        try {
+            const roleId = selectedRole?.roleId || formData.roleId;
+
+            if (selectedRole) {
+                // Ensure roleId is present for update
+                if (!roleId) throw new Error("Role ID is missing");
+                await updateRoleMutation.mutateAsync({ id: selectedRole.roleId, data: formData });
+                toast({ title: "수정 완료", description: "권한 정보가 수정되었습니다.", variant: "success" });
+            } else {
+                await createRoleMutation.mutateAsync(formData);
+                toast({ title: "등록 완료", description: "새 권한이 등록되었습니다.", variant: "success" });
+            }
+
+            if (roleId) {
+                await assignRoleMenusMutation.mutateAsync({ roleId, menuIds });
+            }
+            setDialogOpen(false);
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            toast({ title: "오류 발생", description: message || "An error occurred.", variant: "destructive" });
+        }
+    };
+
+    const columns = React.useMemo(() => getColumns(), []);
+
+    // Selection mode
+    const selectionMode: 'single' | 'multi' | undefined = 'single';
+
+    const table = useReactTable({
+        data: rolesData?.list || [],
+        columns,
+        pageCount: rolesData?.pages || -1,
+        manualPagination: true,
+        enableSorting: false,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        onColumnVisibilityChange: setColumnVisibility,
+        onRowSelectionChange: setRowSelection,
+        onPaginationChange: setPagination,
+        enableMultiRowSelection: (selectionMode as string) === 'multi',
+        state: {
+            sorting,
+            columnFilters,
+            columnVisibility,
+            rowSelection,
+            pagination,
         },
     });
 
-    // Reset form when role or menu data changes
-    React.useEffect(() => {
-        if (open) {
-            if (role) {
-                form.reset({
-                    roleId: role.roleId || "",
-                    roleName: role.roleName || "",
-                    roleDesc: role.roleDesc || "",
-                    useYn: role.useYn || "1",
-                    menuIds: roleMenuIds,
-                });
-            } else {
-                form.reset({
-                    roleId: "",
-                    roleName: "",
-                    roleDesc: "",
-                    useYn: "1",
-                    menuIds: [],
-                });
+    const handleEdit = React.useCallback(() => {
+        const selectedRows = table.getSelectedRowModel().rows;
+        if (selectedRows.length !== 1) {
+            toast({
+                title: "알림",
+                description: "수정할 권한을 하나만 선택해주세요.",
+                variant: "default",
+            });
+            return;
+        }
+        const role = selectedRows[0].original;
+        setSelectedRole(role);
+        setDialogOpen(true);
+    }, [table, toast]);
+
+    const handleDelete = React.useCallback(async () => {
+        const selectedRows = table.getSelectedRowModel().rows;
+        if (selectedRows.length === 0) {
+            toast({
+                title: "알림",
+                description: "삭제할 권한을 선택해주세요.",
+                variant: "default",
+            });
+            return;
+        }
+
+        const roleIds = selectedRows.map(row => row.original.roleId);
+        if (confirm(`선택한 ${roleIds.length}개의 권한을 삭제하시겠습니까?`)) {
+            try {
+                for (const id of roleIds) {
+                    await deleteRoleMutation.mutateAsync(id);
+                }
+                table.resetRowSelection();
+                toast({ title: "삭제 완료", description: "권한이 삭제되었습니다.", variant: "success" });
+            } catch (error: unknown) {
+                const message = error instanceof Error ? error.message : String(error);
+                toast({ title: "삭제 실패", description: message || "Failed to delete role.", variant: "destructive" });
             }
         }
-    }, [open, role, roleMenuIds, form]);
+    }, [table, deleteRoleMutation, toast]);
 
-    const onFormSubmit = async (data: RoleFormValues) => {
-        const { menuIds, ...roleData } = data;
-        await onSubmit(roleData, menuIds);
+    const handleSearch = (term: string) => {
+        setSearchId(term);
+        setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
-            <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-white dark:bg-[#2d2d2d] rounded-xl border-none shadow-2xl">
-                <div className="bg-white dark:bg-[#2d2d2d] px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h3 className="text-lg font-bold leading-6 text-gray-900 dark:text-white flex items-center gap-2">
-                        <ShieldCheck className="text-[#FF5722] w-6 h-6" />
-                        {isEdit ? "권한 수정" : "권한 추가"}
-                    </h3>
-                </div>
+        <div className="w-full space-y-6">
+            <div className="w-full space-y-4">
+                <DataTableToolbar
+                    onAdd={handleAdd}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                    onSearch={handleSearch}
+                />
+                <DataTable table={table} showSeparators={true} />
+            </div>
 
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onFormSubmit)} className="px-6 py-6 space-y-5">
-                        <div className="flex gap-4">
-                            <FormField
-                                control={form.control}
-                                name="roleId"
-                                render={({ field }) => (
-                                    <FormItem className="w-1/2">
-                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                            권한 ID <span className="text-[#FF5722]">*</span>
-                                        </FormLabel>
-                                        <div className="relative rounded-md shadow-sm">
-                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <ShieldCheck className="text-gray-400 w-5 h-5" />
-                                            </div>
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="ROLE_USER"
-                                                    {...field}
-                                                    disabled={isEdit}
-                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
-                                                />
-                                            </FormControl>
-                                        </div>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
-                                name="roleName"
-                                render={({ field }) => (
-                                    <FormItem className="w-1/2">
-                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                            권한 이름 <span className="text-[#FF5722]">*</span>
-                                        </FormLabel>
-                                        <div className="relative">
-                                            <FormControl>
-                                                <Input
-                                                    placeholder="일반 사용자"
-                                                    {...field}
-                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
-                                                />
-                                            </FormControl>
-                                        </div>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-
-                        <FormField
-                            control={form.control}
-                            name="roleDesc"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                        권한 설명
-                                    </FormLabel>
-                                    <FormControl>
-                                        <Textarea
-                                            placeholder="이 권한에 대한 설명을 입력하세요"
-                                            {...field}
-                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
-                                            rows={3}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="menuIds"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                        메뉴 권한
-                                    </FormLabel>
-                                    <FormControl>
-                                        <div className="bg-white dark:bg-[#2d2d2d] border border-gray-300 dark:border-gray-600 rounded-lg p-5 max-h-[300px] overflow-y-auto">
-                                            {isRoleMenusLoading && isEdit ? (
-                                                <div className="h-20 flex items-center justify-center text-sm text-slate-500">권한 로딩 중...</div>
-                                            ) : (
-                                                <MenuCheckboxTree
-                                                    items={allMenus}
-                                                    selectedIds={field.value}
-                                                    onCheckedChange={field.onChange}
-                                                />
-                                            )}
-                                        </div>
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-
-                        <div className="flex items-center justify-between">
-                            <div className="space-y-0.5">
-                                <FormLabel className="text-sm font-medium text-gray-900 dark:text-white">사용 여부</FormLabel>
-                                <FormDescription className="text-sm text-gray-500 dark:text-gray-400">
-                                    이 권한을 활성화하거나 비활성화합니다.
-                                </FormDescription>
-                            </div>
-                            <FormField
-                                control={form.control}
-                                name="useYn"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormControl>
-                                            <Switch
-                                                className="data-[state=checked]:bg-[#FF5722]"
-                                                checked={field.value === "1"}
-                                                onCheckedChange={(checked) => field.onChange(checked ? "1" : "0")}
-                                            />
-                                        </FormControl>
-                                    </FormItem>
-                                )}
-                            />
-                        </div>
-
-                        <div className="bg-white dark:bg-[#2d2d2d] border-t border-gray-100 dark:border-gray-700 pt-4 flex justify-end gap-2">
-                            <Button
-                                type="button"
-                                variant="ghost"
-                                onClick={() => onOpenChange(false)}
-                                className="px-4 py-2 bg-white dark:bg-[#2d2d2d] text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800"
-                            >
-                                취소
-                            </Button>
-                            <Button
-                                type="submit"
-                                className="px-6 py-2 bg-[#FF5722] border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-[#FF5722]"
-                            >
-                                저장
-                            </Button>
-                        </div>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
+            <RoleDialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                role={selectedRole}
+                onSubmit={handleFormSubmit}
+            />
+        </div>
     );
 }

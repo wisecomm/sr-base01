@@ -2,7 +2,13 @@
 - 터미널에서 실행 : pnpm dev (포트 3000)
 - Run Debug 실행 : 스프링
 
-- 배포시 : ./gradlew clean build -x test
+# 배포 빌드 방법
+Prod 빌드 (기본값):
+명령어: ./gradlew build 또는 ./gradlew build -Pprofile=prod
+프론트엔드: pnpm build 실행 (기본 .env.production 사용)
+Dev 빌드:
+명령어: ./gradlew build -Pprofile=dev
+프론트엔드: pnpm run build:dev 실행 (.env.development 사용)
 
 
 . 프론트엔드 작업 시 (빠른 피드백)
