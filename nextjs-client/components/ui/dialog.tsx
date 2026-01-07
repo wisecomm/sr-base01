@@ -12,6 +12,22 @@ interface DialogProps {
 }
 
 export function Dialog({ open, onOpenChange, children, closeOnOutsideClick = true }: DialogProps) {
+    React.useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === "Escape") {
+                onOpenChange(false);
+            }
+        };
+
+        if (open) {
+            window.addEventListener("keydown", handleKeyDown);
+        }
+
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
+    }, [open, onOpenChange]);
+
     if (!open) return null;
 
     return (
