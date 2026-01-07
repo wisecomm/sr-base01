@@ -1,6 +1,6 @@
-package com.example.springrest.domain.board.repository;
+package com.example.springrest.domain.board.master.repository;
 
-import com.example.springrest.domain.board.model.entity.BoardMaster;
+import com.example.springrest.domain.board.master.model.entity.BoardMaster;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 

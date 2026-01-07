@@ -1,10 +1,10 @@
-package com.example.springrest.domain.board.controller;
+package com.example.springrest.domain.board.master.controller;
 
 import com.example.springrest.global.model.dto.ApiResponse;
-import com.example.springrest.domain.board.model.dto.BoardMasterRequest;
-import com.example.springrest.domain.board.model.entity.BoardMaster;
+import com.example.springrest.domain.board.master.model.dto.BoardMasterRequest;
+import com.example.springrest.domain.board.master.model.entity.BoardMaster;
 import com.example.springrest.global.model.dto.PageResponse;
-import com.example.springrest.domain.board.service.BoardMasterService;
+import com.example.springrest.domain.board.master.service.BoardMasterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Board - Board Master Management", description = "게시판 마스터 관리 API")
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/mgmt/boards")
+@RequestMapping("/api/v1/mgmt/boards/master")
 @RequiredArgsConstructor
 public class BoardMasterController {
 

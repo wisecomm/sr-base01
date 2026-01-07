@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.springrest.domain.board.repository.BoardMasterMapper">
-    <resultMap id="BoardMasterResultMap" type="com.example.springrest.domain.board.model.entity.BoardMaster">
+<mapper namespace="com.example.springrest.domain.board.master.repository.BoardMasterMapper">
+    <resultMap id="BoardMasterResultMap" type="com.example.springrest.domain.board.master.model.entity.BoardMaster">
         <id property="brdId" column="BRD_ID"/>
         <result property="brdNm" column="BRD_NM"/>
         <result property="brdDesc" column="BRD_DESC"/>

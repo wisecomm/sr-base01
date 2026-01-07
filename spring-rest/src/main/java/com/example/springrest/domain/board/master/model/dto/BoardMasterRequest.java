@@ -1,4 +1,4 @@
-package com.example.springrest.domain.board.model.dto;
+package com.example.springrest.domain.board.master.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

@@ -32,7 +32,7 @@ export async function getBoards(page: number, size: number, brdNm?: string, star
         if (startDate) params.append("startDate", startDate);
         if (endDate) params.append("endDate", endDate);
 
-        const response = await api.get<PageResponse<BoardMaster>>(`/v1/mgmt/boards?${params.toString()}`);
+        const response = await api.get<PageResponse<BoardMaster>>(`/v1/mgmt/boards/master?${params.toString()}`);
         return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -51,7 +51,7 @@ export async function getBoards(page: number, size: number, brdNm?: string, star
  */
 export async function getBoardById(brdId: string): Promise<ApiResponse<BoardMaster>> {
     try {
-        const response = await api.get<BoardMaster>(`/v1/mgmt/boards/${brdId}`);
+        const response = await api.get<BoardMaster>(`/v1/mgmt/boards/master/${brdId}`);
         return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -70,7 +70,7 @@ export async function getBoardById(brdId: string): Promise<ApiResponse<BoardMast
  */
 export async function createBoard(data: Partial<BoardMaster>): Promise<ApiResponse<void>> {
     try {
-        const response = await api.post<void>("/v1/mgmt/boards", data);
+        const response = await api.post<void>("/v1/mgmt/boards/master", data);
         return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -89,7 +89,7 @@ export async function createBoard(data: Partial<BoardMaster>): Promise<ApiRespon
  */
 export async function updateBoard(brdId: string, data: Partial<BoardMaster>): Promise<ApiResponse<void>> {
     try {
-        const response = await api.put<void>(`/v1/mgmt/boards/${brdId}`, data);
+        const response = await api.put<void>(`/v1/mgmt/boards/master/${brdId}`, data);
         return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
@@ -108,7 +108,7 @@ export async function updateBoard(brdId: string, data: Partial<BoardMaster>): Pr
  */
 export async function deleteBoard(brdId: string): Promise<ApiResponse<void>> {
     try {
-        const response = await api.delete<void>(`/v1/mgmt/boards/${brdId}`);
+        const response = await api.delete<void>(`/v1/mgmt/boards/master/${brdId}`);
         return response;
     } catch (error: unknown) {
         if (axios.isAxiosError(error)) {
