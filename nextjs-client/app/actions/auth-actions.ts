@@ -6,16 +6,39 @@ import { ApiResponse, LoginData } from "@/types";
 // For static export, we use localStorage or client-side cookies.
 // Here we'll use localStorage for simplicity in a static SPA.
 
+// Session Timeout Configuration (30 Minutes)
+export const TIMEOUT_MS = 30 * 60 * 1000;
+
 export const setSession = (data: LoginData) => {
     if (typeof window !== "undefined") {
         localStorage.setItem("accessToken", data.token);
         localStorage.setItem("refreshToken", data.refreshToken);
         localStorage.setItem("userInfo", JSON.stringify(data.user));
+        localStorage.setItem("lastActive", Date.now().toString());
+    }
+};
+
+export const clearSession = () => {
+    if (typeof window !== "undefined") {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("lastActive");
     }
 };
 
 export const getAccessToken = () => {
     if (typeof window !== "undefined") {
+        // Check for session timeout
+        const lastActive = localStorage.getItem("lastActive");
+        if (lastActive) {
+            const now = Date.now();
+            const inactiveTime = now - parseInt(lastActive, 10);
+            if (inactiveTime > TIMEOUT_MS) {
+                clearSession();
+                return null;
+            }
+        }
         return localStorage.getItem("accessToken");
     }
     return null;
@@ -34,14 +57,6 @@ export const updateAccessToken = (token: string, refreshToken?: string) => {
         if (refreshToken) {
             localStorage.setItem("refreshToken", refreshToken);
         }
-    }
-};
-
-export const clearSession = () => {
-    if (typeof window !== "undefined") {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userInfo");
     }
 };
 

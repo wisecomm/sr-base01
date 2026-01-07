@@ -14,6 +14,7 @@ export const metadata: Metadata = {
 
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ToastProvider } from "@/hooks/use-toast";
+import { SessionManager } from "@/components/session-manager";
 
 export default function RootLayout({
   children,
@@ -21,11 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <head />
-      <body className={`${inter.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
         <QueryProvider>
-          <ToastProvider>{children}</ToastProvider>
+          <ToastProvider>
+            <SessionManager />
+            {children}
+          </ToastProvider>
         </QueryProvider>
       </body>
     </html>

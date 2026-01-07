@@ -1,6 +1,6 @@
 "use client";
 
-import { clearSession, getRefreshToken, updateAccessToken } from "@/app/actions/auth-actions";
+import { clearSession, getRefreshToken, updateAccessToken, TIMEOUT_MS } from "@/app/actions/auth-actions";
 import { ApiResponse, LoginData } from "@/types";
 
 /**
@@ -59,3 +59,26 @@ export function handleUnauthorized() {
         window.location.href = "/login";
     }
 }
+
+
+
+export const updateActivity = () => {
+    if (typeof window !== "undefined") {
+        localStorage.setItem("lastActive", Date.now().toString());
+    }
+};
+
+export const checkSessionTimeout = (): boolean => {
+    if (typeof window !== "undefined") {
+        const lastActive = localStorage.getItem("lastActive");
+        if (!lastActive) return false;
+
+        const now = Date.now();
+        const inactiveTime = now - parseInt(lastActive, 10);
+
+        if (inactiveTime > TIMEOUT_MS) {
+            return true;
+        }
+    }
+    return false;
+};
