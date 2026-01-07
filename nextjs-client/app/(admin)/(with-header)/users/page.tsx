@@ -40,7 +40,8 @@ export default function UsersPage() {
 
     const [searchParams, setSearchParams] = React.useState({
         userName: "",
-        startDate: formatDate(yesterday),
+        //        startDate: formatDate(yesterday),
+        startDate: "",
         endDate: formatDate(today)
     });
 

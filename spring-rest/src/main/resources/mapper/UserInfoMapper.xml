@@ -30,6 +30,12 @@
         u.SYS_INSERT_DTM, u.SYS_INSERT_USER_ID, u.SYS_UPDATE_DTM, u.SYS_UPDATE_USER_ID
     </sql>
 
+    <sql id="UserInfoColumnsPlain">
+        USER_ID, USER_EMAIL, USER_MOBILE, USER_NAME, USER_NICK, USER_PWD, USER_MSG, USER_DESC, 
+        USER_STAT_CD, USER_SNSID, USE_YN, 
+        SYS_INSERT_DTM, SYS_INSERT_USER_ID, SYS_UPDATE_DTM, SYS_UPDATE_USER_ID
+    </sql>
+
     <select id="findById" resultMap="UserInfoResultMap">
         SELECT 
             <include refid="UserInfoColumns"/>,
@@ -61,7 +67,7 @@
 
     <insert id="insert">
         INSERT INTO CHMM_USER_INFO (
-            <include refid="UserInfoColumns"/>
+            <include refid="UserInfoColumnsPlain"/>
         ) VALUES (
             #{userId}, #{userEmail}, #{userMobile}, #{userName}, #{userNick}, #{userPwd}, #{userMsg}, #{userDesc}, 
             #{userStatCd}, #{userSnsid}, #{useYn}, 

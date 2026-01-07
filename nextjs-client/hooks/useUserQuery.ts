@@ -37,7 +37,11 @@ export function useUserRoles(userId: string | undefined) {
 export function useCreateUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: Partial<UserDetail>) => createUser(data),
+        mutationFn: async (data: Partial<UserDetail>) => {
+            const res = await createUser(data);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
@@ -47,7 +51,11 @@ export function useCreateUser() {
 export function useUpdateUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, data }: { id: string; data: Partial<UserDetail> }) => updateUser(id, data),
+        mutationFn: async ({ id, data }: { id: string; data: Partial<UserDetail> }) => {
+            const res = await updateUser(id, data);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
@@ -57,7 +65,11 @@ export function useUpdateUser() {
 export function useDeleteUser() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id: string) => deleteUser(id),
+        mutationFn: async (id: string) => {
+            const res = await deleteUser(id);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: userKeys.all });
         },
@@ -67,7 +79,11 @@ export function useDeleteUser() {
 export function useAssignUserRoles() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ userId, roleIds }: { userId: string; roleIds: string[] }) => assignUserRoles(userId, roleIds),
+        mutationFn: async ({ userId, roleIds }: { userId: string; roleIds: string[] }) => {
+            const res = await assignUserRoles(userId, roleIds);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: userKeys.roles(variables.userId) });
             queryClient.invalidateQueries({ queryKey: userKeys.all });
