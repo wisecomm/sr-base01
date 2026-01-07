@@ -8,13 +8,10 @@ import { RoleInfo } from "@/types";
 import { useMenus } from "@/hooks/useMenuQuery";
 import { useRoleMenus } from "@/hooks/useRoleQuery";
 import { MenuCheckboxTree } from "./menu-checkbox-tree";
+import { ShieldCheck } from "lucide-react";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -51,7 +48,8 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
     const isEdit = !!role;
 
     const { data: allMenus = [] } = useMenus();
-    const { data: roleMenuIds = [], isLoading: isRoleMenusLoading } = useRoleMenus(role?.roleId);
+    const { data: fetchedRoleMenuIds, isLoading: isRoleMenusLoading } = useRoleMenus(role?.roleId);
+    const roleMenuIds = React.useMemo(() => fetchedRoleMenuIds || [], [fetchedRoleMenuIds]);
 
     const form = useForm<RoleFormValues>({
         resolver: zodResolver(roleFormSchema),
@@ -94,106 +92,152 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
-            <DialogContent className="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>{isEdit ? "Edit Role" : "Add New Role"}</DialogTitle>
-                    <DialogDescription>
-                        {isEdit
-                            ? "Update role information below."
-                            : "Enter the details for the new role."}
-                    </DialogDescription>
-                </DialogHeader>
+            <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-white dark:bg-[#2d2d2d] rounded-xl border-none shadow-2xl">
+                <div className="bg-white dark:bg-[#2d2d2d] px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
+                    <h3 className="text-lg font-bold leading-6 text-gray-900 dark:text-white flex items-center gap-2">
+                        <ShieldCheck className="text-[#FF5722] w-6 h-6" />
+                        {isEdit ? "권한 수정" : "권한 추가"}
+                    </h3>
+                </div>
+
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onFormSubmit)} className="space-y-4">
-                        <FormField
-                            control={form.control}
-                            name="roleId"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Role ID</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="ROLE_USER" {...field} disabled={isEdit} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={form.control}
-                            name="roleName"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>Name</FormLabel>
-                                    <FormControl>
-                                        <Input placeholder="General User" {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
+                    <form onSubmit={form.handleSubmit(onFormSubmit)} className="px-6 py-6 space-y-5">
+                        <div className="flex gap-4">
+                            <FormField
+                                control={form.control}
+                                name="roleId"
+                                render={({ field }) => (
+                                    <FormItem className="w-1/2">
+                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                            권한 ID <span className="text-[#FF5722]">*</span>
+                                        </FormLabel>
+                                        <div className="relative rounded-md shadow-sm">
+                                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                                <ShieldCheck className="text-gray-400 w-5 h-5" />
+                                            </div>
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="ROLE_USER"
+                                                    {...field}
+                                                    disabled={isEdit}
+                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="roleName"
+                                render={({ field }) => (
+                                    <FormItem className="w-1/2">
+                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                            권한 이름 <span className="text-[#FF5722]">*</span>
+                                        </FormLabel>
+                                        <div className="relative">
+                                            <FormControl>
+                                                <Input
+                                                    placeholder="일반 사용자"
+                                                    {...field}
+                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                />
+                                            </FormControl>
+                                        </div>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
                         <FormField
                             control={form.control}
                             name="roleDesc"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description</FormLabel>
+                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                        권한 설명
+                                    </FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder="Describe the permissions of this role..." {...field} />
+                                        <Textarea
+                                            placeholder="이 권한에 대한 설명을 입력하세요"
+                                            {...field}
+                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                            rows={3}
+                                        />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
+
                         <FormField
                             control={form.control}
                             name="menuIds"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Menu Permissions</FormLabel>
+                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                        메뉴 권한
+                                    </FormLabel>
                                     <FormControl>
-                                        {isRoleMenusLoading && isEdit ? (
-                                            <div className="h-20 flex items-center justify-center text-sm text-muted-foreground">Loading permissions...</div>
-                                        ) : (
-                                            <MenuCheckboxTree
-                                                items={allMenus}
-                                                selectedIds={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
-                                        )}
+                                        <div className="bg-white dark:bg-[#2d2d2d] border border-gray-300 dark:border-gray-600 rounded-lg p-5 max-h-[300px] overflow-y-auto">
+                                            {isRoleMenusLoading && isEdit ? (
+                                                <div className="h-20 flex items-center justify-center text-sm text-slate-500">권한 로딩 중...</div>
+                                            ) : (
+                                                <MenuCheckboxTree
+                                                    items={allMenus}
+                                                    selectedIds={field.value}
+                                                    onCheckedChange={field.onChange}
+                                                />
+                                            )}
+                                        </div>
                                     </FormControl>
-                                    <FormDescription>
-                                        Select the menus accessible by this role.
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={form.control}
-                            name="useYn"
-                            render={({ field }) => (
-                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3">
-                                    <div className="space-y-0.5">
-                                        <FormLabel className="text-base">Use Status</FormLabel>
-                                        <FormDescription>Enable or disable this role.</FormDescription>
-                                    </div>
-                                    <FormControl>
-                                        <Switch
-                                            checked={field.value === "1"}
-                                            onCheckedChange={(checked) => field.onChange(checked ? "1" : "0")}
-                                        />
-                                    </FormControl>
-                                </FormItem>
-                            )}
-                        />
-                        <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                                Cancel
+
+                        <div className="flex items-center justify-between">
+                            <div className="space-y-0.5">
+                                <FormLabel className="text-sm font-medium text-gray-900 dark:text-white">사용 여부</FormLabel>
+                                <FormDescription className="text-sm text-gray-500 dark:text-gray-400">
+                                    이 권한을 활성화하거나 비활성화합니다.
+                                </FormDescription>
+                            </div>
+                            <FormField
+                                control={form.control}
+                                name="useYn"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormControl>
+                                            <Switch
+                                                className="data-[state=checked]:bg-[#FF5722]"
+                                                checked={field.value === "1"}
+                                                onCheckedChange={(checked) => field.onChange(checked ? "1" : "0")}
+                                            />
+                                        </FormControl>
+                                    </FormItem>
+                                )}
+                            />
+                        </div>
+
+                        <div className="bg-white dark:bg-[#2d2d2d] border-t border-gray-100 dark:border-gray-700 pt-4 flex justify-end gap-2">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => onOpenChange(false)}
+                                className="px-4 py-2 bg-white dark:bg-[#2d2d2d] text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800"
+                            >
+                                취소
                             </Button>
-                            <Button type="submit">
-                                {isEdit ? "Save Changes" : "Create Role"}
+                            <Button
+                                type="submit"
+                                className="px-6 py-2 bg-[#FF5722] border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-[#FF5722]"
+                            >
+                                저장
                             </Button>
-                        </DialogFooter>
+                        </div>
                     </form>
                 </Form>
             </DialogContent>

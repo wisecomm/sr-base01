@@ -5,9 +5,13 @@ import { useAppStore } from "@/store/useAppStore";
 export function useLogin() {
     const setUser = useAppStore((state) => state.setUser);
     return useMutation({
-        mutationFn: (formData: FormData) => login(formData),
+        mutationFn: async (formData: FormData) => {
+            const res = await login(formData);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: (res) => {
-            if (res.code === "200" && res.data) {
+            if (res.data) {
                 setUser(res.data.user);
             }
         },

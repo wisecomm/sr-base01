@@ -6,13 +6,21 @@ import { ApiResponse, PageResponse, RoleInfo } from "@/types";
 
 const API_BASE_URL = "/v1/mgmt/roles";
 
-export async function getRoles(page: number, size: number): Promise<ApiResponse<PageResponse<RoleInfo>>> {
+export async function getRoles(page: number, size: number, searchId?: string): Promise<ApiResponse<PageResponse<RoleInfo>>> {
     try {
         const response = await api.get<RoleInfo[]>(API_BASE_URL);
 
         // Backend returns a flat list for roles. We adapt it to a PageResponse structure
         // to stay consistent with the DataTable's expectation of paginated data.
-        const allRoles = response.data || [];
+        let allRoles = response.data || [];
+
+        if (searchId) {
+            const lowerSearch = searchId.toLowerCase();
+            allRoles = allRoles.filter(role =>
+                role.roleId.toLowerCase().includes(lowerSearch)
+            );
+        }
+
         const total = allRoles.length;
         const start = page * size;
         const end = start + size;

@@ -34,7 +34,11 @@ export function useMenus() {
 export function useCreateMenu() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: Partial<MenuInfo>) => createMenu(data),
+        mutationFn: async (data: Partial<MenuInfo>) => {
+            const res = await createMenu(data);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
         },
@@ -44,7 +48,11 @@ export function useCreateMenu() {
 export function useUpdateMenu() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, data }: { id: string; data: Partial<MenuInfo> }) => updateMenu(id, data),
+        mutationFn: async ({ id, data }: { id: string; data: Partial<MenuInfo> }) => {
+            const res = await updateMenu(id, data);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
         },
@@ -54,7 +62,11 @@ export function useUpdateMenu() {
 export function useDeleteMenu() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id: string) => deleteMenu(id),
+        mutationFn: async (id: string) => {
+            const res = await deleteMenu(id);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: menuKeys.all });
         },

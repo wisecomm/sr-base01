@@ -5,16 +5,17 @@ import { RoleInfo } from "@/types";
 export const roleKeys = {
     all: ["roles"] as const,
     lists: () => [...roleKeys.all, "list"] as const,
-    list: (page: number, size: number) => [...roleKeys.lists(), { page, size }] as const,
+    list: (page: number, size: number, searchId?: string) => [...roleKeys.lists(), { page, size, searchId }] as const,
     detail: (id: string) => [...roleKeys.all, "detail", id] as const,
     menus: (id: string) => [...roleKeys.detail(id), "menus"] as const,
 };
 
-export function useRoles(page: number, size: number) {
+export function useRoles(page: number, size: number, searchId?: string) {
     return useQuery({
-        queryKey: roleKeys.list(page, size),
+        queryKey: roleKeys.list(page, size, searchId),
         queryFn: async () => {
-            const res = await getRoles(page, size);
+            // If default pagination/search is needed, handle undefined searchId
+            const res = await getRoles(page, size, searchId);
             if (res.code !== "200") throw new Error(res.message);
             return res.data;
         },
@@ -37,7 +38,11 @@ export function useRoleMenus(roleId: string | undefined) {
 export function useCreateRole() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (data: Partial<RoleInfo>) => createRole(data),
+        mutationFn: async (data: Partial<RoleInfo>) => {
+            const res = await createRole(data);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: roleKeys.all });
         },
@@ -47,7 +52,11 @@ export function useCreateRole() {
 export function useUpdateRole() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ id, data }: { id: string; data: Partial<RoleInfo> }) => updateRole(id, data),
+        mutationFn: async ({ id, data }: { id: string; data: Partial<RoleInfo> }) => {
+            const res = await updateRole(id, data);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: roleKeys.all });
         },
@@ -57,7 +66,11 @@ export function useUpdateRole() {
 export function useDeleteRole() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: (id: string) => deleteRole(id),
+        mutationFn: async (id: string) => {
+            const res = await deleteRole(id);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: roleKeys.all });
         },
@@ -67,7 +80,11 @@ export function useDeleteRole() {
 export function useAssignRoleMenus() {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ roleId, menuIds }: { roleId: string; menuIds: string[] }) => assignRoleMenus(roleId, menuIds),
+        mutationFn: async ({ roleId, menuIds }: { roleId: string; menuIds: string[] }) => {
+            const res = await assignRoleMenus(roleId, menuIds);
+            if (res.code !== "200") throw new Error(res.message);
+            return res;
+        },
         onSuccess: (_, variables) => {
             queryClient.invalidateQueries({ queryKey: roleKeys.menus(variables.roleId) });
             queryClient.invalidateQueries({ queryKey: roleKeys.all });
