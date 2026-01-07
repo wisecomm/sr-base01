@@ -27,3 +27,7 @@ Next.js가 Spring Boot 내부에 포함된 상태로 잘 작동하는지 확인�
 프론트엔드만 갱신: ./gradlew buildFrontend copyFrontend
 Java 코드는 수정하지 않고 프론트엔드 화면만 반영하고 싶을 때 유용합니다.
 백엔드 테스트: spring-rest 폴더에서 ./gradlew test (JUnit 테스트)
+
+## 도커 설치
+% docker volume create pgdata
+% docker run --name my-postgres -e POSTGRES_PASSWORD=postgres123 -p 5432:5432 -v pgdata:/var/lib/postgresql/data -d postgres:16
