@@ -9,7 +9,7 @@ import { BoardMaster } from "./actions";
 import { useBoards, useUpdateBoard, useCreateBoard, useDeleteBoard } from "@/hooks/useBoardQuery";
 import { BoardDialog } from "./board-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useDataTable } from "@/hooks/use-data-table";
+import { useDataTable } from "@/components/data-table/use-data-table";
 
 export default function BoardsPage() {
     const { toast } = useToast();

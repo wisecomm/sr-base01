@@ -9,7 +9,7 @@ import { UserDetail } from "@/types";
 import { useUsers, useUpdateUser, useCreateUser, useDeleteUser, useAssignUserRoles } from "@/hooks/useUserQuery";
 import { UserDialog } from "./user-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useDataTable } from "@/hooks/use-data-table";
+import { useDataTable } from "@/components/data-table/use-data-table";
 
 export default function UsersPage() {
     const { toast } = useToast();

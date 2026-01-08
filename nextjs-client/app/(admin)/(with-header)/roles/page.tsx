@@ -9,7 +9,7 @@ import { RoleInfo } from "@/types";
 import { useRoles, useCreateRole, useUpdateRole, useDeleteRole, useAssignRoleMenus } from "@/hooks/useRoleQuery";
 import { RoleDialog } from "./role-dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useDataTable } from "@/hooks/use-data-table";
+import { useDataTable } from "@/components/data-table/use-data-table";
 
 export default function RolesPage() {
     const { toast } = useToast();

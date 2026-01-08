@@ -2,6 +2,10 @@
 export type { BaseCellProps } from "./cell-types";
 export { sizeStyles, alignStyles } from "./cell-types";
 
+// 선택 셀
+export { SelectCell } from "./select-cell";
+
+
 // 텍스트 셀
 export { TextCell, DescriptionCell, LinkCell, MonoCell } from "./text-cell";
 
@@ -27,5 +31,4 @@ export {
 } from "./actions-cell";
 export type { ActionItem } from "./actions-cell";
 
-// 헤더 셀
-export { SortableHeader, HeaderCell } from "./header-cell";
+
