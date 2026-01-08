@@ -5,9 +5,12 @@ spring:
   profiles:
     active: local
 
+
 app:
   cors:
     allowed-origins: http://localhost:3000,http://localhost:8080
+  file:
+    upload-dir: /Users/danyoh/XXX-AI/sr-mobile/uploads/
 
 # Actuator 설정
 management:
@@ -24,3 +27,7 @@ server:
   port: 8080
   compression:
     enabled: false
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

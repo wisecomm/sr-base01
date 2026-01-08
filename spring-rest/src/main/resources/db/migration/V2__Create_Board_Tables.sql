@@ -21,12 +21,10 @@ CREATE TABLE CHMM_BOARD_MASTER (
 CREATE TABLE CHMM_BOARD (
     BOARD_ID        SERIAL PRIMARY KEY,          -- 게시물 일련번호
     BRD_ID          VARCHAR(20) NOT NULL,       -- 게시판 마스터 ID (FK)
-
     USER_ID         VARCHAR(50) NOT NULL,       -- 작성자 ID (CHMM_USER_INFO와 명칭 통일)
     TITLE           VARCHAR(1000) NOT NULL,     -- 제목
     CONTENTS        TEXT,                       -- 내용
     HIT_CNT         INTEGER DEFAULT 0,          -- 조회수
-    NOTICE_YN       CHAR(1) DEFAULT '0',        -- 공지사항 여부
     SECRET_YN       CHAR(1) DEFAULT '0',        -- 비밀글 여부
     USE_YN          CHAR(1) DEFAULT '1' NOT NULL, -- 사용 여부 (삭제 시 '0')
     SYS_INSERT_DTM  TIMESTAMP WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP,
