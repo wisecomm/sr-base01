@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Profile;
  * 개발 환경에서만 활성화
  */
 @Configuration
-@Profile("dev")
+@Profile({ "local", "dev" })
 public class SwaggerConfig {
 
         private static final String SECURITY_SCHEME_NAME = "Bearer Authentication";
