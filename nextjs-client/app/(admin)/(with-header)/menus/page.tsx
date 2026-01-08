@@ -73,9 +73,9 @@ export default function MenusPage() {
     return (
         <div className="w-full h-full flex flex-col lg:flex-row gap-6">
             {/* Left Column: Menu Tree */}
-            <div className="w-full lg:w-1/4 min-w-[300px] flex flex-col bg-white dark:bg-[#1e293b] rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden h-fit max-h-[calc(100vh-200px)]">
-                <div className="p-4 bg-gray-100 dark:bg-slate-700 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-                    <div className="flex items-center gap-2 font-medium text-sm text-gray-700 dark:text-gray-200">
+            <div className="w-full lg:w-1/4 min-w-[300px] flex flex-col bg-background dark:bg-card rounded-xl shadow-sm border border-border dark:border-border overflow-hidden h-fit max-h-[calc(100vh-200px)]">
+                <div className="p-4 bg-muted dark:bg-muted border-b border-border dark:border-border flex items-center justify-between">
+                    <div className="flex items-center gap-2 font-medium text-sm text-muted-foreground dark:text-muted-foreground">
                         <span className="text-base">최상위메뉴</span>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ export default function MenusPage() {
             </div>
 
             {/* Right Column: Menu Detail Form */}
-            <div className="flex-1 bg-white dark:bg-[#1e293b] rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col overflow-hidden">
+            <div className="flex-1 bg-background dark:bg-card rounded-xl shadow-sm border border-border dark:border-border flex flex-col overflow-hidden">
                 <MenuForm
                     item={selectedMenu}
                     allMenus={menus}

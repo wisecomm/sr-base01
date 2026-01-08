@@ -49,8 +49,8 @@ export function MenuTree({ items, selectedId, onSelect, onAddChild }: MenuTreePr
                     className={cn(
                         "py-2 flex items-center gap-2 text-sm rounded cursor-pointer transition-colors group", // Added group for hover effect
                         isSelected
-                            ? "bg-gray-100 dark:bg-slate-700 text-gray-900 dark:text-white font-medium"
-                            : "text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-700"
+                            ? "bg-muted text-foreground font-medium"
+                            : "text-muted-foreground hover:bg-muted"
                     )}
                     onClick={() => onSelect(item)}
                     style={{ paddingLeft: `${level * 16 + 16} px` }}
@@ -66,21 +66,21 @@ export function MenuTree({ items, selectedId, onSelect, onAddChild }: MenuTreePr
                             }}
                         >
                             {isExpanded ? (
-                                <ChevronDown className="w-3 h-3 text-gray-400" />
+                                <ChevronDown className="w-3 h-3 text-muted-foreground" />
                             ) : (
-                                <ChevronRight className="w-3 h-3 text-gray-400" />
+                                <ChevronRight className="w-3 h-3 text-muted-foreground" />
                             )}
                         </Button>
                     ) : (
                         // Placeholder for alignment if no children
                         <div className="w-6 h-6 -ml-1 flex items-center justify-center">
-                            <div className="w-1 h-1 rounded-full bg-gray-400" />
+                            <div className="w-1 h-1 rounded-full bg-muted-foreground" />
                         </div>
                     )}
 
-                    {item.menuId === 'M10000' && <LayoutGrid className="w-4 h-4 text-gray-400" />}
-                    {item.menuId === 'M20000' && <Settings className="w-4 h-4 text-gray-400" />}
-                    {item.menuId === 'M30000' && <Info className="w-4 h-4 text-gray-400" />}
+                    {item.menuId === 'M10000' && <LayoutGrid className="w-4 h-4 text-muted-foreground" />}
+                    {item.menuId === 'M20000' && <Settings className="w-4 h-4 text-muted-foreground" />}
+                    {item.menuId === 'M30000' && <Info className="w-4 h-4 text-muted-foreground" />}
 
                     <span className="flex-1 truncate">{item.menuName}</span>
 

@@ -92,10 +92,10 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
-            <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-white dark:bg-[#2d2d2d] rounded-xl border-none shadow-2xl">
-                <div className="bg-white dark:bg-[#2d2d2d] px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h3 className="text-lg font-bold leading-6 text-gray-900 dark:text-white flex items-center gap-2">
-                        <ShieldCheck className="text-[#FF5722] w-6 h-6" />
+            <DialogContent className="sm:max-w-xl p-0 overflow-hidden bg-background dark:bg-card rounded-xl border-none shadow-2xl">
+                <div className="bg-background dark:bg-card px-6 py-5 border-b border-border dark:border-border flex items-center justify-between">
+                    <h3 className="text-lg font-bold leading-6 text-foreground dark:text-foreground flex items-center gap-2">
+                        <ShieldCheck className="text-primary w-6 h-6" />
                         {isEdit ? "권한 수정" : "권한 추가"}
                     </h3>
                 </div>
@@ -108,19 +108,19 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                                 name="roleId"
                                 render={({ field }) => (
                                     <FormItem className="w-1/2">
-                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                            권한 ID <span className="text-[#FF5722]">*</span>
+                                        <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                            권한 ID <span className="text-primary">*</span>
                                         </FormLabel>
                                         <div className="relative rounded-md shadow-sm">
                                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                                <ShieldCheck className="text-gray-400 w-5 h-5" />
+                                                <ShieldCheck className="text-muted-foreground w-5 h-5" />
                                             </div>
                                             <FormControl>
                                                 <Input
                                                     placeholder="ROLE_USER"
                                                     {...field}
                                                     disabled={isEdit}
-                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                    className="block w-full pl-10 sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                 />
                                             </FormControl>
                                         </div>
@@ -133,15 +133,15 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                                 name="roleName"
                                 render={({ field }) => (
                                     <FormItem className="w-1/2">
-                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                            권한 이름 <span className="text-[#FF5722]">*</span>
+                                        <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                            권한 이름 <span className="text-primary">*</span>
                                         </FormLabel>
                                         <div className="relative">
                                             <FormControl>
                                                 <Input
                                                     placeholder="일반 사용자"
                                                     {...field}
-                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                    className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                 />
                                             </FormControl>
                                         </div>
@@ -156,14 +156,14 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                             name="roleDesc"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                         권한 설명
                                     </FormLabel>
                                     <FormControl>
                                         <Textarea
                                             placeholder="이 권한에 대한 설명을 입력하세요"
                                             {...field}
-                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                            className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                             rows={3}
                                         />
                                     </FormControl>
@@ -177,11 +177,11 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                             name="menuIds"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                         메뉴 권한
                                     </FormLabel>
                                     <FormControl>
-                                        <div className="bg-white dark:bg-[#2d2d2d] border border-gray-300 dark:border-gray-600 rounded-lg p-5 max-h-[300px] overflow-y-auto">
+                                        <div className="bg-background dark:bg-card border border-border dark:border-border rounded-lg p-5 max-h-[300px] overflow-y-auto">
                                             {isRoleMenusLoading && isEdit ? (
                                                 <div className="h-20 flex items-center justify-center text-sm text-slate-500">권한 로딩 중...</div>
                                             ) : (
@@ -200,8 +200,8 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
 
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
-                                <FormLabel className="text-sm font-medium text-gray-900 dark:text-white">사용 여부</FormLabel>
-                                <FormDescription className="text-sm text-gray-500 dark:text-gray-400">
+                                <FormLabel className="text-sm font-medium text-foreground dark:text-foreground">사용 여부</FormLabel>
+                                <FormDescription className="text-sm text-muted-foreground dark:text-muted-foreground">
                                     이 권한을 활성화하거나 비활성화합니다.
                                 </FormDescription>
                             </div>
@@ -212,7 +212,7 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                                     <FormItem>
                                         <FormControl>
                                             <Switch
-                                                className="data-[state=checked]:bg-[#FF5722]"
+                                                className=""
                                                 checked={field.value === "1"}
                                                 onCheckedChange={(checked) => field.onChange(checked ? "1" : "0")}
                                             />
@@ -222,18 +222,18 @@ export function RoleDialog({ open, onOpenChange, role, onSubmit }: RoleDialogPro
                             />
                         </div>
 
-                        <div className="bg-white dark:bg-[#2d2d2d] border-t border-gray-100 dark:border-gray-700 pt-4 flex justify-end gap-2">
+                        <div className="bg-background dark:bg-card border-t border-border dark:border-border pt-4 flex justify-end gap-2">
                             <Button
                                 type="button"
                                 variant="ghost"
                                 onClick={() => onOpenChange(false)}
-                                className="px-4 py-2 bg-white dark:bg-[#2d2d2d] text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800"
+                                className="px-4 py-2 bg-background dark:bg-card text-muted-foreground dark:text-muted-foreground border border-border dark:border-border rounded-md text-sm font-bold hover:bg-muted dark:hover:bg-muted"
                             >
                                 취소
                             </Button>
                             <Button
                                 type="submit"
-                                className="px-6 py-2 bg-[#FF5722] border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-[#FF5722]"
+                                className="px-6 py-2 bg-primary border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-primary"
                             >
                                 저장
                             </Button>

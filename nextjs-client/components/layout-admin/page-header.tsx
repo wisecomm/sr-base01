@@ -23,10 +23,10 @@ export function PageHeader() {
         return (
             <div className="flex flex-col gap-4 mb-6 pt-2">
                 <div className="flex items-center gap-4">
-                    <div className="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
-                    <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100 capitalize">{title}</h1>
+                    <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
+                    <h1 className="text-2xl font-bold text-foreground dark:text-foreground capitalize">{title}</h1>
                 </div>
-                <div className="h-px bg-slate-200 dark:bg-slate-800 w-full" />
+                <div className="h-px bg-border dark:bg-border w-full" />
             </div>
         );
     }
@@ -52,16 +52,16 @@ export function PageHeader() {
         <div className="flex flex-col gap-3 mb-2 pt-2">
             <div className="flex items-center gap-4">
                 {/* The Orange Dot */}
-                <div className="w-3 h-3 rounded-full bg-orange-500 shadow-[0_0_8px_rgba(249,115,22,0.4)] shrink-0" />
+                <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.4)] shrink-0" />
 
                 {/* Page Title */}
-                <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">{pageTitle}</h1>
+                <h1 className="text-2xl font-bold text-foreground dark:text-foreground">{pageTitle}</h1>
 
                 {/* Breadcrumbs */}
-                <div className="ml-4 flex items-center gap-2 text-sm text-slate-400 dark:text-slate-500 font-medium">
+                <div className="ml-4 flex items-center gap-2 text-sm text-muted-foreground dark:text-muted-foreground font-medium">
                     {displayBreadcrumbs.map((crumb, index) => (
                         <React.Fragment key={index}>
-                            <span className={cn(index === displayBreadcrumbs.length - 1 ? "text-slate-700 dark:text-slate-300" : "")}>
+                            <span className={cn(index === displayBreadcrumbs.length - 1 ? "text-foreground dark:text-muted-foreground" : "")}>
                                 {crumb}
                             </span>
                             {index < displayBreadcrumbs.length - 1 && (
@@ -73,7 +73,7 @@ export function PageHeader() {
             </div>
 
             {/* Horizontal Separator */}
-            <div className="h-px bg-slate-200 dark:bg-slate-800 w-full" />
+            <div className="h-px bg-border dark:bg-border w-full" />
         </div>
     );
 }

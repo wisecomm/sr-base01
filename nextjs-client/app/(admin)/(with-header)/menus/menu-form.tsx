@@ -124,7 +124,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
                             {/* Basic Info Section */}
                             <div className="space-y-6">
-                                <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Basic Information</h3>
+                                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Basic Information</h3>
                                 <FormField
                                     control={form.control}
                                     name="menuId"
@@ -186,7 +186,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
 
                             {/* Path & Sorting Section */}
                             <div className="space-y-6">
-                                <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-500">Path & Display</h3>
+                                <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">Path & Display</h3>
                                 <FormField
                                     control={form.control}
                                     name="menuUri"
@@ -211,7 +211,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                                 <FormControl className="flex-1">
                                                     <Input placeholder="/images/menus/icon.svg" {...field} className="py-2.5" />
                                                 </FormControl>
-                                                <Button type="button" variant="outline" size="icon" className="shrink-0 bg-white dark:bg-slate-800">
+                                                <Button type="button" variant="outline" size="icon" className="shrink-0 bg-background dark:bg-input">
                                                     <Settings className="h-4 w-4" />
                                                 </Button>
                                             </div>
@@ -252,12 +252,12 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                         </div>
 
                         {/* Use Status and Description */}
-                        <Separator className="border-gray-200 dark:border-slate-700 my-6" />
+                        <Separator className="border-border dark:border-border my-6" />
 
                         <div className="flex items-center justify-between">
                             <div className="space-y-0.5">
-                                <FormLabel className="text-sm font-medium text-gray-900 dark:text-white">사용 여부</FormLabel>
-                                <FormDescription className="text-sm text-gray-500 dark:text-gray-400">
+                                <FormLabel className="text-sm font-medium text-foreground dark:text-foreground">사용 여부</FormLabel>
+                                <FormDescription className="text-sm text-muted-foreground dark:text-muted-foreground">
                                     Enable or disable this menu.
                                 </FormDescription>
                             </div>
@@ -268,7 +268,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                     <FormItem>
                                         <FormControl>
                                             <Switch
-                                                className="data-[state=checked]:bg-blue-600"
+                                                className="data-[state=checked]:bg-primary"
                                                 checked={field.value === "1"}
                                                 onCheckedChange={(checked: boolean) => field.onChange(checked ? "1" : "0")}
                                             />
@@ -295,7 +295,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                         </div>
 
                         {/* Footer Buttons */}
-                        <div className="px-8 py-5 bg-gray-50 dark:bg-slate-900/50 border-t border-gray-200 dark:border-gray-700 flex items-center justify-end rounded-b-xl -mx-8 -mb-8 mt-10">
+                        <div className="px-8 py-5 bg-muted dark:bg-muted border-t border-border dark:border-border flex items-center justify-end rounded-b-xl -mx-8 -mb-8 mt-10">
                             <div className="flex gap-2">
                                 {isEdit && onDelete && (
                                     <Button
@@ -306,7 +306,7 @@ export function MenuForm({ item, allMenus, onSubmit, onDelete }: MenuFormProps) 
                                         삭제
                                     </Button>
                                 )}
-                                <Button type="submit" className="bg-[#111827] hover:bg-[#374151] text-white">
+                                <Button type="submit" className="bg-primary hover:bg-primary/90 text-white">
                                     저장
                                 </Button>
                             </div>

@@ -90,10 +90,10 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
-            <DialogContent className="sm:max-w-lg p-0 overflow-hidden bg-white dark:bg-[#2d2d2d] rounded-xl border-none shadow-2xl">
-                <div className="bg-white dark:bg-[#2d2d2d] px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h3 className="text-lg font-bold leading-6 text-gray-900 dark:text-white flex items-center gap-2">
-                        <LayoutDashboard className="text-[#FF5722] w-6 h-6" />
+            <DialogContent className="sm:max-w-lg p-0 overflow-hidden bg-background dark:bg-card rounded-xl border-none shadow-2xl">
+                <div className="bg-background dark:bg-card px-6 py-5 border-b border-border dark:border-border flex items-center justify-between">
+                    <h3 className="text-lg font-bold leading-6 text-foreground dark:text-foreground flex items-center gap-2">
+                        <LayoutDashboard className="text-primary w-6 h-6" />
                         {isEdit ? "게시판 수정" : "게시판 추가"}
                     </h3>
                 </div>
@@ -105,12 +105,12 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                             name="brdId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                        게시판 코드 <span className="text-[#FF5722]">*</span>
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                        게시판 코드 <span className="text-primary">*</span>
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                            className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                             placeholder="예: NOTICE, FREE, QNA"
                                             {...field}
                                             disabled={isEdit}
@@ -126,12 +126,12 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                             name="brdNm"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                        게시판 명 <span className="text-[#FF5722]">*</span>
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                        게시판 명 <span className="text-primary">*</span>
                                     </FormLabel>
                                     <FormControl>
                                         <Input
-                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                            className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                             placeholder="예: 공지사항, 자유게시판"
                                             {...field}
                                         />
@@ -146,12 +146,12 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                             name="brdDesc"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                         게시판 설명
                                     </FormLabel>
                                     <FormControl>
                                         <Textarea
-                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                            className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                             placeholder="게시판에 대한 설명을 입력하세요"
                                             rows={3}
                                             {...field}
@@ -168,7 +168,7 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                                 name="replyUseYn"
                                 render={({ field }) => (
                                     <FormItem className="flex items-center gap-3">
-                                        <FormLabel className="text-xs font-bold text-gray-700 dark:text-gray-300">
+                                        <FormLabel className="text-xs font-bold text-muted-foreground dark:text-muted-foreground">
                                             댓글 사용
                                         </FormLabel>
                                         <FormControl>
@@ -186,7 +186,7 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                                 name="fileUseYn"
                                 render={({ field }) => (
                                     <FormItem className="flex items-center gap-3">
-                                        <FormLabel className="text-xs font-bold text-gray-700 dark:text-gray-300">
+                                        <FormLabel className="text-xs font-bold text-muted-foreground dark:text-muted-foreground">
                                             파일 첨부
                                         </FormLabel>
                                         <FormControl>
@@ -204,7 +204,7 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                                 name="useYn"
                                 render={({ field }) => (
                                     <FormItem className="flex items-center gap-3">
-                                        <FormLabel className="text-xs font-bold text-gray-700 dark:text-gray-300">
+                                        <FormLabel className="text-xs font-bold text-muted-foreground dark:text-muted-foreground">
                                             사용
                                         </FormLabel>
                                         <FormControl>
@@ -223,7 +223,7 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                             name="fileMaxCnt"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                         최대 파일 첨부 수
                                     </FormLabel>
                                     <FormControl>
@@ -231,7 +231,7 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                                             type="number"
                                             min={0}
                                             max={20}
-                                            className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] w-24 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5"
+                                            className="w-24 sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5"
                                             {...field}
                                             onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                                         />
@@ -241,18 +241,18 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
                             )}
                         />
 
-                        <div className="bg-white dark:bg-[#2d2d2d] border-t border-gray-100 dark:border-gray-700 pt-4 flex justify-end gap-2">
+                        <div className="bg-background dark:bg-card border-t border-border dark:border-border pt-4 flex justify-end gap-2">
                             <Button
                                 type="button"
                                 variant="ghost"
                                 onClick={() => onOpenChange(false)}
-                                className="px-4 py-2 bg-white dark:bg-[#2d2d2d] text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800"
+                                className="px-4 py-2 bg-background dark:bg-card text-muted-foreground dark:text-muted-foreground border border-border dark:border-border rounded-md text-sm font-bold hover:bg-muted dark:hover:bg-muted"
                             >
                                 취소
                             </Button>
                             <Button
                                 type="submit"
-                                className="px-6 py-2 bg-[#FF5722] border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-[#FF5722]"
+                                className="px-6 py-2 bg-primary border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-primary"
                             >
                                 저장
                             </Button>

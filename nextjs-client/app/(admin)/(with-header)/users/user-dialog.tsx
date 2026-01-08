@@ -103,10 +103,10 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange} closeOnOutsideClick={false}>
-            <DialogContent className="sm:max-w-lg p-0 overflow-hidden bg-white dark:bg-[#2d2d2d] rounded-xl border-none shadow-2xl">
-                <div className="bg-white dark:bg-[#2d2d2d] px-6 py-5 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
-                    <h3 className="text-lg font-bold leading-6 text-gray-900 dark:text-white flex items-center gap-2">
-                        <UserPlus className="text-[#FF5722] w-6 h-6" />
+            <DialogContent className="sm:max-w-lg p-0 overflow-hidden bg-background dark:bg-card rounded-xl border-none shadow-2xl">
+                <div className="bg-background dark:bg-card px-6 py-5 border-b border-border dark:border-border flex items-center justify-between">
+                    <h3 className="text-lg font-bold leading-6 text-foreground dark:text-foreground flex items-center gap-2">
+                        <UserPlus className="text-primary w-6 h-6" />
                         {isEdit ? "사용자 수정" : "사용자 추가"}
                     </h3>
                 </div>
@@ -118,16 +118,16 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                             name="userId"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                        아이디 <span className="text-[#FF5722]">*</span>
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                        아이디 <span className="text-primary">*</span>
                                     </FormLabel>
                                     <div className="relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <IdCard className="text-gray-400 w-5 h-5" />
+                                            <IdCard className="text-muted-foreground w-5 h-5" />
                                         </div>
                                         <FormControl>
                                             <Input
-                                                className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                className="block w-full pl-10 sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                 placeholder="사용자 아이디를 입력하세요"
                                                 {...field}
                                                 disabled={isEdit}
@@ -145,13 +145,13 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                                 name="userName"
                                 render={({ field }) => (
                                     <FormItem className="w-1/2">
-                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                            이름 <span className="text-[#FF5722]">*</span>
+                                        <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                            이름 <span className="text-primary">*</span>
                                         </FormLabel>
                                         <div className="relative">
                                             <FormControl>
                                                 <Input
-                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                    className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                     placeholder="실명 입력"
                                                     {...field}
                                                 />
@@ -166,13 +166,13 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                                 name="userNick"
                                 render={({ field }) => (
                                     <FormItem className="w-1/2">
-                                        <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                        <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                             닉네임
                                         </FormLabel>
                                         <div className="relative">
                                             <FormControl>
                                                 <Input
-                                                    className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                    className="block w-full sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                     placeholder="닉네임 입력"
                                                     {...field}
                                                 />
@@ -189,16 +189,16 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                             name="userEmail"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
-                                        이메일 <span className="text-[#FF5722]">*</span>
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
+                                        이메일 <span className="text-primary">*</span>
                                     </FormLabel>
                                     <div className="relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Mail className="text-gray-400 w-5 h-5" />
+                                            <Mail className="text-muted-foreground w-5 h-5" />
                                         </div>
                                         <FormControl>
                                             <Input
-                                                className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                className="block w-full pl-10 sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                 placeholder="example@company.com"
                                                 {...field}
                                             />
@@ -214,17 +214,17 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                             name="userPwd"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                         {isEdit ? "새 비밀번호" : "초기 비밀번호"}
                                     </FormLabel>
                                     <div className="relative rounded-md shadow-sm">
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                            <Lock className="text-gray-400 w-5 h-5" />
+                                            <Lock className="text-muted-foreground w-5 h-5" />
                                         </div>
                                         <FormControl>
                                             <Input
                                                 type="password"
-                                                className="focus-visible:ring-[#FF5722] focus:border-[#FF5722] block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-800 rounded-md py-2.5 placeholder-gray-400"
+                                                className="block w-full pl-10 sm:text-sm border-border dark:border-border dark:bg-input rounded-md py-2.5 placeholder:text-muted-foreground"
                                                 placeholder="••••••••"
                                                 {...field}
                                             />
@@ -240,10 +240,10 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                             name="roleIds"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel className="block text-xs font-bold text-gray-700 dark:text-gray-300 mb-1.5">
+                                    <FormLabel className="block text-xs font-bold text-muted-foreground dark:text-muted-foreground mb-1.5">
                                         권한
                                     </FormLabel>
-                                    <div className="bg-white dark:bg-[#2d2d2d] border border-gray-300 dark:border-gray-600 rounded-lg p-5">
+                                    <div className="bg-background dark:bg-card border border-border dark:border-border rounded-lg p-5">
                                         <div className="grid grid-cols-2 gap-y-4 gap-x-2">
                                             {isUserRolesLoading && isEdit ? (
                                                 <div className="col-span-2 text-center text-xs text-slate-500 py-2">권한 로딩 중...</div>
@@ -251,7 +251,7 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                                                 allRoles.map((role) => (
                                                     <label key={role.roleId} className="inline-flex items-center space-x-3 cursor-pointer group">
                                                         <Checkbox
-                                                            className="h-5 w-5 rounded border-gray-300 text-[#FF5722] focus:ring-[#FF5722] data-[state=checked]:bg-[#FF5722] data-[state=checked]:border-[#FF5722] dark:border-gray-600 dark:bg-gray-800"
+                                                            className="h-5 w-5 rounded border-border dark:border-border dark:bg-input"
                                                             checked={field.value?.includes(role.roleId)}
                                                             onCheckedChange={(checked) => {
                                                                 const current = field.value || [];
@@ -262,7 +262,7 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                                                                 }
                                                             }}
                                                         />
-                                                        <span className="text-base font-normal text-gray-900 dark:text-gray-100 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                                                        <span className="text-base font-normal text-foreground dark:text-foreground group-hover:text-muted-foreground dark:group-hover:text-muted-foreground">
                                                             {role.roleName}
                                                         </span>
                                                     </label>
@@ -275,18 +275,18 @@ export function UserDialog({ open, onOpenChange, user, onSubmit }: UserDialogPro
                             )}
                         />
 
-                        <div className="bg-white dark:bg-[#2d2d2d] border-t border-gray-100 dark:border-gray-700 pt-4 flex justify-end gap-2">
+                        <div className="bg-background dark:bg-card border-t border-border dark:border-border pt-4 flex justify-end gap-2">
                             <Button
                                 type="button"
                                 variant="ghost"
                                 onClick={() => onOpenChange(false)}
-                                className="px-4 py-2 bg-white dark:bg-[#2d2d2d] text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-bold hover:bg-gray-50 dark:hover:bg-gray-800"
+                                className="px-4 py-2 bg-background dark:bg-card text-muted-foreground dark:text-muted-foreground border border-border dark:border-border rounded-md text-sm font-bold hover:bg-muted dark:hover:bg-muted"
                             >
                                 취소
                             </Button>
                             <Button
                                 type="submit"
-                                className="px-6 py-2 bg-[#FF5722] border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-[#FF5722]"
+                                className="px-6 py-2 bg-primary border border-transparent rounded-md shadow-sm text-sm font-bold text-white hover:opacity-90 hover:bg-primary"
                             >
                                 저장
                             </Button>

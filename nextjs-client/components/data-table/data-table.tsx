@@ -33,7 +33,7 @@ export function DataTable<TData>({
 }: DataTableProps<TData>) {
     return (
         <div className="w-full space-y-4">
-            <div className="rounded-md border bg-white dark:bg-slate-900">
+            <div className="rounded-md border bg-background dark:bg-card">
                 <Table className="table-fixed" showSeparators={showSeparators}>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
@@ -60,7 +60,7 @@ export function DataTable<TData>({
                                     key={row.id}
                                     data-state={row.getIsSelected() && "selected"}
                                     onClick={() => row.toggleSelected()}
-                                    className={`cursor-pointer ${row.getIsSelected() ? "bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800" : ""}`}
+                                    className={`cursor-pointer ${row.getIsSelected() ? "bg-primary/10 dark:bg-primary/20 hover:bg-primary/20 dark:hover:bg-primary/30" : ""}`}
                                 >
                                     {row.getVisibleCells().map((cell) => (
                                         <TableCell key={cell.id}>

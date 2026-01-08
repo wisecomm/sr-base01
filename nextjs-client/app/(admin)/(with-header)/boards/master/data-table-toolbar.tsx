@@ -88,7 +88,7 @@ export function DataTableToolbar({
                             tabIndex={-1}
                         />
                         <button
-                            className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors"
+                            className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
                             type="button"
                             onClick={() => handleDateIconClick(startDateRef)}
                         >
@@ -115,7 +115,7 @@ export function DataTableToolbar({
                             tabIndex={-1}
                         />
                         <button
-                            className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-slate-500 hover:text-blue-600 transition-colors"
+                            className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
                             type="button"
                             onClick={() => handleDateIconClick(endDateRef)}
                         >
@@ -126,7 +126,7 @@ export function DataTableToolbar({
                 <Button
                     variant="outline"
                     onClick={handleSearch}
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
+                    className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     disabled={isLoading}
                 >
                     <Search className="mr-2 h-4 w-4" />
@@ -139,7 +139,7 @@ export function DataTableToolbar({
                 <Button
                     variant="outline"
                     onClick={onAdd}
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
+                    className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                 >
                     <Plus className="mr-2 h-4 w-4" />
                     추가
@@ -148,7 +148,7 @@ export function DataTableToolbar({
                 <Button
                     variant="outline"
                     onClick={onEdit}
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
+                    className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                 >
                     <Pencil className="mr-2 h-4 w-4" />
                     수정
@@ -157,7 +157,7 @@ export function DataTableToolbar({
                 <Button
                     variant="outline"
                     onClick={onDelete}
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm"
+                    className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                 >
                     <Trash2 className="mr-2 h-4 w-4" />
                     삭제

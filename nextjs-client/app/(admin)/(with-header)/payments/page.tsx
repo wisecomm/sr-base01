@@ -13,7 +13,7 @@ import {
 import { columns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { generatePayments } from "@/app/(admin)/(with-header)/payments/mock";
+import { generatePayments } from "./mock";
 import { useState, useEffect } from "react";
 import { Payment } from "./columns";
 import * as React from "react";

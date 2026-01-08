@@ -32,7 +32,7 @@ export function Sidebar() {
     const pathname = usePathname();
 
     return (
-        <div className="hidden border-r bg-slate-50/40 dark:bg-slate-950/40 md:block md:w-64 lg:w-72">
+        <div className="hidden border-r bg-muted/40 dark:bg-card/40 md:block md:w-64 lg:w-72">
             <div className="flex h-full flex-col gap-2">
                 <div className="flex h-14 items-center border-b px-6 font-semibold lg:h-[60px]">
                     <Link href="/" className="flex items-center gap-2 font-bold">
@@ -50,7 +50,7 @@ export function Sidebar() {
                                     className={cn(
                                         "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
                                         pathname === item.href
-                                            ? "bg-slate-100 text-primary dark:bg-slate-800"
+                                            ? "bg-muted text-primary dark:bg-card"
                                             : "text-muted-foreground"
                                     )}
                                 >
