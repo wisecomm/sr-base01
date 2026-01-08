@@ -49,3 +49,9 @@ logging:
     com.example.springrest.repository: TRACE
     org.springframework.security: DEBUG
     org.mybatis: DEBUG
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:8080
+  file:
+    upload-dir: /home/uploads/

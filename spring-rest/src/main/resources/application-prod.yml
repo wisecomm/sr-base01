@@ -43,3 +43,9 @@ logging:
     com.example.springrest: INFO
     org.springframework: WARN
     org.mybatis: WARN
+
+app:
+  cors:
+    allowed-origins: http://localhost:3000,http://localhost:8080
+  file:
+    upload-dir: /home/uploads/
