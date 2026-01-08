@@ -3,8 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { RoleInfo } from "@/types";
 import { Checkbox } from "@/components/ui/checkbox";
-import { WiTitleCell, TextCell } from "@/components/data-table/cells";
-import { cn } from "@/lib/utils";
+import { TextCell, UseYnCell, HeaderCell, SortableHeader } from "@/components/data-table/cells";
 
 export const getColumns = (): ColumnDef<RoleInfo>[] => [
     {
@@ -27,36 +26,26 @@ export const getColumns = (): ColumnDef<RoleInfo>[] => [
     },
     {
         accessorKey: "roleId",
-        header: () => <WiTitleCell value="권한 아이디" size="100" />,
+        header: ({ column }) => <SortableHeader column={column} title="권한 아이디" />,
         cell: ({ row }) => <TextCell value={row.getValue("roleId")} />,
+        enableSorting: true,
     },
     {
         accessorKey: "roleName",
-        header: () => <WiTitleCell value="권한 이름" size="150" />,
-        cell: ({ row }) => <TextCell value={row.getValue("roleName")} />, // Using TextCell for consistency
+        header: ({ column }) => <SortableHeader column={column} title="권한 이름" />,
+        cell: ({ row }) => <TextCell value={row.getValue("roleName")} />,
+        enableSorting: true,
     },
     {
         accessorKey: "roleDesc",
-        header: () => <WiTitleCell value="비고" size="200" />,
-        cell: ({ row }) => <TextCell value={row.getValue("roleDesc") || "-"} />,
+        header: () => <HeaderCell title="비고" />,
+        cell: ({ row }) => <TextCell value={row.getValue("roleDesc")} variant="muted" />,
     },
     {
         accessorKey: "useYn",
-        header: () => <WiTitleCell value="상태" size="80" />,
-        cell: ({ row }) => {
-            const useYn = row.getValue("useYn") as string;
-            return (
-                <div className="flex items-center">
-                    <span className={cn(
-                        "px-2 py-1 text-xs font-semibold rounded-full",
-                        useYn === "1"
-                            ? "text-green-700 bg-green-100"
-                            : "text-red-700 bg-red-100"
-                    )}>
-                        {useYn === "1" ? "Active" : "Disabled"}
-                    </span>
-                </div>
-            );
-        },
+        header: ({ column }) => <SortableHeader column={column} title="상태" />,
+        cell: ({ row }) => <UseYnCell value={row.getValue("useYn")} />,
+        size: 80,
+        enableSorting: true,
     },
 ];

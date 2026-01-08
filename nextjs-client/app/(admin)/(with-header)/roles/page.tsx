@@ -1,15 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-    SortingState,
-    VisibilityState,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    useReactTable,
-    PaginationState,
-} from "@tanstack/react-table";
+import { PaginationState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
@@ -17,12 +9,10 @@ import { RoleInfo } from "@/types";
 import { useRoles, useCreateRole, useUpdateRole, useDeleteRole, useAssignRoleMenus } from "@/hooks/useRoleQuery";
 import { RoleDialog } from "./role-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useDataTable } from "@/hooks/use-data-table";
 
 export default function RolesPage() {
     const { toast } = useToast();
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
 
     // Pagination state
     const [pagination, setPagination] = React.useState<PaginationState>({
@@ -62,26 +52,13 @@ export default function RolesPage() {
     // Selection mode: 'single' or 'multi' (defaults to 'single' if not specified)
     const selectionMode: 'single' | 'multi' | undefined = 'single';
 
-    const table = useReactTable({
+    const table = useDataTable({
         data: rolesData?.list || [],
         columns,
         pageCount: rolesData?.pages || -1,
-        manualPagination: true,
-        enableSorting: false,
-        onSortingChange: setSorting,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        pagination,
         onPaginationChange: setPagination,
         enableMultiRowSelection: (selectionMode as string) === 'multi',
-        state: {
-            sorting,
-            columnVisibility,
-            rowSelection,
-            pagination,
-        },
     });
 
     // Toolbar handlers (using table instance)

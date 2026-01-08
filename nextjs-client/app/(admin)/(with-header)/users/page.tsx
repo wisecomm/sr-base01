@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    useReactTable,
-    PaginationState,
-} from "@tanstack/react-table";
+import { PaginationState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
@@ -18,13 +9,10 @@ import { UserDetail } from "@/types";
 import { useUsers, useUpdateUser, useCreateUser, useDeleteUser, useAssignUserRoles } from "@/hooks/useUserQuery";
 import { UserDialog } from "./user-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useDataTable } from "@/hooks/use-data-table";
 
 export default function UsersPage() {
     const { toast } = useToast();
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
 
     // Search state
     const today = new Date();
@@ -40,7 +28,6 @@ export default function UsersPage() {
 
     const [searchParams, setSearchParams] = React.useState({
         userName: "",
-        //        startDate: formatDate(yesterday),
         startDate: "",
         endDate: formatDate(today)
     });
@@ -93,28 +80,13 @@ export default function UsersPage() {
     // Selection mode: 'single' or 'multi' (defaults to 'single' if not specified)
     const selectionMode: 'single' | 'multi' | undefined = 'single';
 
-    const table = useReactTable({
+    const table = useDataTable({
         data: usersData?.list || [],
         columns,
         pageCount: usersData?.pages || -1,
-        manualPagination: true,
-        enableSorting: false,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        pagination,
         onPaginationChange: setPagination,
         enableMultiRowSelection: (selectionMode as string) === 'multi',
-        state: {
-            sorting,
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-            pagination,
-        },
     });
 
     const handleEdit = React.useCallback(() => {

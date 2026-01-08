@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-    ColumnFiltersState,
-    SortingState,
-    VisibilityState,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    useReactTable,
-    PaginationState,
-} from "@tanstack/react-table";
+import { PaginationState } from "@tanstack/react-table";
 import { getColumns } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
@@ -18,13 +9,10 @@ import { BoardMaster } from "./actions";
 import { useBoards, useUpdateBoard, useCreateBoard, useDeleteBoard } from "@/hooks/useBoardQuery";
 import { BoardDialog } from "./board-dialog";
 import { useToast } from "@/hooks/use-toast";
+import { useDataTable } from "@/hooks/use-data-table";
 
 export default function BoardsPage() {
     const { toast } = useToast();
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
-    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-    const [rowSelection, setRowSelection] = React.useState({});
 
     // Search state
     const today = new Date();
@@ -82,28 +70,13 @@ export default function BoardsPage() {
     // Selection mode
     const selectionMode: 'single' | 'multi' | undefined = 'single';
 
-    const table = useReactTable({
+    const table = useDataTable({
         data: boardsData?.list || [],
         columns,
         pageCount: boardsData?.pages || -1,
-        manualPagination: true,
-        enableSorting: false,
-        onSortingChange: setSorting,
-        onColumnFiltersChange: setColumnFilters,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        getFilteredRowModel: getFilteredRowModel(),
-        onColumnVisibilityChange: setColumnVisibility,
-        onRowSelectionChange: setRowSelection,
+        pagination,
         onPaginationChange: setPagination,
         enableMultiRowSelection: (selectionMode as string) === 'multi',
-        state: {
-            sorting,
-            columnFilters,
-            columnVisibility,
-            rowSelection,
-            pagination,
-        },
     });
 
     const handleEdit = React.useCallback(() => {

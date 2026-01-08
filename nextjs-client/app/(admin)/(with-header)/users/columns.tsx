@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { UserDetail } from "@/types";
-import { WiTitleCell, TextCell, DateCell } from "@/components/data-table/cells";
+import { TextCell, DateCell, UseYnCell, SortableHeader } from "@/components/data-table/cells";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export const getColumns = (): ColumnDef<UserDetail>[] => [
@@ -24,10 +24,46 @@ export const getColumns = (): ColumnDef<UserDetail>[] => [
         enableHiding: false,
         size: 40,
     },
-    { accessorKey: "userId", header: () => <WiTitleCell value="아이디" size="100" />, cell: ({ row }) => <TextCell value={row.getValue("userId")} /> },
-    { accessorKey: "userName", header: () => <WiTitleCell value="이름" size="150" />, cell: ({ row }) => <TextCell value={row.getValue("userName")} /> },
-    { accessorKey: "userEmail", header: () => <WiTitleCell value="이메일" size="200" />, cell: ({ row }) => <TextCell value={row.getValue("userEmail")} /> },
-    { accessorKey: "userNick", header: () => <WiTitleCell value="닉네임" size="150" />, cell: ({ row }) => <TextCell value={row.getValue("userNick")} /> },
-    { accessorKey: "useYn", header: () => <WiTitleCell value="사용 여부" size="80" />, cell: ({ row }) => <TextCell value={row.getValue("useYn")} /> },
-    { accessorKey: "sysInsertDtm", header: () => <WiTitleCell value="등록일" size="180" />, cell: ({ row }) => <DateCell value={row.getValue("sysInsertDtm")} format="datetime" /> },
+    {
+        accessorKey: "userId",
+        header: ({ column }) => <SortableHeader column={column} title="아이디" />,
+        cell: ({ row }) => <TextCell value={row.getValue("userId")} />,
+        enableSorting: true,
+        size: 100,
+    },
+    {
+        accessorKey: "userName",
+        header: ({ column }) => <SortableHeader column={column} title="이름" />,
+        cell: ({ row }) => <TextCell value={row.getValue("userName")} />,
+        enableSorting: true,
+        size: 150,
+    },
+    {
+        accessorKey: "userEmail",
+        header: ({ column }) => <SortableHeader column={column} title="이메일" />,
+        cell: ({ row }) => <TextCell value={row.getValue("userEmail")} />,
+        enableSorting: true,
+        size: 200,
+    },
+    {
+        accessorKey: "userNick",
+        header: ({ column }) => <SortableHeader column={column} title="닉네임" />,
+        cell: ({ row }) => <TextCell value={row.getValue("userNick")} />,
+        enableSorting: true,
+        size: 150,
+    },
+    {
+        accessorKey: "useYn",
+        header: ({ column }) => <SortableHeader column={column} title="사용 여부" />,
+        cell: ({ row }) => <UseYnCell value={row.getValue("useYn")} />,
+        enableSorting: true,
+        size: 80,
+    },
+    {
+        accessorKey: "sysInsertDtm",
+        header: ({ column }) => <SortableHeader column={column} title="등록일" />,
+        cell: ({ row }) => <DateCell value={row.getValue("sysInsertDtm")} format="date" />,
+        enableSorting: true,
+        size: 180,
+    },
 ];
