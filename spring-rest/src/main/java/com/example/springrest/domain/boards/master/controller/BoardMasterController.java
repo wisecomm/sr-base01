@@ -1,10 +1,10 @@
-package com.example.springrest.domain.board.master.controller;
+package com.example.springrest.domain.boards.master.controller;
 
 import com.example.springrest.global.model.dto.ApiResponse;
-import com.example.springrest.domain.board.master.model.dto.BoardMasterRequest;
-import com.example.springrest.domain.board.master.model.entity.BoardMaster;
+import com.example.springrest.domain.boards.master.model.dto.BoardMasterRequest;
+import com.example.springrest.domain.boards.master.model.entity.BoardMaster;
 import com.example.springrest.global.model.dto.PageResponse;
-import com.example.springrest.domain.board.master.service.BoardMasterService;
+import com.example.springrest.domain.boards.master.service.BoardMasterService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

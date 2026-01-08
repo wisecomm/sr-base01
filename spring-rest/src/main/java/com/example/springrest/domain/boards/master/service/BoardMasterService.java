@@ -1,8 +1,8 @@
-package com.example.springrest.domain.board.master.service;
+package com.example.springrest.domain.boards.master.service;
 
-import com.example.springrest.domain.board.master.model.dto.BoardMasterRequest;
-import com.example.springrest.domain.board.master.model.entity.BoardMaster;
-import com.example.springrest.domain.board.master.repository.BoardMasterMapper;
+import com.example.springrest.domain.boards.master.model.dto.BoardMasterRequest;
+import com.example.springrest.domain.boards.master.model.entity.BoardMaster;
+import com.example.springrest.domain.boards.master.repository.BoardMasterMapper;
 import com.example.springrest.global.model.dto.PageResponse;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;

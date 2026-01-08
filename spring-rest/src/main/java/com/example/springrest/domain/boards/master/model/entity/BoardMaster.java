@@ -1,4 +1,4 @@
-package com.example.springrest.domain.board.master.model.entity;
+package com.example.springrest.domain.boards.master.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
