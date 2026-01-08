@@ -26,11 +26,11 @@ import { LayoutDashboard } from "lucide-react";
 const boardFormSchema = z.object({
     brdId: z.string().min(1, "게시판 코드는 필수입니다.").max(20, "게시판 코드는 20자 이하여야 합니다."),
     brdNm: z.string().min(1, "게시판 명은 필수입니다.").max(100, "게시판 명은 100자 이하여야 합니다."),
-    brdDesc: z.string().optional().default(""),
-    replyUseYn: z.string().default("1"),
-    fileUseYn: z.string().default("1"),
-    fileMaxCnt: z.number().min(0).max(20).default(5),
-    useYn: z.string().default("1"),
+    brdDesc: z.string(),
+    replyUseYn: z.string(),
+    fileUseYn: z.string(),
+    fileMaxCnt: z.number().min(0).max(20),
+    useYn: z.string(),
 });
 
 type BoardFormValues = z.infer<typeof boardFormSchema>;
@@ -46,7 +46,7 @@ export function BoardDialog({ open, onOpenChange, board, onSubmit }: BoardDialog
     const isEdit = !!board;
 
     const form = useForm<BoardFormValues>({
-        resolver: zodResolver(boardFormSchema) as any,
+        resolver: zodResolver(boardFormSchema),
         defaultValues: {
             brdId: "",
             brdNm: "",

@@ -51,8 +51,13 @@ export function DataTableToolbar({
                 </Button>
             </div>
             <div className="flex items-center gap-2">
-                <Button onClick={onAdd} className="bg-primary text-primary-foreground font-bold px-4 py-2 h-9 rounded-md shadow-sm">
-                    <Plus className="mr-2 h-4 w-4" /> 추가
+                <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={onAdd}
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm lg:flex"
+                >
+                    <Pencil className="mr-2 h-4 w-4" /> 추가
                 </Button>
                 <Button
                     variant="outline"
@@ -66,7 +71,7 @@ export function DataTableToolbar({
                     variant="outline"
                     size="sm"
                     onClick={async () => await onDelete()}
-                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm lg:flex text-red-500 hover:text-red-600"
+                    className="border-slate-200 text-slate-700 hover:bg-slate-100 font-bold px-4 py-2 h-9 rounded-md shadow-sm lg:flex"
                 >
                     <Trash2 className="mr-2 h-4 w-4" /> 삭제
                 </Button>
