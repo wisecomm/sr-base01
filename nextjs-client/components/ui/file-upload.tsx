@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Paperclip, X, File as FileIcon, ChevronUp } from "lucide-react";
+import { Paperclip, X, File as FileIcon, ChevronUp, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -10,6 +10,7 @@ interface FileUploadProps {
     onFilesChange: (files: File[]) => void;
     existingFiles?: { fileId: number; orgFileNm: string; fileSize: number }[];
     onDeleteExisting?: (fileId: number) => void;
+    onDownloadExisting?: (fileId: number) => void;
     maxSize?: number; // in bytes, default 500MB
     accept?: string;
     className?: string;
@@ -20,6 +21,7 @@ export function FileUpload({
     onFilesChange,
     existingFiles = [],
     onDeleteExisting,
+    onDownloadExisting,
     maxSize = 500 * 1024 * 1024,
     accept,
     className,
@@ -74,8 +76,6 @@ export function FileUpload({
         return parseFloat((bytes / Math.pow(k, i)).toFixed(i === 0 ? 0 : 1)) + " " + sizes[i];
     };
 
-
-
     const totalSize = files.reduce((acc, file) => acc + file.size, 0)
         + existingFiles.reduce((acc, file) => acc + file.fileSize, 0);
 
@@ -107,16 +107,28 @@ export function FileUpload({
                                         <span className="text-xs text-muted-foreground">{formatSize(file.fileSize)} (저장됨)</span>
                                     </div>
                                 </div>
-                                {onDeleteExisting && (
-                                    <button
-                                        type="button"
-                                        onClick={() => onDeleteExisting(file.fileId)}
-                                        className="text-muted-foreground hover:text-destructive transition-colors p-1 hover:bg-muted rounded ml-2 shrink-0"
-                                        title="파일 삭제"
-                                    >
-                                        <X className="w-5 h-5" />
-                                    </button>
-                                )}
+                                <div className="flex items-center">
+                                    {onDownloadExisting && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onDownloadExisting(file.fileId)}
+                                            className="text-muted-foreground hover:text-primary transition-colors p-1 hover:bg-muted rounded ml-2 shrink-0"
+                                            title="다운로드"
+                                        >
+                                            <Download className="w-5 h-5" />
+                                        </button>
+                                    )}
+                                    {onDeleteExisting && (
+                                        <button
+                                            type="button"
+                                            onClick={() => onDeleteExisting(file.fileId)}
+                                            className="text-muted-foreground hover:text-destructive transition-colors p-1 hover:bg-muted rounded ml-1 shrink-0"
+                                            title="파일 삭제"
+                                        >
+                                            <X className="w-5 h-5" />
+                                        </button>
+                                    )}
+                                </div>
                             </li>
                         ))}
 

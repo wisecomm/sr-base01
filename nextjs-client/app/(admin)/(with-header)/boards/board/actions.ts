@@ -145,3 +145,30 @@ export async function deleteBoard(boardId: number): Promise<ApiResponse<void>> {
         };
     }
 }
+
+/**
+ * 게시물 첨부파일 다운로드
+ */
+export async function downloadBoardFile(fileId: number, fileName: string): Promise<void> {
+    try {
+        const response = await api.get(`/v1/boards/board/files/${fileId}/download`, {
+            responseType: "blob",
+        });
+
+        // Create a URL for the blob
+        const url = window.URL.createObjectURL(new Blob([response as unknown as Blob]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", fileName); // Set the file name
+        document.body.appendChild(link);
+        link.click();
+
+        // Clean up
+        link.parentNode?.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    } catch (error: unknown) {
+        console.error("File download failed:", error);
+        alert("파일 다운로드에 실패했습니다.");
+    }
+}
+

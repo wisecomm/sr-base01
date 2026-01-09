@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import java.net.MalformedURLException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -75,5 +78,15 @@ public class FileStore {
     private String extractExt(String originalFilename) {
         int pos = originalFilename.lastIndexOf(".");
         return originalFilename.substring(pos + 1);
+    }
+
+    public Resource loadFileAsResource(String storedFileName) throws MalformedURLException {
+        File file = new File(getFullPath(storedFileName));
+        Resource resource = new UrlResource(file.toURI());
+        if (resource.exists() || resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("Could not read file: " + storedFileName);
+        }
     }
 }

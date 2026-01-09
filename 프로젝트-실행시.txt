@@ -31,3 +31,6 @@ Java 코드는 수정하지 않고 프론트엔드 화면만 반영하고 싶을
 ## 도커 설치
 % docker volume create pgdata
 % docker run --name my-postgres -e POSTGRES_PASSWORD=postgres123 -p 5432:5432 -v pgdata:/var/lib/postgresql/data -d postgres:16
+
+
+http://localhost:3000/boards/board?brdId=NOTICE

@@ -4,7 +4,7 @@ import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { Board, BoardFile } from "./actions";
+import { Board, BoardFile, downloadBoardFile } from "./actions";
 import {
     Dialog,
     DialogContent,
@@ -165,6 +165,12 @@ export function BoardDialog({ open, onOpenChange, board, defaultBrdId, onSubmit 
                                 onFilesChange={setFiles}
                                 existingFiles={existingFiles}
                                 onDeleteExisting={handleDeleteExisting}
+                                onDownloadExisting={async (fileId) => {
+                                    const file = existingFiles.find(f => f.fileId === fileId);
+                                    if (file) {
+                                        await downloadBoardFile(fileId, file.orgFileNm);
+                                    }
+                                }}
                                 maxSize={500 * 1024 * 1024} // 500MB
                             />
                         </div>

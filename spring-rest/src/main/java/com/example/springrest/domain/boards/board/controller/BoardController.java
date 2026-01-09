@@ -15,6 +15,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import com.example.springrest.domain.boards.board.model.entity.BoardFile;
+import com.example.springrest.global.util.FileStore;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Tag(name = "Board - Post Management", description = "게시물 관리 API")
 @Slf4j
@@ -24,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 public class BoardController {
 
     private final BoardService boardService;
+    private final FileStore fileStore;
 
     @Operation(summary = "게시물 목록 조회")
     @GetMapping
@@ -58,6 +66,26 @@ public class BoardController {
             @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception {
         boardService.updateBoard(boardId, request, files);
         return ResponseEntity.ok(ApiResponse.success(null));
+    }
+
+    @Operation(summary = "파일 다운로드")
+    @GetMapping("/files/{fileId}/download")
+    public ResponseEntity<Resource> downloadFile(@PathVariable Integer fileId) throws Exception {
+        BoardFile boardFile = boardService.getBoardFile(fileId);
+        if (boardFile == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Resource resource = fileStore.loadFileAsResource(boardFile.getFilePath() + boardFile.getStrFileNm());
+
+        String encodedUploadFileName = URLEncoder.encode(boardFile.getOrgFileNm(), StandardCharsets.UTF_8)
+                .replace("+", "%20");
+        String contentDisposition = "attachment; filename=\"" + encodedUploadFileName + "\"";
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+                .body(resource);
     }
 
     @Operation(summary = "게시물 삭제")

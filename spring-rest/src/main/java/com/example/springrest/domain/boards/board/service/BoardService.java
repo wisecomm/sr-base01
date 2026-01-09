@@ -55,6 +55,10 @@ public class BoardService {
         return board;
     }
 
+    public BoardFile getBoardFile(Integer fileId) {
+        return boardFileMapper.findById(fileId);
+    }
+
     @Transactional
     public void createBoard(BoardRequest request, List<MultipartFile> files) throws IOException {
         // TODO: Get real User ID from context
