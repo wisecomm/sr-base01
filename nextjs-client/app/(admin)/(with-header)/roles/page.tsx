@@ -10,6 +10,7 @@ import { useRoles, useCreateRole, useUpdateRole, useDeleteRole, useAssignRoleMen
 import { RoleDialog } from "./role-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useDataTable } from "@/components/data-table/use-data-table";
+import { SearchPageLayout } from "@/components/common/search-page-layout";
 
 export default function RolesPage() {
     const { toast } = useToast();
@@ -125,9 +126,13 @@ export default function RolesPage() {
         }
     };
 
+
+
+    // ...
+
     return (
         <div className="w-full space-y-6">
-            <div className="w-full space-y-4">
+            <SearchPageLayout>
                 <DataTableToolbar
                     onAdd={handleAdd}
                     onEdit={handleToolbarEdit}
@@ -135,7 +140,7 @@ export default function RolesPage() {
                     onSearch={handleSearch}
                 />
                 <DataTable table={table} showSeparators={true} />
-            </div>
+            </SearchPageLayout>
 
             <RoleDialog
                 open={dialogOpen}

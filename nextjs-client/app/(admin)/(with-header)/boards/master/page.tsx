@@ -10,6 +10,7 @@ import { useBoards, useUpdateBoard, useCreateBoard, useDeleteBoard } from "@/hoo
 import { BoardDialog } from "./board-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useDataTable } from "@/components/data-table/use-data-table";
+import { SearchPageLayout } from "@/components/common/search-page-layout";
 
 export default function BoardsPage() {
     const { toast } = useToast();
@@ -125,9 +126,13 @@ export default function BoardsPage() {
         setPagination((prev) => ({ ...prev, pageIndex: 0 }));
     };
 
+
+
+    // ... existing code
+
     return (
         <div className="w-full space-y-6">
-            <div className="w-full space-y-4">
+            <SearchPageLayout>
                 <DataTableToolbar
                     onAdd={handleAdd}
                     onEdit={handleEdit}
@@ -138,7 +143,7 @@ export default function BoardsPage() {
                     initialEndDate={searchParams.endDate}
                 />
                 <DataTable table={table} showSeparators={true} />
-            </div>
+            </SearchPageLayout>
 
             <BoardDialog
                 open={dialogOpen}

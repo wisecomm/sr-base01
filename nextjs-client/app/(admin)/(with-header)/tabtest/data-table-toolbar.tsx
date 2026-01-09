@@ -10,6 +10,10 @@ interface DataTableToolbarProps {
     dateInputRef: React.RefObject<HTMLInputElement | null>;
 }
 
+import { Card, CardContent } from "@/components/ui/card";
+
+// ...
+
 export function DataTableToolbar({
     searchDate,
     onSearchDateChange,
@@ -29,8 +33,8 @@ export function DataTableToolbar({
     };
 
     return (
-        <div className="p-4 bg-white shadow-sm">
-            <div className="flex items-center gap-3 w-full">
+        <Card className="w-full">
+            <CardContent className="p-4 flex items-center gap-3 w-full">
                 <p className="text-sm font-bold text-foreground leading-normal shrink-0">입고 날짜</p>
                 <div className="relative flex-1">
                     <input
@@ -65,7 +69,7 @@ export function DataTableToolbar({
                     <Search className="h-4 w-4 mr-1.5" />
                     <span>조회</span>
                 </button>
-            </div>
-        </div>
+            </CardContent>
+        </Card>
     );
 }

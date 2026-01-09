@@ -10,6 +10,7 @@ import { useUsers, useUpdateUser, useCreateUser, useDeleteUser, useAssignUserRol
 import { UserDialog } from "./user-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useDataTable } from "@/components/data-table/use-data-table";
+import { SearchPageLayout } from "@/components/common/search-page-layout";
 
 export default function UsersPage() {
     const { toast } = useToast();
@@ -137,7 +138,7 @@ export default function UsersPage() {
 
     return (
         <div className="w-full space-y-6">
-            <div className="w-full space-y-4">
+            <SearchPageLayout>
                 <DataTableToolbar
                     onAdd={handleAdd}
                     onEdit={handleEdit}
@@ -148,7 +149,7 @@ export default function UsersPage() {
                     initialEndDate={searchParams.endDate}
                 />
                 <DataTable table={table} showSeparators={true} />
-            </div>
+            </SearchPageLayout>
 
             <UserDialog
                 open={dialogOpen}

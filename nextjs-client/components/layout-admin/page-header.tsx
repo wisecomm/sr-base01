@@ -21,7 +21,7 @@ export function PageHeader() {
         // Fallback for sub-pages or unknown pages
         const title = pathname.split("/").pop() || "Admin";
         return (
-            <div className="flex flex-col gap-4 mb-6 pt-2">
+            <div className="flex flex-col gap-3 mb-2 pt-2">
                 <div className="flex items-center gap-4">
                     <div className="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.4)]" />
                     <h1 className="text-2xl font-bold text-foreground dark:text-foreground capitalize">{title}</h1>

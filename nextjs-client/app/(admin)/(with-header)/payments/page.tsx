@@ -17,6 +17,7 @@ import { generatePayments } from "./mock";
 import { useState, useEffect } from "react";
 import { Payment } from "./columns";
 import * as React from "react";
+import { SearchPageLayout } from "@/components/common/search-page-layout";
 
 export default function PaymentsPage() {
   const [data, setData] = useState<Payment[]>([]);
@@ -54,12 +55,16 @@ export default function PaymentsPage() {
     },
   });
 
+
+
+  // ... existing code
+
   return (
     <div className="w-full space-y-6">
-      <div className="w-full space-y-4">
+      <SearchPageLayout>
         <DataTableToolbar table={table} />
         <DataTable table={table} />
-      </div>
+      </SearchPageLayout>
     </div>
   );
 }

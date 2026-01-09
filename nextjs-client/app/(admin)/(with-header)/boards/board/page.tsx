@@ -11,6 +11,7 @@ import { BoardDialog } from "./board-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { useDataTable } from "@/components/data-table/use-data-table";
 import { useSearchParams } from "next/navigation";
+import { SearchPageLayout } from "@/components/common/search-page-layout";
 
 export default function BoardsPage() {
     return (
@@ -174,7 +175,7 @@ function BoardsContent() {
 
     return (
         <div className="w-full space-y-6">
-            <div className="w-full space-y-4">
+            <SearchPageLayout>
                 <DataTableToolbar
                     onAdd={handleAdd}
                     onEdit={handleEdit}
@@ -185,7 +186,7 @@ function BoardsContent() {
                     initialEndDate={searchParams.endDate}
                 />
                 <DataTable table={table} showSeparators={true} />
-            </div>
+            </SearchPageLayout>
 
             <BoardDialog
                 open={dialogOpen}

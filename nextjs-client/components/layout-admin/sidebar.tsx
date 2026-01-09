@@ -305,27 +305,6 @@ export function Sidebar() {
                             })}
                         </nav>
                     </div>
-                    <div className="mt-auto p-4 border-t">
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Link
-                                    href="/logout"
-                                    className={cn(
-                                        "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-primary",
-                                        isCollapsed && "justify-center px-2"
-                                    )}
-                                >
-                                    <LogOut className="h-4 w-4" />
-                                    {!isCollapsed && <span>로그아웃</span>}
-                                </Link>
-                            </TooltipTrigger>
-                            {isCollapsed && (
-                                <TooltipContent side="right">
-                                    로그아웃
-                                </TooltipContent>
-                            )}
-                        </Tooltip>
-                    </div>
                 </div>
             </div>
         </TooltipProvider>

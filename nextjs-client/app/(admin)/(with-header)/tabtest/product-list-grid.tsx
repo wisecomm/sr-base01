@@ -13,6 +13,10 @@ import {
 import { columns, Product } from "./columns";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { SearchPageLayout } from "@/components/common/search-page-layout";
+
+// ...
+
 
 const mockProducts: Product[] = [
     { barcode: "A-01-02", productName: "무선 바코드 스캐너", status: "정상", statusColor: "text-green-600", quantity: 120, date: "2023-10-25" },
@@ -30,10 +34,6 @@ export function ProductListGrid() {
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
     const [rowSelection, setRowSelection] = React.useState({});
-
-    const handleSearch = () => {
-        table.getColumn("date")?.setFilterValue(searchDate);
-    };
 
     const table = useReactTable({
         data: mockProducts,
@@ -53,27 +53,32 @@ export function ProductListGrid() {
         },
     });
 
+    const handleSearch = () => {
+        table.getColumn("date")?.setFilterValue(searchDate);
+    };
     return (
         <div className="flex flex-col w-full">
-            <DataTableToolbar
-                searchDate={searchDate}
-                onSearchDateChange={setSearchDate}
-                onSearch={handleSearch}
-                dateInputRef={dateInputRef}
-            />
+            <SearchPageLayout>
+                <DataTableToolbar
+                    searchDate={searchDate}
+                    onSearchDateChange={setSearchDate}
+                    onSearch={handleSearch}
+                    dateInputRef={dateInputRef}
+                />
 
-            <main className="flex-1 px-4 pt-2 space-y-4 w-full">
-                <div className="flex justify-between items-end">
-                    <p className="text-foreground text-lg font-bold">검색 결과 <span className="text-primary">{table.getFilteredRowModel().rows.length}</span>건</p>
-                    <p className="text-muted-foreground text-xs font-medium">최신순 정렬</p>
-                </div>
-
-                <div className="flex flex-col gap-4">
-                    <div className="rounded-xl border bg-white shadow-sm overflow-hidden mb-8">
-                        <DataTable table={table} />
+                <main className="flex-1 space-y-4 w-full">
+                    <div className="flex justify-between items-end">
+                        <p className="text-foreground text-lg font-bold">검색 결과 <span className="text-primary">{table.getFilteredRowModel().rows.length}</span>건</p>
+                        <p className="text-muted-foreground text-xs font-medium">최신순 정렬</p>
                     </div>
-                </div>
-            </main>
+
+                    <div className="flex flex-col gap-4">
+                        <div className="rounded-xl border bg-white shadow-sm overflow-hidden mb-8">
+                            <DataTable table={table} />
+                        </div>
+                    </div>
+                </main>
+            </SearchPageLayout>
         </div>
     );
 }

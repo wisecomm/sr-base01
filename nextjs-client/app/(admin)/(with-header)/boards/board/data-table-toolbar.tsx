@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 import { Plus, Pencil, Trash2, Search, Calendar } from "lucide-react";
 import {
     Select,
@@ -69,8 +70,8 @@ export function DataTableToolbar({
     };
 
     return (
-        <div className="flex flex-col gap-4">
-            <div className="flex items-center justify-between gap-4">
+        <Card className="w-full">
+            <CardContent className="p-4 flex items-center justify-between gap-2 flex-wrap">
                 <div className="flex flex-1 items-center gap-4 flex-wrap">
                     {/* Board Selection (Required per backend) */}
                     {/* Board Selection Removed - Passed via URL */}
@@ -78,7 +79,7 @@ export function DataTableToolbar({
                     <div className="flex items-center gap-2">
                         <span className="text-sm font-medium whitespace-nowrap">검색</span>
                         <Select value={searchType} onValueChange={setSearchType}>
-                            <SelectTrigger className="w-[100px]">
+                            <SelectTrigger className="w-[100px] h-9">
                                 <SelectValue placeholder="유형" />
                             </SelectTrigger>
                             <SelectContent>
@@ -92,7 +93,7 @@ export function DataTableToolbar({
                             value={keyword}
                             onChange={(e) => setKeyword(e.target.value)}
                             onKeyDown={handleKeyDown}
-                            className="w-[200px]"
+                            className="w-[200px] h-9"
                         />
                     </div>
 
@@ -105,7 +106,7 @@ export function DataTableToolbar({
                                     placeholder="YYYY-MM-DD"
                                     value={startDate}
                                     onChange={(e) => setStartDate(e.target.value)}
-                                    className="pr-8"
+                                    className="pr-8 h-9"
                                 />
                                 <button
                                     className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
@@ -131,7 +132,7 @@ export function DataTableToolbar({
                                     placeholder="YYYY-MM-DD"
                                     value={endDate}
                                     onChange={(e) => setEndDate(e.target.value)}
-                                    className="pr-8"
+                                    className="pr-8 h-9"
                                 />
                                 <button
                                     className="absolute right-0 top-0 h-9 w-9 flex items-center justify-center text-muted-foreground hover:text-primary transition-colors"
@@ -157,7 +158,7 @@ export function DataTableToolbar({
                         variant="outline"
                         onClick={handleSearch}
                         disabled={isLoading}
-                        className="font-bold border-border text-foreground hover:bg-muted"
+                        className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     >
                         <Search className="mr-2 h-4 w-4" />
                         조회
@@ -168,7 +169,7 @@ export function DataTableToolbar({
                     <Button
                         variant="outline"
                         onClick={onAdd}
-                        className="font-bold border-border text-foreground hover:bg-muted"
+                        className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     >
                         <Plus className="mr-2 h-4 w-4" />
                         추가
@@ -177,7 +178,7 @@ export function DataTableToolbar({
                     <Button
                         variant="outline"
                         onClick={onEdit}
-                        className="font-bold border-border text-foreground hover:bg-muted"
+                        className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     >
                         <Pencil className="mr-2 h-4 w-4" />
                         수정
@@ -186,13 +187,13 @@ export function DataTableToolbar({
                     <Button
                         variant="outline"
                         onClick={onDelete}
-                        className="font-bold border-border text-foreground hover:bg-muted"
+                        className="border-border text-foreground hover:bg-muted font-bold px-4 py-2 h-9 rounded-md shadow-sm"
                     >
                         <Trash2 className="mr-2 h-4 w-4" />
                         삭제
                     </Button>
                 </div>
-            </div>
-        </div>
+            </CardContent>
+        </Card>
     );
 }

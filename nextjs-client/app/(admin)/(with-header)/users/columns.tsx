@@ -26,10 +26,14 @@ export const getColumns = (): ColumnDef<UserDetail>[] => [
         size: 150,
         cell: ({ row }) => <TextCell value={row.getValue("userNick")} />
     }),
-    createColumn("useYn", "사용 여부", {
-        sort: true,
-        size: 80,
-        cell: ({ row }) => <UseYnCell value={row.getValue("useYn")} />
+    createColumn("useYn", "사용", {
+        size: 60,
+        cell: ({ row }) => (
+            <TextCell
+                value={row.getValue("useYn") === "1" ? "사용" : "미사용"}
+                align="center"
+            />
+        )
     }),
     createColumn("sysInsertDtm", "등록일", {
         sort: true,
