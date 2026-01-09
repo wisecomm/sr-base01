@@ -115,7 +115,7 @@ export function NumberCell({
         : "text-foreground";
 
     return (
-        <span
+        <div
             className={cn(
                 "tabular-nums font-medium",
                 sizeStyles[size],
@@ -125,7 +125,7 @@ export function NumberCell({
             )}
         >
             {formatted}
-        </span>
+        </div>
     );
 }
 

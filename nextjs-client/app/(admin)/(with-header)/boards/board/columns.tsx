@@ -2,7 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Board } from "./actions";
-import { TextCell, DateCell, UseYnCell, NumberCell } from "@/components/data-table/cells";
+import { TextCell, DateCell, NumberCell } from "@/components/data-table/cells";
 import { createColumn, createSelectColumn } from "@/components/data-table/column-helper";
 
 export const getColumns = (): ColumnDef<Board>[] => [
@@ -27,15 +27,25 @@ export const getColumns = (): ColumnDef<Board>[] => [
         size: 80,
         cell: ({ row }) => <NumberCell value={row.getValue("hitCnt")} />
     }),
-    createColumn("secretYn", "비밀", {
+    createColumn("secretYn", "공개", {
         sort: true,
         size: 60,
-        cell: ({ row }) => <UseYnCell value={row.getValue("secretYn")} />
+        cell: ({ row }) => (
+            <TextCell
+                value={row.getValue("secretYn") === "1" ? "비공개" : "공개"}
+                align="center"
+            />
+        )
     }),
     createColumn("useYn", "사용", {
         sort: true,
         size: 60,
-        cell: ({ row }) => <UseYnCell value={row.getValue("useYn")} />
+        cell: ({ row }) => (
+            <TextCell
+                value={row.getValue("useYn") === "Y" ? "사용" : "미사용"}
+                align="center"
+            />
+        )
     }),
     createColumn("sysInsertDtm", "등록일", {
         sort: true,
